@@ -7,12 +7,12 @@ var router = express.Router();
 
 var Viewcontroller = require('../src/controller/ViewController');
 const  Viewcontroller_obj= new Viewcontroller();
-var AddDataController = require('../src/controller/AddDataController');
-const AddDataController_obj = new AddDataController();
+var UserAuthController = require('../src/controller/UserAuthController');
+const UserAuthController_obj = new UserAuthController();
 
-router.get("/todo", (req, res) => Viewcontroller_obj.todo(req, res));
 router.get("/home", (req, res) => Viewcontroller_obj.home(req, res));
-router.get("/todoGet", (req, res) => AddDataController_obj.todoGET(req, res));
-router.post("/todoPOST", (req, res) => AddDataController_obj.todoPOST(req, res));
+router.get("/userAuth", (req, res) => Viewcontroller_obj.userAuth(req, res));
+router.post("/register", (req, res) => UserAuthController_obj.register(req, res));
+router.post("/login", (req, res) => UserAuthController_obj.login(req, res));
 
 module.exports = router;
