@@ -3,16 +3,27 @@
  */
 var express = require('express');
 var router = express.Router();
+const { check, validationResult } = require('express-validator');
 
 
 var Viewcontroller = require('../src/controller/ViewController');
-const  Viewcontroller_obj= new Viewcontroller();
+const Viewcontroller_obj = new Viewcontroller();
 var UserAuthController = require('../src/controller/UserAuthController');
-const UserAuthController_obj = new UserAuthController();
+const UserAuthController_obj = new UserAuthController(validationResult);
 
 router.get("/home", (req, res) => Viewcontroller_obj.home(req, res));
 router.get("/userAuth", (req, res) => Viewcontroller_obj.userAuth(req, res));
-router.post("/register", (req, res) => UserAuthController_obj.register(req, res));
-router.post("/login", (req, res) => UserAuthController_obj.login(req, res));
+//route for registration og new users
+router.post("/register", [
+    //check not empty fields
+    check('name', 'name must not be empty').not().isEmpty().trim().escape(),
+    check('mobile', 'Mobile number should contains 3 digits').isLength({ min: 3 }),
+    check('password', 'Password length should be 3 characters').isLength({ min: 3 }),
+], (req, res) => UserAuthController_obj.register(req, res));
+//route for login of registered user
+router.post("/login", [
+    check('EmailMobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
+    check('password', 'password must not be empty').not().isEmpty(),
+], (req, res) => UserAuthController_obj.login(req, res));
 
 module.exports = router;
