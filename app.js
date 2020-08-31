@@ -16,7 +16,6 @@ const bodyParser = require("body-parser"); // Module for POST/GET datas
 // const cookieParser = require("cookie-parser"); // Module for cookie in Session
 // const sassMiddleware = require("node-sass-middleware");
 // const session = require("express-session");
-const config = require('./config'); //it includes configuration file.
 
 // app.use(express.static(__dirname + "/public")); // all statics files in /public
 app.use(express.static('./public'));
@@ -60,19 +59,23 @@ app.use(
  * *************************************************************************
  * *************************************************************************
  ******************************************************************************************************************************************/
-//on root url home page calling
-app.get("/", (req, res) => res.render("userAuth"));
+
+const config = require('./config'); //it includes configuration file.
+const database = require('./src/javascript/database');
 
 /**
  * Routing
  */
+//on root url home page calling
+app.get("/", (req, res) => res.render("userAuth"));
+
 const Router = require("./routes/Router");
 app.use("/", Router);
 
 if (!module.parent) {
-	app.listen(config.port, function() {
-		console.log(`app is listening at http://localhost:${config.port}`);
-	});
+  app.listen(config.PORT, function () {
+    console.log(`app is listening at http://localhost:${config.PORT}`);
+  });
 }
 
 module.exports = app;
