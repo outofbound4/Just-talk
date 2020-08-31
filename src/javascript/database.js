@@ -1,6 +1,5 @@
 //code init
 const mongoose = require('mongoose');
-const assert = require('assert');
 const config = require('./../../config');
 
 // mongoDB_URL = 'mongodb://127.0.0.1:27017/chatapp', 'chatapp' is database name
