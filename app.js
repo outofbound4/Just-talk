@@ -61,7 +61,7 @@ app.use(
  ******************************************************************************************************************************************/
 
 const config = require('./config'); //it includes configuration file.
-const database = require('./src/javascript/database');
+const database = require('./src/DBConn/database');
 
 /**
  * Routing
