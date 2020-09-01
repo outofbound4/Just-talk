@@ -14,8 +14,8 @@ const debug = Debug("express:app"); // Module for Debug
 const logger = require("morgan"); // Module for Log
 const bodyParser = require("body-parser"); // Module for POST/GET datas
 // const cookieParser = require("cookie-parser"); // Module for cookie in Session
-// const sassMiddleware = require("node-sass-middleware");
-// const session = require("express-session");
+const session = require("express-session");
+const config = require('./config'); //it includes configuration file.
 
 // app.use(express.static(__dirname + "/public")); // all statics files in /public
 app.use(express.static('./public'));
@@ -23,10 +23,10 @@ app.use(express.static('./public'));
 app.set('views', './src/views');
 app.set("view engine", "ejs");
 
-// app.use(logger("dev"));
+app.use(logger("dev"));
 app.use(bodyParser.json()); // API response en JSON
 app.use(
-  // donnée en get post non encodé par l'URL
+  // get post non encode URL
   bodyParser.urlencoded({
     extended: true
   })
@@ -35,15 +35,19 @@ app.use(
 /**
  * Configuration of Session
  */
-// app.set("trust proxy", 1); // trust first proxy
-// app.use(
-//   session({
-//     secret: "*****JeSuisLaClefSecrèteWild2018*****",
-//     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
-//     cookie: { maxAge: 60000 }, // lifetime of cookie
-//     saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
-//   })
-// );
+app.set("trust proxy", 1); // trust first proxy
+app.use(
+  session({
+    name: config.SESSION_NAME,
+    secret: config.SESSION_SECRET,
+    resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
+    cookie: {
+      maxAge: config.SESSION_LIFETIME,
+      sameSite: true,
+    }, // lifetime of cookie
+    saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
+  })
+);
 /**
  * Store in local session all
  */
@@ -60,7 +64,6 @@ app.use(
  * *************************************************************************
  ******************************************************************************************************************************************/
 
-const config = require('./config'); //it includes configuration file.
 const database = require('./src/DBConn/database');
 
 /**
