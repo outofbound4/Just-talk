@@ -1,7 +1,7 @@
+//init
+var validator = require("email-validator");
 var User = require('../model/User');
-/**
- * Class ViewController Controller
- */
+
 class UserAuthController {
     /**
      * Liste of Articles
@@ -18,8 +18,12 @@ class UserAuthController {
          *  block of code will run 
          */
         if (!errors.isEmpty()) {
-            console.log(errors);
-            return res.json(errors);
+            //sending errors to client page
+            return res.json({
+                status: 400,
+                message: 'Required Param Empty',
+                errors: errors,
+            });
         }
         /* If no error occurs, then this 
          * block of code will run 
@@ -30,25 +34,28 @@ class UserAuthController {
                 mobile: req.body.mobile,
                 password: req.body.password,
             },
-            
-            function (error, result) {
-                // iff error occurs
-                if (error) {
-                    console.log(error);
+
+                function (errors, result) {
+                    // iff error occurs
+                    if (errors) {
+                        //sending errors to client page
+                        return res.json({
+                            status: 11000,
+                            message: 'duplicate key error collection. Mobile number already exist',
+                        });
+                    }
+                    // if every things ok
+                    //setting session
+                    req.session.mobile = result.mobile;
+                    req.session.name = result.name;
+
+                    //senddind data to client page
                     return res.json({
-                        status: false,
-                        message: 'Error in inserting data in user Module',
-                        error: error
+                        status: 200,
+                        message: 'inserted data in user Module',
+                        result: result,
                     });
-                }
-                // if every things ok
-                console.log(result);
-                return res.json({
-                    status: true,
-                    message: 'inserted data in user Module',
-                    result: result
                 });
-            });
         }
     }
 
@@ -58,15 +65,45 @@ class UserAuthController {
          *  block of code will run 
          */
         if (!errors.isEmpty()) {
-            console.log(errors);
-            return res.json(errors);
+            //sending errors to client page
+            return res.json({
+                status: 400,
+                message: 'Required Param Empty',
+                errors: errors,
+            });
         }
         /* If no error occurs, then this 
         * block of code will run 
         */
         else {
-            res.send("Successfully validated");
-            console.log(req.body);
+            //finding the user credentials
+            User.find({ mobile: req.body.mobile }, function (errors, result) {
+                if (errors) {
+                    //sending errors to client page
+                    return res.json({
+                        status: 500,
+                        message: 'data fetching error occurs',
+                        errors: errors,
+                    });
+                }
+
+                // if everything ok
+                // checking password for authenticity
+                else if (result[0].password === req.body.password) {
+                    return res.json({
+                        status: 200,
+                        message: 'Authorised user',
+                        result: result,
+                    });
+                }
+                else {
+                    return res.json({
+                        status:  422,
+                        message: 'Unauthorised user, mobile or password incorrect',
+                        result: result,
+                    });
+                }
+            });
         }
     }
 }
