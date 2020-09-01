@@ -204,7 +204,7 @@
             <div class="login-show">
                 <h2>LOGIN</h2>
                 <form action="" id="login">
-                    <input type="text" name="EmailMobile" placeholder="Email or Mobile" required>
+                    <input type="text" name="mobile" placeholder="Mobile" required>
                     <input type="password" name="password" placeholder="Password" required>
                     <input type="button" id="btnLogin" value="Login">
                     <a href="">Forgot password?</a>
@@ -218,6 +218,7 @@
                     <input type="password" name="password" placeholder="Password" required>
                     <input type="password" placeholder="Confirm Password" required>
                     <input type="button" id="btnRegister" value="Register">
+                    <p id="400"></p>
                 </form>
             </div>
         </div>
@@ -234,7 +235,23 @@
     });
 
     function postFunctionLogin(res) {
-        alert(res);
+        if (res.status === 400) {
+            alert(res.message);
+        }
+        else if (res.status === 500) {
+            alert(res.message);
+        }
+        else if (res.status === 200) {
+            // alert(res.message);
+            window.open("/home", "_self");
+        }
+        else if (res.status === 422) {
+            alert(res.message);
+        }
+        else {
+            alert("Somthing went wrong.......");
+
+        }
     }
 
     $('#btnRegister').on('click', function () {
@@ -244,7 +261,19 @@
     });
 
     function postFunctionRegister(res) {
-        alert(res);
+        if (res.status === 400) {
+            alert(res.message);
+        }
+        else if (res.status === 11000) {
+            alert(res.message);
+        }
+        else if (res.status === 200) {
+            // alert(res.message);
+            window.open("/home", "_self");
+        }
+        else {
+            alert("Somthing went wrong.......");
+        }
     }
 </script>
 <script>
