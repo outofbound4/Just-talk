@@ -90,6 +90,10 @@ class UserAuthController {
                 // if everything ok
                 // checking password for authenticity
                 else if (result[0].password === req.body.password) {
+                    //setting session
+                    req.session.mobile = result.mobile;
+                    req.session.name = result.name;
+                    //  returning data to user
                     return res.json({
                         status: 200,
                         message: 'Authorised user',
@@ -97,8 +101,9 @@ class UserAuthController {
                     });
                 }
                 else {
+                    //  returning data to user
                     return res.json({
-                        status:  422,
+                        status: 422,
                         message: 'Unauthorised user, mobile or password incorrect',
                         result: result,
                     });
