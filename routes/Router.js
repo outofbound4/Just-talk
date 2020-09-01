@@ -22,7 +22,7 @@ router.post("/register", [
 ], (req, res) => UserAuthController_obj.register(req, res));
 //route for login of registered user
 router.post("/login", [
-    check('EmailMobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
+    check('mobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
     check('password', 'password must not be empty').not().isEmpty(),
 ], (req, res) => UserAuthController_obj.login(req, res));
 
