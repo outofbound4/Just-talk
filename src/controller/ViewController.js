@@ -13,6 +13,23 @@ class ViewController {
   userAuth(req, res) {
     return res.render("userAuth");
   }
+  chatbox(req, res) {
+    return res.render("chatbox");
+  }
+  contactlist(req, res) {
+    return res.render("contactlist");
+  }
+  ownprofile(req, res) {
+    return res.render("ownprofile");
+  }
+
+  otherprofile(req, res) {
+    return res.render("otherprofile");
+  }
+  editprofile(req, res) {
+    return res.render("editprofile");
+  }
+  
 }
 
 module.exports = ViewController;
