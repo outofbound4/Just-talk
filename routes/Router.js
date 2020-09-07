@@ -10,7 +10,10 @@ var Viewcontroller = require('../src/controller/ViewController');
 const Viewcontroller_obj = new Viewcontroller();
 var UserAuthController = require('../src/controller/UserAuthController');
 const UserAuthController_obj = new UserAuthController(validationResult);
+var ChatboxControlle = require('../src/controller/ChatboxControlle');
+const ChatboxControlle_obj = new ChatboxControlle(validationResult);
 
+// View controller router
 router.get("/home", (req, res) => Viewcontroller_obj.home(req, res));
 router.get("/chatbox", (req, res) => Viewcontroller_obj.chatbox(req, res));
 router.get("/contactlist", (req, res) => Viewcontroller_obj.contactlist(req, res));
@@ -19,7 +22,11 @@ router.get("/otherprofile", (req, res) => Viewcontroller_obj.otherprofile(req, r
 router.get("/userAuth", (req, res) => Viewcontroller_obj.userAuth(req, res));
 router.get("/editprofile", (req, res) => Viewcontroller_obj.editprofile(req, res));
 
-//route for registration og new users
+// ChatboxControlle router
+router.post("/usersearch", (req, res) => ChatboxControlle_obj.usersearch(req, res));
+
+//route for registration or new users
+// UserAuthController router
 router.post("/register", [
     //check not empty fields
     check('name', 'name must not be empty').not().isEmpty().trim().escape(),
