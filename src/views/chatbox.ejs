@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang=" ">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="">
+    <!-- title -->
+    <title>Chat Box</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <!-- Styles -->
+    <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <!-- <link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet" id="fontawesome"> -->
+    <!-- Animation CSS -->
+    <link href="/chatbox/css/animate.css" rel="stylesheet">
+    <link href="/chatbox/css/custom.css" rel="stylesheet" id="style">
+    <!-- Theme light dark version CSS -->
+    <link href="/chatbox/css/style.css" rel="stylesheet">
+    <link href="/chatbox/css/style-light.css" id="maintheme" rel="stylesheet">
+    <!-- color CSS you can use different color css from css/colors folder -->
+    <!-- We have chosen the skin-blue (blue.css) for this starter
+                page. However, you can choose any other skin from folder css / colors .
+ -->
+    <link href="/chatbox/css/colors/green.css" id="theme" rel="stylesheet">
+    <!-- Emoji One JS -->
+    <link rel="stylesheet" href="/chatbox/smiley/assets/sprites/emojione.sprites.css" />
+    <script src="/chatbox/smiley/js/emojione.min.js"></script>
+    <script type="text/javascript">
+        // #################################################
+        // # Optional
+
+        // default is PNG but you may also use SVG
+        emojione.imageType = 'png';
+        emojione.sprites = false;
+
+        // default is ignore ASCII smileys like :) but you can easily turn them on
+        emojione.ascii = true;
+
+        // if you want to host the images somewhere else
+        // you can easily change the default paths
+        emojione.imagePathPNG = "/chatbox/smiley/assets/png/";
+        emojione.imagePathSVG = "/chatbox/smiley/assets/svg/";
+
+        // #################################################
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="wchat">
+            <div class="wchat-wrapper wchat-wrapper-web wchat-wrapper-main">
+                <div tabindex="-1" class="wchat two">
+                    <div class="drawer-manager">
+                        <span class="pane wchat-one"></span>
+                        <span class="pane wchat-two">
+                            <div id="get-error">
+
+                            </div>
+                            <div id="showErrorModal" data-toggle="modal" data-target=".bs-example-modal-sm">
+                            </div>
+                            <div class="pane pane-intro" id="pane-intro" style="visibility: visible">
+                                <div class="intro-body">
+                                    <div class="intro-image" style="opacity: 1; transform: scale(1);"></div>
+                                    <div class="intro-text-container" style="opacity: 1; transform: translateY(0px);">
+                                        <h1 class="intro-title">Welcome to chat App</h1>
+                                        <div class="intro-text">No Conversation sync. Please search users and
+                                            start chat.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="uploader" style="display: none">
+                                <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+                            </div>
+
+                        </span>
+                        <span class="pane wchat-three" style="transition: all 0.3s ease;">
+                            <span class="flow-drawer-container"
+                                style="transform: translateX(0px);border: 1px solid rgba(0, 0, 0, .08);display:block;">
+                                <div class="drawer drawer-info">
+                                    <header class="wchat-header">
+                                        <div class="header-close">
+                                            <button><span class="icon icon-x  ti-close"></span></button>
+                                        </div>
+                                        <div class="header-body">
+                                            <div class="header-main">
+                                                <div class="header-title">Profile info</div>
+                                            </div>
+                                        </div>
+                                    </header>
+                                    <div class="drawer-body" id="userProfile" data-list-scroll-container="true">
+                                        <!--Here Profile comes dynamically-->
+                                    </div>
+                                </div>
+                            </span>
+                        </span>
+                    </div>
+
+                    <!-- .chat-left-panel -->
+                    <div id="side" class="wchat-list wchat-one chat-left-aside left">
+                        <div class="open-panel"><i class="ti-angle-right"></i></div>
+                        <div class="chat-left-inner">
+                            <div id="my-profile" style="display: none;">
+                            </div>
+                            <div id="contact-list">
+                                <header class="wchat-header wchat-chat-header top">
+
+                                    <div class="chat-avatar">
+                                        <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
+                                            <div class="avatar-body userimage">
+                                                <a href="/ownprofile">
+                                                    <img src="storage/user_image/Kristina.jpg" alt="Img"
+                                                        class="avatar-image is-loaded bg-theme" width="100%">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="chat-body">
+                                        <div class="chat-main">
+                                            <a href="/ownprofile">
+                                                <h2 class="chat-title" dir="auto"><span
+                                                        class="wchatellips personName">GAURAV</span></h2>
+                                            </a>
+                                            <input type="hidden" name='email' id='email' value='user phone number'>
+                                        </div>
+                                    </div>
+                                    <div class="wchat-chat-controls">
+                                        <div class="menu menu-horizontal">
+                                            <div class="menu-item active dropdown pull-right">
+                                                <button class="icon dropdown-toggle" data-toggle="dropdown"
+                                                    href="#"><span class="font-19"><i
+                                                            class="icon icon-options-vertical"></i></span></button>
+                                                <ul class="dropdown-menu dropdown-user animated flipInY">
+                                                    <li><a href="#"><i class="fa fa-power-off"></i> Logout</a>
+                                                    </li>
+                                                </ul>
+                                                <!-- /.dropdown-user -->
+                                            </div>
+                                            <div class="menu-item right-side-toggle"><button
+                                                    class="icon ti-settings font-20"
+                                                    title="Attach"></button><span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="form-material">
+                                    <form id="searchboxForm" action="">
+                                        <input class="form-control p-lr-20 live-search-box search_bg" id="searchbox"
+                                            name="mobile" type="text" placeholder="Search By Mobile number">
+                                    </form>
+
+                                </div>
+                                <div class="contact-drawer">
+                                    <ul class="chatonline drawer-body contact-list" id="display"
+                                        data-list-scroll-container="true" style="display: block;">
+                                        <!-- here user's recent sidebar comes dynamically -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- .chat-left-panel -->
+                    <!-- .chat-right-panel -->
+
+                    <div tabindex="-1" id="main right" class="pane wchat-chat wchat-two chat-right-aside right"
+                        style="visibility: hidden;">
+                        <div class="wchat-chat-tile"></div>
+                        <header class="wchat-header wchat-chat-header top" data-user="">
+                            <button class="icon m-r-5 hidden-sm hidden-md hidden-lg open-panel" href="#"><span
+                                    class="font-19"><i class="icon ti-arrow-left"></i></span></button>
+                            <div class="chat-avatar" id="launchProfile">
+                                <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
+                                    <div class="avatar-body userimage profile-picture">
+                                        <img src="storage/user_image/Kristina.jpg" alt="img"
+                                            class="avatar-image is-loaded bg-theme" width="100%">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-body">
+                                <div class="chat-main">
+                                    <h2 class="chat-header-title" dir="auto"><span
+                                            class="wchatellips personName">&nbsp;</span>
+                                    </h2>
+                                </div>
+                                <div class="chat-status wchatellips" id="typing_on">
+                                    <!--last seen today at 8:52 PM-->
+                                </div>
+                            </div>
+                            <div class="wchat-chat-controls">
+                                <div class="menu menu-horizontal">
+                                    <div class="menu-item active pull-right">
+                                        <i class="fa fa-phone font-24" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="menu-item active pull-right">
+                                        <i class="fa fa-video-camera font-24" aria-hidden="true"></i>
+                                    </div>
+
+                                    <div class="menu-item active dropdown pull-right">
+                                        <button class="icon dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <span class="font-19">
+                                                <i class="icon icon-options-vertical"></i>
+                                            </span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-user animated flipInY">
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="javascript:blockUser();">
+                                                    <i class="ti-user"></i>
+                                                    Block user
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="javascript:emailChat();">
+                                                    <i class="ti-wallet"></i>
+                                                    Email This Chat
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="javascript:saveChat();">
+                                                    <i class="icon-doc"></i>
+                                                    Save Chat
+                                                </a>
+                                            </li>
+                                            <!-- /.dropdown-user -->
+                                    </div>
+                                    <div class="menu-item right-side-toggle hidden-xs hidden">
+                                        <button class="icon ti-settings font-20" title="Attach"></button>
+                                        <span>
+
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="wchat-body wchat-chat-tile-container" style="background-size: cover;">
+                            <div>
+                                <span>
+                                    <div class="scroll-down"
+                                        style="transform: scaleX(1) scaleY(1); opacity: 1; visibility:hidden;">
+                                        <span class="ti-angle-down"></span>
+                                    </div>
+                                </span>
+                                <div class="wchat-chat-msgs wchat-chat-body lastTabIndex" tabindex="0">
+                                    <div class="wchat-chat-empty"></div>
+                                    <div class="message-list">
+                                        <div class="chat-list" id="resultchat">
+                                            <!--Here content comes dynamically -->
+                                            <!-- all chats of a particular user comes here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wchat-filler" style="height: 0px;"></div>
+                        <footer tabindex="-1" class="wchat-footer wchat-chat-footer">
+                            <div id="chatFrom">
+                                <!--TextArea Dinamic -->
+                            </div>
+                            <div class="wchat-box-items-positioning-container">
+                                <div class="wchat-box-items-overlay-container">
+                                    <div style="display: none" class="target-emoji">
+                                        <div class="smiley-panel">
+                                            <!-- Nav tabs -->
+                                            <ul class="nav customtab2 nav-tabs menu-tabs" role="tablist"
+                                                style="padding: 0;">
+                                                <li role="presentation" class="menu-item active"><a href="#people"
+                                                        aria-controls="people" role="tab" data-toggle="tab"
+                                                        aria-expanded="true"><i class="ti-face-smile"></i></a></li>
+                                                <li role="presentation" class="menu-item"><a href="#nature"
+                                                        aria-controls="nature" role="tab" data-toggle="tab"
+                                                        aria-expanded="false"><i class="ti-gallery"></i></a>
+                                                </li>
+                                                <li role="presentation" class="menu-item"><a href="#food"
+                                                        aria-controls="food" role="tab" data-toggle="tab"
+                                                        aria-expanded="false"><i class="fa fa-cutlery"></i></a>
+                                                </li>
+                                                <li role="presentation" class="menu-item"><a href="#activity"
+                                                        aria-controls="activity" role="tab" data-toggle="tab"
+                                                        aria-expanded="false"><i class="ti-basketball"></i></a>
+                                                </li>
+                                                <li role="presentation" class="menu-item"><a href="#travel"
+                                                        aria-controls="travel" role="tab" data-toggle="tab"
+                                                        aria-expanded="false"><i class="fa fa-car"></i></a></li>
+                                                <li role="presentation" class="menu-item"><a href="#objects"
+                                                        aria-controls="objects" role="tab" data-toggle="tab"
+                                                        aria-expanded="false"><i class="ti-light-bulb"></i></a>
+                                                </li>
+                                                <li role="presentation" class="menu-item"><a href="#symbols"
+                                                        aria-controls="symbols" role="tab" data-toggle="tab"
+                                                        aria-expanded="false"><i class="ti-heart"></i></a></li>
+                                                <li role="presentation" class="menu-item"><a href="#flags"
+                                                        aria-controls="flags" role="tab" data-toggle="tab"
+                                                        aria-expanded="false"><i class="ti-flag-alt"></i></a>
+                                                </li>
+                                            </ul>
+                                            <!-- Tab panes -->
+                                            <div class="tab-content" style="margin: 0;text-align: center;">
+                                                <div role="tabpanel" class="tab-pane fade active in" id="people">
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="mentions-positioning-container"></span>
+                        </footer>
+                        <span></span>
+                    </div>
+                    <!-- .chat-right-panel -->
+                </div>
+            </div>
+        </div>
+
+
+        <!-- .right-sidebar -->
+        <div class="right-sidebar">
+            <div class="slimscrollright">
+                <div class="rpanel-title"> Theme Modify<span><i class="ti-close right-side-toggle"></i></span>
+                </div>
+                <div class="r-panel-body">
+                    <ul>
+                        <li><b>Layout Options</b></li>
+
+                    </ul>
+                    <ul id="mainthemecolors" class="m-t-20">
+                        <li><b>Theme (Light/Dark)</b></li>
+                        <li><a href="javascript:void(0)" maintheme="style-light" class="light-theme working">1</a></li>
+                        <li><a href="javascript:void(0)" maintheme="style-dark" class="dark-theme">2</a></li>
+                    </ul>
+                    <ul id="themecolors" class="m-t-20">
+                        <li><b>With Color Effect</b></li>
+                        <li><a href="javascript:void(0)" theme="default" class="default-theme">1</a></li>
+                        <li><a href="javascript:void(0)" theme="green" class="green-theme">2</a></li>
+                        <li><a href="javascript:void(0)" theme="gray" class="yellow-theme">3</a></li>
+                        <li><a href="javascript:void(0)" theme="blue" class="blue-theme">4</a></li>
+                        <li><a href="javascript:void(0)" theme="purple" class="purple-theme working">5</a></li>
+                        <li><a href="javascript:void(0)" theme="megna" class="megna-theme">6</a></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.right-sidebar -->
+
+        <!-- Media Uploader -->
+        <!--This div for modal light box chat box image-->
+        <div id="lightbox" style="display: none;">
+            <p>
+                <img src="/chatbox/plugins/images/close-icon-white.png" width="30px" style="cursor: pointer" />
+            </p>
+            <div id="content">
+                <img src="#" />
+            </div>
+        </div>
+        <!--This div for modal light box chat box image-->
+
+
+    </div>
+</body>
+<script src="/assets/jquery/jquery-1.11.1.min.js"></script>
+<!--- Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+    </script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="/ajax/ajax.js"></script>
+
+<!-- jQuery -->
+<script src="/chatbox/plugins/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+
+<!-- Custom Theme JavaScript -->
+<script src="/chatbox/js/custom.js"></script>
+<!--Style Switcher -->
+<script src="/chatbox/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+<!--Style Switcher -->
+<!--ChatJs -->
+<script type="text/javascript" src="/chatbox/chatjs/lightbox.js"></script>
+<script type="text/javascript" src="/chatbox/chatjs/inbox.js"></script>
+<script type="text/javascript" src="/chatbox/chatjs/custom.js"></script>
+<!--ChatJs-->
+<script>
+    $('#searchbox').keyup(function () {
+
+        var ajax = new Ajax();
+        var urlData = ajax.create_url_data("searchboxForm");
+        ajax.processPOST("/usersearch", urlData, postSearchFunction);
+    });
+
+    function postSearchFunction(res) {
+
+        let list = "";
+        let result = res.result;
+        for (var i = 0; i < result.length; i++) {
+            list += "<li class='person chatboxhead active' value='" + result._id + "' id='" + result._id + "' data-chat='" + result._id + "'" +
+                "href='javascript:void(0)'" +
+                "onclick=\"javascript:chatWith1('" + result[i].name + "','" + result._id + "','deven.jpg','Online')\">" +
+                "<a href='javascript:void(0)'>" +
+                "<span class='userimage profile-picture min-profile-picture'><img " +
+                "src='storage/user_image/Deven.jpg' alt='Img'" +
+                "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
+                "<span>" +
+                "<span class='bname personName'>" + result[i].name + "</span>" +
+                "<span class='personStatus'><span class='time Online'><i " +
+                "class='fa fa-circle'" +
+                "aria-hidden='true'></i></span></span> " +
+                "<span class='count'><span " +
+                "class='icon-meta unread-count'>2</span></span><br>" +
+                "<small class='preview'><span class='Online'>Online</span></small>" +
+                "</span>" +
+                "</a >" +
+                "</li >";
+        }
+        if (list == "") {
+            $(".chat-right-aside").css({ 'visibility': 'hidden' });
+            $("#pane-intro").css({ 'visibility': 'visible' });
+        }
+        $("#display").html(list);
+    }
+
+    function chatWith1(chatuser, toid, img, status) {
+        chatWith(chatuser, toid, img, status);
+        messageLoad();
+    }
+    function messageLoad() {
+        var message_content = '<div id="chatbox_Deven" class="chat chatboxcontent active-chat"' +
+            'data-chat="person_1" client="Deven">' +
+            '<div class="col-xs-12 p-b-10">' +
+            '<div class="chat-image  profile-picture max-profile-picture">' +
+            '<img alt="Deven" src="storage/user_image/Deven.jpg"' +
+            'class="bg-theme">' +
+            '</div>' +
+            '<div class="chat-body">' +
+            '<div class="chat-text">' +
+            '<h4>Deven Patel</h4>' +
+            '<p><a url="storage/user_files/image-chat.jpg"' +
+            'onclick="trigq(this)"><img' +
+            'src="storage/user_files/image-chat.jpg"' +
+            'class="userfiles" ></a ></p >' +
+            '<b>23 days ago</b>' +
+            '</div >' +
+            '</div >' +
+            '</div >' +
+            '<div class="col-xs-12 p-b-10 odd">' +
+            '<div class="chat-image  profile-picture max-profile-picture">' +
+            '<img alt="Bylancer" src="storage/user_image/Bylancer.jpg">' +
+            '</div>' +
+            '<div class="chat-body">' +
+            '<div class="chat-text">' +
+            '<h4>Bylancer</h4>' +
+            '<p>Hi</p>' +
+            '<b>Just Now</b>' +
+            '<span class="msg-status msg-mega"><i' +
+            'class="fa fa-check"></i></span>' +
+            '</div >' +
+            '</div >' +
+            '</div >' +
+            '</div >';
+        // alert(message_content);
+        $("#resultchat").html(message_content);
+    }
+</script>
+
+</html>
