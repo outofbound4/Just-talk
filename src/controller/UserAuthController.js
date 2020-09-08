@@ -89,28 +89,35 @@ class UserAuthController {
 
                 // if everything ok
                 // checking password for authenticity
-                else if (result[0].password === req.body.password) {
-                    //setting session
-                    req.session.mobile = result.mobile;
-                    req.session.name = result.name;
-                    //  returning data to user
-                    return res.json({
-                        status: 200,
-                        message: 'Authorised user',
-                        result: result,
-                    });
+                if (result) { //checking if mobile number is registered
+
+                    if (result[0].password === req.body.password) {
+                        //setting session
+                        req.session.mobile = result.mobile;
+                        req.session.name = result.name;
+                        //  returning data to user
+                        return res.json({
+                            status: 200,
+                            message: 'Authorised user',
+                            result: result,
+                        });
+                    }
+                    else {
+                        //  returning data to user
+                        return res.json({
+                            status: 422,
+                            message: 'Unauthorised user, password incorrect',
+                        });
+                    }
                 }
                 else {
-                    //  returning data to user
                     return res.json({
-                        status: 422,
-                        message: 'Unauthorised user, mobile or password incorrect',
-                        result: result,
+                        status: 421,
+                        message: 'mobile number not registered',
                     });
                 }
             });
         }
     }
 }
-
 module.exports = UserAuthController;
