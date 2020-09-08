@@ -13,6 +13,13 @@ class ChatboxControlle {
 
 
     usersearch(req, res) {
+        if(req.body.mobile ==  "") {
+            return res.json({
+                status: 200,
+                message: 'datas',
+                result: [],
+            });
+        }
         User.find({ mobile: { $regex: req.body.mobile }}, function (errors, result) {
             if (errors) {
                 //sending errors to client page
