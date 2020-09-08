@@ -45,10 +45,11 @@ class UserAuthController {
                         });
                     }
                     // if every things ok
+                    console.log(result);
                     //setting session
                     req.session.mobile = result.mobile;
                     req.session.name = result.name;
-
+                    req.session._id = result._id;
                     //senddind data to client page
                     return res.json({
                         status: 200,
@@ -94,6 +95,8 @@ class UserAuthController {
                         //setting session
                         req.session.mobile = result.mobile;
                         req.session.name = result.name;
+                        req.session._id = result._id;
+
                         //  returning data to user
                         return res.json({
                             status: 200,
