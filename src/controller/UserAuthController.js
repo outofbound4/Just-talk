@@ -89,8 +89,7 @@ class UserAuthController {
 
                 // if everything ok
                 // checking password for authenticity
-                if (result) { //checking if mobile number is registered
-
+                if (Object.keys(result).length !== 0) { //checking if mobile number is registered
                     if (result[0].password === req.body.password) {
                         //setting session
                         req.session.mobile = result.mobile;
