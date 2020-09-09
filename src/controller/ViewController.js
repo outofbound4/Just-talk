@@ -11,10 +11,19 @@ class ViewController {
     return res.render("home");
   }
   userAuth(req, res) {
-    return res.render("userAuth");
+      return res.render("userAuth");
   }
   chatbox(req, res) {
-    return res.render("chatbox");
+    // checking if session is set
+    // console.log(req.session);
+    if(req.session._id) {
+      // if session is set then go to next page
+      return res.render("chatbox", {session: req.session});
+    }
+    else {
+      // if session not set the goto to login and register page
+      return res.render("userAuth");
+    }
   }
   contactlist(req, res) {
     return res.render("contactlist");
