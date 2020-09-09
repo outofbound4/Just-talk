@@ -111,7 +111,7 @@
                                         <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
                                             <div class="avatar-body userimage">
                                                 <a href="/ownprofile">
-                                                    <img src="storage/user_image/Kristina.jpg" alt="Img"
+                                                    <img src="" alt="Img"
                                                         class="avatar-image is-loaded bg-theme" width="100%">
                                                 </a>
                                             </div>
@@ -121,9 +121,9 @@
                                         <div class="chat-main">
                                             <a href="/ownprofile">
                                                 <h2 class="chat-title" dir="auto"><span
-                                                        class="wchatellips personName">GAURAV</span></h2>
+                                                        class="wchatellips personName"><%= session.name %></span></h2>
                                             </a>
-                                            <input type="hidden" name='email' id='email' value='user phone number'>
+                                            <input type="hidden" id='id_user1' value='<%= session._id%>' >
                                         </div>
                                     </div>
                                     <div class="wchat-chat-controls">
@@ -166,8 +166,9 @@
 
                     <div tabindex="-1" id="main right" class="pane wchat-chat wchat-two chat-right-aside right"
                         style="visibility: hidden;">
+                        <input type="hidden" id='id_user2' value='' >
                         <div class="wchat-chat-tile"></div>
-                        <header class="wchat-header wchat-chat-header top" data-user="">
+                        <header class="wchat-header wchat-chat-header top2" data-user="">
                             <button class="icon m-r-5 hidden-sm hidden-md hidden-lg open-panel" href="#"><span
                                     class="font-19"><i class="icon ti-arrow-left"></i></span></button>
                             <div class="chat-avatar" id="launchProfile">
@@ -400,9 +401,9 @@
         let list = "";
         let result = res.result;
         for (var i = 0; i < result.length; i++) {
-            list += "<li class='person chatboxhead active' value='" + result._id + "' id='" + result._id + "' data-chat='" + result._id + "'" +
+            list += "<li class='person chatboxhead active' value='" + result[i]._id + "' id='" + result[i]._id + "' data-chat='" + result[i]._id + "'" +
                 "href='javascript:void(0)'" +
-                "onclick=\"javascript:chatWith1('" + result[i].name + "','" + result._id + "','deven.jpg','Online')\">" +
+                "onclick=\"javascript:chatWith1('" + result[i].name + "','" + result[i]._id + "','deven.jpg','Online')\">" +
 
                 "<a href='javascript:void(0)'>" +
                 "<span class='userimage profile-picture min-profile-picture'><img " +
@@ -427,13 +428,13 @@
         $("#display").html(list);
     }
 
-    function chatWith1(chatuser, toid, img, status) {
-        chatWith(chatuser, toid, img, status);
-        messageLoad();
+    function chatWith1(name_user2, id_user2, img_user2, status_user2) {
+        chatWith(name_user2, id_user2, img_user2, status_user2);
+        messageLoad(id_user2);
     }
-    function messageLoad() {
-        var message_content = '<div id="chatbox_Deven" class="chat chatboxcontent active-chat"' +
-            'data-chat="person_1" client="Deven">' +
+    function messageLoad(id_user2) {
+        var message_content = '<div id="chatbox_'+id_user2+'" class="chat chatboxcontent active-chat"' +
+            'data-chat="person_'+id_user2+'" client="'+id_user2+'">' +
             '<div class="col-xs-12 p-b-10">' +
             '<div class="chat-image  profile-picture max-profile-picture">' +
             '<img alt="Deven" src="storage/user_image/Deven.jpg"' +
