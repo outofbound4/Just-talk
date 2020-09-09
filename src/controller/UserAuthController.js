@@ -45,11 +45,11 @@ class UserAuthController {
                         });
                     }
                     // if every things ok
-                    console.log(result);
                     //setting session
                     req.session.mobile = result.mobile;
                     req.session.name = result.name;
                     req.session._id = result._id;
+                    // console.log(req.session);
                     //senddind data to client page
                     return res.json({
                         status: 200,
@@ -93,9 +93,10 @@ class UserAuthController {
                 if (Object.keys(result).length !== 0) { //checking if mobile number is registered
                     if (result[0].password === req.body.password) {
                         //setting session
-                        req.session.mobile = result.mobile;
-                        req.session.name = result.name;
-                        req.session._id = result._id;
+                        req.session.mobile = result[0].mobile;
+                        req.session.name = result[0].name;
+                        req.session._id = result[0]._id;
+                        // console.log(req.session);
 
                         //  returning data to user
                         return res.json({
