@@ -10,49 +10,50 @@ function scrollDown() {
     $(".scroll-down").css({ 'visibility': 'hidden' });
 }
 
-function chatWith(chatuser, toid, img, status) {
+function chatWith(name_user2, id_user2, img_user2, status_user2) {
     if ($("#pane-intro").css('visibility') == 'visible') {
         $("#pane-intro").css({ 'visibility': 'hidden' });
         $(".chat-right-aside").css({ 'visibility': 'visible' });
     }
-
-    createChatBox(chatuser, toid, img, status);
+    createChatBox(name_user2, id_user2, img_user2, status_user2);
     scrollDown();
-    // $('.right .top').attr("data-user", chatuser)
-    //     .attr("data-image", img);
-    $('.chat-header-title').text(chatuser);
+    $('.top2').attr("data-user", name_user2)
+        .attr("data-image", img_user2);
+    $("#id_user2").val(id_user2);
+    $('.chat-header-title').text(name_user2);
 
 }
 
-function createChatBox(chatboxtitle, toid, img, status, minimizeChatBox) {
+function createChatBox(name_user2, id_user2, img_user2, status_user2, minimizeChatBox) {
     var chatFormTpl =
-        '<div class="block-wchat" id="chatForm_' + chatboxtitle + '">' +
+        '<div class="block-wchat" id="chatForm_' + id_user2 + '">' +
         '<div id="typing_on"></div>' +
         '<button class="icon ti-face-smile font-24 btn-emoji" onclick="javascript:chatemoji()" href="javascript:void(0)" id="toggle-emoji"></button>' +
         '<div tabindex="-1" class="input-container">' +
         '<div tabindex="-1" class="input-emoji">' +
         '<div class="input-placeholder" style="visibility: visible;display:none;">Type a message</div>' +
-        '<textarea class="input chatboxtextarea" id="chatboxtextarea" name="chattxt" onkeydown="javascript:return checkChatBoxInputKey(event,this,\'' + chatboxtitle + '\',\'' + toid + '\',\'' + img + '\');" contenteditable spellcheck="true" style="resize:none;height:20px" placeholder="Type a message"></textarea>' +
+        '<textarea class="input chatboxtextarea" id="chatboxtextarea" name="chattxt" onkeydown="javascript:return checkChatBoxInputKey(event,this,\'' + name_user2 + '\',\'' + id_user2 + '\',\'' + img_user2 + '\');" contenteditable spellcheck="true" style="resize:none;height:20px" placeholder="Type a message"></textarea>' +
         '</div>' +
         '</div>' +
-        '<button onclick="javascript:return clickTosendMessage(\'' + chatboxtitle + '\',\'' + toid + '\',\'' + img + '\');" class="btn-icon icon-send fa fa-paper-plane-o font-24 send-container"></button>' +
+        '<button onclick="javascript:return clickTosendMessage(\''+name_user2+'\',\''+id_user2+'\',\''+img_user2+'\');" class="btn-icon icon-send fa fa-paper-plane-o font-24 send-container"></button>' +
         '</div>';
 
-    if ($("#chatbox_" + chatboxtitle).length > 0) {
+    if ($("#chatbox_" + id_user2).length > 0) {
         $("#chatFrom").html(chatFormTpl);
         $(".chatboxtextarea").focus();
         return;
     }
 
-    $(" <div />").attr("id", "chatbox_" + chatboxtitle)
+    $(" <div />").attr("id", "chatbox_" + id_user2)
         .addClass("chat chatboxcontent active-chat")
-        .attr("data-chat", "person_" + toid)
-        .attr("client", chatboxtitle)
+        .attr("data-chat", "person_" + id_user2)
+        .attr("client", id_user2)
         .html('<span class="hidecontent"></span>')
         .appendTo($("#resultchat"));
     if (minimizeChatBox != 1) {
         $("#chatFrom").html(chatFormTpl);
     }
+    $(".chatboxtextarea").focus();
 }
 
 function checkChatBoxInputKey(event, chatboxtextarea, chatboxtitle, toid, img, send) {
@@ -82,10 +83,10 @@ function checkChatBoxInputKey(event, chatboxtextarea, chatboxtitle, toid, img, s
             }
             message = $words.join(' ');
             message = emojione.shortnameToImage(message); // Set imotions
-            $("#chatbox_" + chatboxtitle).append('<div class="col-xs-12 p-b-10 odd">' +
-                '<div class="chat-image  profile-picture max-profile-picture">' +
-                '<img alt="' + username + '" src="storage/user_image/' + Ses_img + '">' +
-                '</div>' +
+            $("#chatbox_" + toid).append('<div class="col-xs-12 p-b-10 odd">' +
+                // '<div class="chat-image  profile-picture max-profile-picture">' +
+                // '<img alt="' + username + '" src="storage/user_image/' + Ses_img + '">' +
+                // '</div>' +
                 '<div class="chat-body">' +
                 '<div class="chat-text">' +
                 '<h4>' + username + '</h4>' +
@@ -121,7 +122,6 @@ function checkChatBoxInputKey(event, chatboxtextarea, chatboxtitle, toid, img, s
 }
 
 function clickTosendMessage(chatboxtitle, toid, img) {
-
     message = $(".chatboxtextarea").val();
 
     message = message.replace(/^\s+|\s+$/g, "");
@@ -147,7 +147,7 @@ function clickTosendMessage(chatboxtitle, toid, img) {
         message = $words.join(' ');
         message = emojione.shortnameToImage(message);  // Set imotions
 
-        $("#chatbox_" + chatboxtitle).append('<div class="col-xs-12 p-b-10 odd">' +
+        $("#chatbox_" + toid).append('<div class="col-xs-12 p-b-10 odd">' +
             '<div class="chat-image  profile-picture max-profile-picture">' +
             '<img alt="' + username + '" src="storage/user_image/' + Ses_img + '">' +
             '</div>' +
