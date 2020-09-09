@@ -13,6 +13,7 @@ const UserAuthController_obj = new UserAuthController(validationResult);
 var ChatboxControlle = require('../src/controller/ChatboxControlle');
 const ChatboxControlle_obj = new ChatboxControlle(validationResult);
 
+
 // View controller router
 router.get("/home", (req, res) => Viewcontroller_obj.home(req, res));
 router.get("/chatbox", (req, res) => Viewcontroller_obj.chatbox(req, res));
@@ -38,5 +39,14 @@ router.post("/login", [
     check('mobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
     check('password', 'password must not be empty').not().isEmpty(),
 ], (req, res) => UserAuthController_obj.login(req, res));
+
+//route for store message in FriendMessageController
+var FriendMessageController = require('../src/controller/FriendMessageController');
+const FriendMessageController_obj = new FriendMessageController(validationResult);
+router.post("/storeMessage", [
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
+    check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
+    check('message', 'message must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => FriendMessageController_obj.storeMessage(req, res));
 
 module.exports = router;
