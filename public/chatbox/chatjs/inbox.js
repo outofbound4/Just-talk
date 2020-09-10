@@ -1,5 +1,4 @@
-var username = "Bylancer";
-var Ses_img = "Bylancer.jpg";
+// var username = "Bylancer";
 var audioogg = new Audio('audio/chat.ogg');
 var audiomp3 = new Audio('audio/chat.mp3');
 
@@ -32,10 +31,10 @@ function createChatBox(name_user2, id_user2, img_user2, status_user2, minimizeCh
         '<div tabindex="-1" class="input-container">' +
         '<div tabindex="-1" class="input-emoji">' +
         '<div class="input-placeholder" style="visibility: visible;display:none;">Type a message</div>' +
-        '<textarea class="input chatboxtextarea" id="chatboxtextarea" name="chattxt" onkeydown="javascript:return checkChatBoxInputKey(event,this,\'' + name_user2 + '\',\'' + id_user2 + '\',\'' + img_user2 + '\');" contenteditable spellcheck="true" style="resize:none;height:20px" placeholder="Type a message"></textarea>' +
+        '<textarea class="input chatboxtextarea" id="chatboxtextarea" name="chattxt" onkeydown="javascript:return checkChatBoxInputKey(event,this,\'' + id_user2 + '\');" contenteditable spellcheck="true" style="resize:none;height:20px" placeholder="Type a message"></textarea>' +
         '</div>' +
         '</div>' +
-        '<button onclick="javascript:return clickTosendMessage(\''+name_user2+'\',\''+id_user2+'\',\''+img_user2+'\');" class="btn-icon icon-send fa fa-paper-plane-o font-24 send-container"></button>' +
+        '<button onclick="javascript:return clickTosendMessage(\'' + id_user2 + '\');" class="btn-icon icon-send fa fa-paper-plane-o font-24 send-container"></button>' +
         '</div>';
 
     if ($("#chatbox_" + id_user2).length > 0) {
@@ -56,8 +55,7 @@ function createChatBox(name_user2, id_user2, img_user2, status_user2, minimizeCh
     $(".chatboxtextarea").focus();
 }
 
-function checkChatBoxInputKey(event, chatboxtextarea, chatboxtitle, toid, img, send) {
-
+function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
     $(".input-placeholder").css({ 'visibility': 'hidden' });
 
     if ((event.keyCode == 13 && event.shiftKey == 0) || (send == 1)) {
@@ -83,15 +81,15 @@ function checkChatBoxInputKey(event, chatboxtextarea, chatboxtitle, toid, img, s
             }
             message = $words.join(' ');
             message = emojione.shortnameToImage(message); // Set imotions
-            $("#chatbox_" + toid).append('<div class="col-xs-12 p-b-10 odd">' +
+            $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
                 // '<div class="chat-image  profile-picture max-profile-picture">' +
                 // '<img alt="' + username + '" src="storage/user_image/' + Ses_img + '">' +
                 // '</div>' +
                 '<div class="chat-body">' +
                 '<div class="chat-text">' +
-                '<h4>' + username + '</h4>' +
+                // '<h4>' + username + '</h4>' +
                 '<p>' + message + '</p>' +
-                '<b>Just Now</b><span class="msg-status msg-' + chatboxtitle + '"><i class="fa fa-check"></i></span>' +
+                '<b>Just Now</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
                 '</div>' +
                 '</div>' +
                 '</div>');
@@ -100,6 +98,9 @@ function checkChatBoxInputKey(event, chatboxtextarea, chatboxtitle, toid, img, s
             $('.wchat-filler').css({ 'height': 0 + 'px' });
 
             scrollDown();
+            // this function is defined in Views/chatbox.ejs 
+            // this functions work is to save mesaage to the server
+            saveMessageToServer(message);
         }
 
         return false;
@@ -121,7 +122,7 @@ function checkChatBoxInputKey(event, chatboxtextarea, chatboxtitle, toid, img, s
 
 }
 
-function clickTosendMessage(chatboxtitle, toid, img) {
+function clickTosendMessage(id_user2) {
     message = $(".chatboxtextarea").val();
 
     message = message.replace(/^\s+|\s+$/g, "");
@@ -147,15 +148,15 @@ function clickTosendMessage(chatboxtitle, toid, img) {
         message = $words.join(' ');
         message = emojione.shortnameToImage(message);  // Set imotions
 
-        $("#chatbox_" + toid).append('<div class="col-xs-12 p-b-10 odd">' +
-            '<div class="chat-image  profile-picture max-profile-picture">' +
-            '<img alt="' + username + '" src="storage/user_image/' + Ses_img + '">' +
-            '</div>' +
+        $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
+            // '<div class="chat-image  profile-picture max-profile-picture">' +
+            // '<img alt="' + username + '" src="storage/user_image/' + Ses_img + '">' +
+            // '</div>' +
             '<div class="chat-body">' +
             '<div class="chat-text">' +
-            '<h4>' + username + '</h4>' +
+            // '<h4>' + username + '</h4>' +
             '<p>' + message + '</p>' +
-            '<b>Just Now</b><span class="msg-status msg-' + chatboxtitle + '"><i class="fa fa-check"></i></span>' +
+            '<b>Just Now</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
             '</div>' +
             '</div>' +
             '</div>');
@@ -163,6 +164,9 @@ function clickTosendMessage(chatboxtitle, toid, img) {
         $(".target-emoji").css({ 'display': 'none' });
         $('.wchat-filler').css({ 'height': 0 + 'px' });
         scrollDown();
+        // this function is defined in Views/chatbox.ejs 
+        // this functions work is to save mesaage to the server
+        saveMessageToServer(message);
     }
 
 
