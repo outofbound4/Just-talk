@@ -64,7 +64,7 @@
                                 <div class="intro-body">
                                     <div class="intro-image" style="opacity: 1; transform: scale(1);"></div>
                                     <div class="intro-text-container" style="opacity: 1; transform: translateY(0px);">
-                                        <h1 class="intro-title">Welcome to chat App</h1>
+                                        <h1 class="intro-title">Welcome to Just-talk</h1>
                                         <div class="intro-text">No Conversation sync. Please search users and
                                             start chat.
                                         </div>
@@ -111,8 +111,8 @@
                                         <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
                                             <div class="avatar-body userimage">
                                                 <a href="/ownprofile">
-                                                    <img src="" alt="Img"
-                                                        class="avatar-image is-loaded bg-theme" width="100%">
+                                                    <img src="" alt="Img" class="avatar-image is-loaded bg-theme"
+                                                        width="100%">
                                                 </a>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                                                 <h2 class="chat-title" dir="auto"><span
                                                         class="wchatellips personName"><%= session.name %></span></h2>
                                             </a>
-                                            <input type="hidden" id='id_user1' value='<%= session._id%>' >
+                                            <input type="hidden" id='id_user1' value='<%= session._id%>'>
                                         </div>
                                     </div>
                                     <div class="wchat-chat-controls">
@@ -166,7 +166,7 @@
 
                     <div tabindex="-1" id="main right" class="pane wchat-chat wchat-two chat-right-aside right"
                         style="visibility: hidden;">
-                        <input type="hidden" id='id_user2' value='' >
+                        <input type="hidden" id='id_user2' value=''>
                         <div class="wchat-chat-tile"></div>
                         <header class="wchat-header wchat-chat-header top2" data-user="">
                             <button class="icon m-r-5 hidden-sm hidden-md hidden-lg open-panel" href="#"><span
@@ -407,7 +407,7 @@
 
                 "<a href='javascript:void(0)'>" +
                 "<span class='userimage profile-picture min-profile-picture'><img " +
-                "src='storage/user_image/Deven.jpg' alt='Img'" +
+                "src='" + result[i].profile_pic + "' alt='Img'" +
                 "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
                 "<span>" +
                 "<span class='bname personName'>" + result[i].name + "</span>" +
@@ -433,41 +433,62 @@
         messageLoad(id_user2);
     }
     function messageLoad(id_user2) {
-        var message_content = '<div id="chatbox_'+id_user2+'" class="chat chatboxcontent active-chat"' +
-            'data-chat="person_'+id_user2+'" client="'+id_user2+'">' +
-            '<div class="col-xs-12 p-b-10">' +
-            '<div class="chat-image  profile-picture max-profile-picture">' +
-            '<img alt="Deven" src="storage/user_image/Deven.jpg"' +
-            'class="bg-theme">' +
-            '</div>' +
-            '<div class="chat-body">' +
-            '<div class="chat-text">' +
-            '<h4>Deven Patel</h4>' +
-            '<p><a url="storage/user_files/image-chat.jpg"' +
-            'onclick="trigq(this)"><img' +
-            'src="storage/user_files/image-chat.jpg"' +
-            'class="userfiles" ></a ></p >' +
-            '<b>23 days ago</b>' +
-            '</div >' +
-            '</div >' +
-            '</div >' +
-            '<div class="col-xs-12 p-b-10 odd">' +
-            '<div class="chat-image  profile-picture max-profile-picture">' +
-            '<img alt="Bylancer" src="storage/user_image/Bylancer.jpg">' +
-            '</div>' +
-            '<div class="chat-body">' +
-            '<div class="chat-text">' +
-            '<h4>Bylancer</h4>' +
-            '<p>Hi</p>' +
-            '<b>Just Now</b>' +
-            '<span class="msg-status msg-mega"><i' +
-            'class="fa fa-check"></i></span>' +
-            '</div >' +
-            '</div >' +
-            '</div >' +
-            '</div >';
-        // alert(message_content);
+        var id_user1 = $("#id_user1").val();
+        var id_user2 = $("#id_user2").val();
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1 + "&id_user2=" + id_user2;
+        ajax.processPOST("/fetchMessage", urlData, postmessageLoad);
+    }
+
+    function postmessageLoad(res) {
+        var id_user2 = $("#id_user2").val();
+        var message_content = '<div id="chatbox_' + id_user2 + '" class="chat chatboxcontent active-chat"' +
+                              'data-chat="person_' + id_user2 + '" client="' + id_user2 + '">';
+
+        for (var i = 0; i < res.result.length; i++) {
+            if (res.result[i].id_user1 == id_user2) {
+                message_content +=
+                    '<div class="col-xs-12 p-b-10">' +
+                    '<div class="chat-body">' +
+                    '<div class="chat-text">' +
+                    '<input type="hidden" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
+                    '<p>' + res.result[i].message + '</p >' +
+                    '<b>' + res.result[i].time + '</b>' +
+                    '</div >' +
+                    '</div >' +
+                    '</div >';
+            }
+            else {
+                message_content +=
+                    '<div class="col-xs-12 p-b-10 odd">' +
+                    '<div class="chat-body">' +
+                    '<div class="chat-text">' +
+                    '<input type="hidden" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
+                    '<p>' + res.result[i].message + '</p>' +
+                    '<b>' + res.result[i].time + '</b>' +
+                    '<span class="msg-status msg-mega"><i' +
+                    'class="fa fa-check"></i></span>' +
+                    '</div >' +
+                    '</div >' +
+                    '</div >';
+            }
+        }
+
+        message_content += '</div >';
         $("#resultchat").html(message_content);
+    }
+    // this function's work is to save mesaage to the server
+    // this function is called from public/chatbox/chatjs/inbox.js 
+    // in function clickTosendMessage() and function checkChatBoxInputKey()
+    function saveMessageToServer(message) {
+        var id_user1 = $("#id_user1").val();
+        var id_user2 = $("#id_user2").val();
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&message=" + message;
+        ajax.processPOST("/storeMessage", urlData, postsaveMessageToServer);
+    }
+    function postsaveMessageToServer(res) {
+        alert(res.message);
     }
 </script>
 
