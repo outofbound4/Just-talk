@@ -48,5 +48,10 @@ router.post("/storeMessage", [
     check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
     check('message', 'message must not be empty').not().isEmpty().trim().escape(),
 ], (req, res) => FriendMessageController_obj.storeMessage(req, res));
+// router for fetching messages
+router.post("/fetchMessage", [
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
+    check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => FriendMessageController_obj.fetchMessage(req, res));
 
 module.exports = router;
