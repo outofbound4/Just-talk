@@ -13,30 +13,56 @@ class ChatboxControlle {
 
 
     usersearch(req, res) {
-        if(req.body.mobile ==  "") {
+        // console.log(req.body);
+        let searchkey = req.body.searchkey;
+        if (searchkey == "") {
             return res.json({
                 status: 200,
                 message: 'datas',
                 result: [],
             });
         }
-        User.find({ mobile: { $regex: req.body.mobile }}, function (errors, result) {
-            if (errors) {
-                //sending errors to client page
+        // isNaN(searchkey) returns true if string is not number
+        // we are searching by name
+        if (isNaN(searchkey)) {
+            User.find({ name: { $regex: searchkey, $options: "i" } }, function (errors, result) {
+                if (errors) {
+                    //sending errors to client page
+                    return res.json({
+                        status: 500,
+                        message: 'data fetching error occurs',
+                        errors: errors,
+                    });
+                }
+                // if everything ok
+                // checking password for authenticity
                 return res.json({
-                    status: 500,
-                    message: 'data fetching error occurs',
-                    errors: errors,
+                    status: 200,
+                    message: 'datas',
+                    result: result,
                 });
-            }
-            // if everything ok
-            // checking password for authenticity
-            return res.json({
-                status: 200,
-                message: 'datas',
-                result: result,
             });
-        });
+        }
+        // we are searching by number
+        else {
+            User.find({ mobile: { $regex: searchkey } }, function (errors, result) {
+                if (errors) {
+                    //sending errors to client page
+                    return res.json({
+                        status: 500,
+                        message: 'data fetching error occurs',
+                        errors: errors,
+                    });
+                }
+                // if everything ok
+                // checking password for authenticity
+                return res.json({
+                    status: 200,
+                    message: 'datas',
+                    result: result,
+                });
+            });
+        }
     }
 }
 module.exports = ChatboxControlle;
