@@ -42,7 +42,7 @@ app.use(
     secret: config.SESSION_SECRET,
     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
     cookie: {
-      maxAge: config.SESSION_LIFETIME,
+      // maxAge: config.SESSION_LIFETIME,
       sameSite: true,
     }, // lifetime of cookie
     saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
@@ -75,10 +75,18 @@ app.get("/", (req, res) => res.render("userAuth"));
 const Router = require("./routes/Router");
 app.use("/", Router);
 
+var server;
 if (!module.parent) {
-  app.listen(config.PORT, function () {
+  server = app.listen(config.PORT, function () {
     console.log(`app is listening at http://localhost:${config.PORT}`);
   });
 }
+
+/**
+ * here establishing socket.io connection
+ */
+const SocketConnection = require("./socket/socket");
+var SocketConnection_obj = new SocketConnection(server);
+SocketConnection_obj.listenConnection();
 
 module.exports = app;
