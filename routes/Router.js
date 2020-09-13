@@ -39,6 +39,8 @@ router.post("/login", [
     check('mobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
     check('password', 'password must not be empty').not().isEmpty(),
 ], (req, res) => UserAuthController_obj.login(req, res));
+// rout for logout
+router.post("/logout", (req, res) => UserAuthController_obj.logout(req, res));
 
 //route for store message in FriendMessageController
 var FriendMessageController = require('../src/controller/FriendMessageController');
