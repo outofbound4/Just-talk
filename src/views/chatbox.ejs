@@ -133,7 +133,7 @@
                                                     href="#"><span class="font-19"><i
                                                             class="icon icon-options-vertical"></i></span></button>
                                                 <ul class="dropdown-menu dropdown-user animated flipInY">
-                                                    <li><a href="#"><i class="fa fa-power-off"></i> Logout</a>
+                                                    <li id="logout"><i class="fa fa-power-off"></i> Logout
                                                     </li>
                                                 </ul>
                                                 <!-- /.dropdown-user -->
@@ -148,7 +148,7 @@
                                 <div class="form-material">
                                     <form id="searchboxForm" action="">
                                         <input class="form-control p-lr-20 live-search-box search_bg" id="searchbox"
-                                            name="mobile" type="text" placeholder="Search By Mobile number">
+                                            name="searchkey" type="text" placeholder="Search By Name or mobile number">
                                     </form>
 
                                 </div>
@@ -371,7 +371,9 @@
     integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
     </script>
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-
+<!-- here we are doin client socket connection -->
+<script src="/socket.io/socket.io.js"></script>
+<!-- <script src="/socket/chat.js"></script> -->
 <script src="/ajax/ajax.js"></script>
 
 <!-- jQuery -->
@@ -390,14 +392,13 @@
 <!--ChatJs-->
 <script>
     $('#searchbox').keyup(function () {
-
         var ajax = new Ajax();
         var urlData = ajax.create_url_data("searchboxForm");
+        // send request to ChatboxController
         ajax.processPOST("/usersearch", urlData, postSearchFunction);
     });
 
     function postSearchFunction(res) {
-
         let list = "";
         let result = res.result;
         for (var i = 0; i < result.length; i++) {
@@ -424,8 +425,10 @@
         if (list == "") {
             $(".chat-right-aside").css({ 'visibility': 'hidden' });
             $("#pane-intro").css({ 'visibility': 'visible' });
+            $("#display").html("<p>No account found with this number or name</p>").css("color", "red");;
         }
-        $("#display").html(list);
+        else
+            $("#display").html(list);
     }
 
     function chatWith1(name_user2, id_user2, img_user2, status_user2) {
@@ -443,7 +446,7 @@
     function postmessageLoad(res) {
         var id_user2 = $("#id_user2").val();
         var message_content = '<div id="chatbox_' + id_user2 + '" class="chat chatboxcontent active-chat"' +
-                              'data-chat="person_' + id_user2 + '" client="' + id_user2 + '">';
+            'data-chat="person_' + id_user2 + '" client="' + id_user2 + '">';
 
         for (var i = 0; i < res.result.length; i++) {
             if (res.result[i].id_user1 == id_user2) {
@@ -451,7 +454,7 @@
                     '<div class="col-xs-12 p-b-10">' +
                     '<div class="chat-body">' +
                     '<div class="chat-text">' +
-                    '<input type="hidden" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
+                    '<input type="hidden" name="message_object_id" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
                     '<p>' + res.result[i].message + '</p >' +
                     '<b>' + res.result[i].time + '</b>' +
                     '</div >' +
@@ -463,7 +466,7 @@
                     '<div class="col-xs-12 p-b-10 odd">' +
                     '<div class="chat-body">' +
                     '<div class="chat-text">' +
-                    '<input type="hidden" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
+                    '<input type="hidden" name="message_object_id" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
                     '<p>' + res.result[i].message + '</p>' +
                     '<b>' + res.result[i].time + '</b>' +
                     '<span class="msg-status msg-mega"><i' +
@@ -480,15 +483,74 @@
     // this function's work is to save mesaage to the server
     // this function is called from public/chatbox/chatjs/inbox.js 
     // in function clickTosendMessage() and function checkChatBoxInputKey()
+
+    var socket = io.connect('http://localhost:3000');
+    // emit event
     function saveMessageToServer(message) {
         var id_user1 = $("#id_user1").val();
         var id_user2 = $("#id_user2").val();
-        var ajax = new Ajax();
-        var urlData = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&message=" + message;
-        ajax.processPOST("/storeMessage", urlData, postsaveMessageToServer);
+        socket.emit('chat', {
+            message: message,
+            id_user1: id_user1,
+            id_user2: id_user2
+        });
     }
-    function postsaveMessageToServer(res) {
-        alert(res.message);
+    // listenevent
+    socket.on('chat', function (data) {
+        var id_user2 = $("#id_user2").val();
+        var message_content;
+        if (data.id_user1 == id_user2) {
+            message_content =
+                '<div class="col-xs-12 p-b-10">' +
+                '<div class="chat-body">' +
+                '<div class="chat-text">' +
+                '<input type="hidden" name="message_object_id" id=\'\' value=\'\'>' +
+                '<p>' + data.message + '</p >' +
+                '<b>' + (new Date()).toISOString() + '</b>' +
+                '</div >' +
+                '</div >' +
+                '</div >';
+        }
+        else {
+            message_content =
+                '<div class="col-xs-12 p-b-10 odd">' +
+                '<div class="chat-body">' +
+                '<div class="chat-text">' +
+                '<input type="hidden" name="message_object_id" id=\'\' value=\'\'>' +
+                '<p>' + data.message + '</p>' +
+                '<b>' + (new Date()).toISOString() + '</b>' +
+                '<span class="msg-status msg-mega"><i' +
+                'class="fa fa-check"></i></span>' +
+                '</div >' +
+                '</div >' +
+                '</div >';
+        }
+        $("#resultchat").append(message_content);
+    });
+
+    function addTyping() {
+        socket.emit('typing', { });
+    }
+    socket.on('typing', function (data) {
+        $("#typing_on").html("<p id='display_typing_on'> typing...</p>");
+    });
+    function removeTyping() {
+        socket.emit('remove_typing', { });
+    }
+    socket.on('remove_typing', function (data) {
+        $("#display_typing_on").remove();
+    });
+    // sending logout request to server
+    $('#logout').on('click', function () {
+        var ajax = new Ajax();
+        var urlData = "";
+        ajax.processPOST("/logout", urlData, postLogoutFunction);
+    });
+    function postLogoutFunction(res) {
+        if (res.status == 200)
+            window.open("/userAuth", "_self");
+        else
+            alert("something went wrong on session destroyed");
     }
 </script>
 
