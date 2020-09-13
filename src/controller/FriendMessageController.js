@@ -92,7 +92,6 @@ class FriendMessageController {
                             message: 'Error in fetching data',
                         });
                     }
-                    console.log(result);
                     // if every things ok
                     //senddind data to client page
                     return res.json({
