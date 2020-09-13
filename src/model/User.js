@@ -14,7 +14,7 @@ var schema = new Schema({
     mobile: {
         type: String,
         require: true,
-        index: true,
+        // index: true,
         unique: true,
         sparse: true,
     },
