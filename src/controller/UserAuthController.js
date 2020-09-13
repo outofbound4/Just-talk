@@ -122,5 +122,15 @@ class UserAuthController {
             });
         }
     }
+
+    // logout function here we destoy the session
+    logout(req, res) {
+        //  returning data to user
+        if (req.session.destroy())
+            return res.json({
+                status: 200,
+                message: 'Logout successfull',
+            });
+    }
 }
 module.exports = UserAuthController;
