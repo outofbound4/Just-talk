@@ -13,7 +13,7 @@ const app = express();
 const debug = Debug("express:app"); // Module for Debug
 const logger = require("morgan"); // Module for Log
 const bodyParser = require("body-parser"); // Module for POST/GET datas
-// const cookieParser = require("cookie-parser"); // Module for cookie in Session
+const cookieParser = require("cookie-parser"); // Module for cookie in Session
 const session = require("express-session");
 const config = require('./config'); //it includes configuration file.
 
@@ -42,7 +42,7 @@ app.use(
     secret: config.SESSION_SECRET,
     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
     cookie: {
-      // maxAge: config.SESSION_LIFETIME,
+      maxAge: config.SESSION_LIFETIME,
       sameSite: true,
     }, // lifetime of cookie
     saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
@@ -51,10 +51,10 @@ app.use(
 /**
  * Store in local session all
  */
-// app.use((req, res, next) => {
-//   res.locals.session = req.session;
-//   next();
-// });
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
 
 /*********************************************************************************************************************************************
  * *************************************************************************
