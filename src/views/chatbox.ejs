@@ -489,17 +489,18 @@
     function saveMessageToServer(message) {
         var id_user1 = $("#id_user1").val();
         var id_user2 = $("#id_user2").val();
-        socket.emit('chat', {
+        socket.emit('sending_message', {
             message: message,
             id_user1: id_user1,
             id_user2: id_user2
         });
     }
     // listenevent
-    socket.on('chat', function (data) {
-        var id_user2 = $("#id_user2").val();
+    socket.on('receiving_message', function (data) {
+        // var id_user2 = $("#id_user2").val();
         var message_content;
-        if (data.id_user1 == id_user2) {
+        // alert(data);
+        // if (data.id_user1 == id_user2) {
             message_content =
                 '<div class="col-xs-12 p-b-10">' +
                 '<div class="chat-body">' +
@@ -510,36 +511,50 @@
                 '</div >' +
                 '</div >' +
                 '</div >';
-        }
-        else {
-            message_content =
-                '<div class="col-xs-12 p-b-10 odd">' +
-                '<div class="chat-body">' +
-                '<div class="chat-text">' +
-                '<input type="hidden" name="message_object_id" id=\'\' value=\'\'>' +
-                '<p>' + data.message + '</p>' +
-                '<b>' + (new Date()).toISOString() + '</b>' +
-                '<span class="msg-status msg-mega"><i' +
-                'class="fa fa-check"></i></span>' +
-                '</div >' +
-                '</div >' +
-                '</div >';
-        }
+        // }
+        // else {
+        //     message_content =
+        //         '<div class="col-xs-12 p-b-10 odd">' +
+        //         '<div class="chat-body">' +
+        //         '<div class="chat-text">' +
+        //         '<input type="hidden" name="message_object_id" id=\'\' value=\'\'>' +
+        //         '<p>' + data.message + '</p>' +
+        //         '<b>' + (new Date()).toISOString() + '</b>' +
+        //         '<span class="msg-status msg-mega"><i' +
+        //         'class="fa fa-check"></i></span>' +
+        //         '</div >' +
+        //         '</div >' +
+        //         '</div >';
+        // }
         $("#resultchat").append(message_content);
     });
 
     function addTyping() {
-        socket.emit('typing', { });
+        var id_user2 = $("#id_user2").val();
+        socket.emit('typing_on', {
+            id_user2: id_user2
+        });
     }
-    socket.on('typing', function (data) {
+    socket.on('typing_on', function (data) {
         $("#typing_on").html("<p id='display_typing_on'> typing...</p>");
     });
     function removeTyping() {
-        socket.emit('remove_typing', { });
+        var id_user2 = $("#id_user2").val();
+        socket.emit('typing_off', {
+            id_user2: id_user2
+        });
     }
-    socket.on('remove_typing', function (data) {
+    socket.on('typing_off', function (data) {
         $("#display_typing_on").remove();
     });
+    // Fired upon disconnection.
+    // socket.on('disconnect', (reason) => {
+    // if (reason === 'io server disconnect') {
+    //     // the disconnection was initiated by the server, you need to reconnect manually
+    //     socket.connect();
+    // }
+    // else the socket will automatically try to reconnect
+    // });
     // sending logout request to server
     $('#logout').on('click', function () {
         var ajax = new Ajax();
@@ -552,6 +567,17 @@
         else
             alert("something went wrong on session destroyed");
     }
+
+    socket.on('new user', function (data) {
+        // alert(data);
+    });
+    var id_user1 = $("#id_user1").val();
+    socket.emit('new user', id_user1);
+    // $(document).ready(function () {
+    //     // executes when HTML-Document is loaded and DOM is ready
+    //     var id_user1 = $("#id_user1").val();
+    //     socket.emit('new user', id_user1);
+    // });
 </script>
 
 </html>
