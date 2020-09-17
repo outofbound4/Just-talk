@@ -58,6 +58,8 @@ function createChatBox(name_user2, id_user2, img_user2, status_user2, minimizeCh
 function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
     $(".input-placeholder").css({ 'visibility': 'hidden' });
     addTyping();
+    if (event.keyCode == 8)
+        removeTyping();
 
     if ((event.keyCode == 13 && event.shiftKey == 0) || (send == 1)) {
         message = $(chatboxtextarea).val();
@@ -83,14 +85,15 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
             message = $words.join(' ');
             message = emojione.shortnameToImage(message); // Set imotions
             // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
-            //     '<div class="chat-body">' +
-            //     '<div class="chat-text">' +
-            //     '<input type="hidden" name="message_object_id" id="" value="">' +
-            //     '<p>' + message + '</p>' +
-            //     '<b>' + Date.now() + '</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
-            //     '</div>' +
-            //     '</div>' +
-            //     '</div>');
+            $("#resultchat").append('<div class="col-xs-12 p-b-10 odd">' +
+                '<div class="chat-body">' +
+                '<div class="chat-text">' +
+                '<input type="hidden" name="message_object_id" id="" value="">' +
+                '<p>' + message + '</p>' +
+                '<b>' + Date.now() + '</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
+                '</div>' +
+                '</div>' +
+                '</div>');
 
             $(".target-emoji").css({ 'display': 'none' });
             $('.wchat-filler').css({ 'height': 0 + 'px' });
@@ -146,21 +149,22 @@ function clickTosendMessage(id_user2) {
         }
         message = $words.join(' ');
         message = emojione.shortnameToImage(message);  // Set imotions
-
+        
         // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
-        //     '<div class="chat-body">' +
-        //     '<div class="chat-text">' +
-        //     '<input type="hidden" name="message_object_id" id="" value="">' +
-        //     '<p>' + message + '</p>' +
-        //     '<b>' + Date.now() + '</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
-        //     '</div>' +
-        //     '</div>' +
-        //     '</div>');
+        $("#resultchat").append('<div class="col-xs-12 p-b-10 odd">' +
+            '<div class="chat-body">' +
+            '<div class="chat-text">' +
+            '<input type="hidden" name="message_object_id" id="" value="">' +
+            '<p>' + message + '</p>' +
+            '<b>' + Date.now() + '</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
 
         $(".target-emoji").css({ 'display': 'none' });
         $('.wchat-filler').css({ 'height': 0 + 'px' });
         scrollDown();
-        // this function is defined in Views/chatbox.ejs 
+        // this function is defined in Views/chatbox.ejs
         // this functions work is to save mesaage to the server
         saveMessageToServer(message);
         removeTyping();
