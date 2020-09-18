@@ -31,6 +31,13 @@ var schema = new Schema({
         type: String,
         required: true,
     },
+
+    recent_user: [{
+        userid: {
+            type: String,
+        },
+    }],
+
     created_at: {
         type: Date,
         default: Date.now,
