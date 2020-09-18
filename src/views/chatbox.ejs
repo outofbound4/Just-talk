@@ -391,13 +391,14 @@
 <script type="text/javascript" src="/chatbox/chatjs/custom.js"></script>
 <!--ChatJs-->
 <script>
+    // this function is called on keypress on search box in chat room
     $('#searchbox').keyup(function () {
         var ajax = new Ajax();
         var urlData = ajax.create_url_data("searchboxForm");
         // send request to ChatboxController
         ajax.processPOST("/usersearch", urlData, postSearchFunction);
     });
-
+    // this makes sidebar of user with searchkey data
     function postSearchFunction(res) {
         let list = "";
         let result = res.result;
@@ -430,11 +431,12 @@
         else
             $("#display").html(list);
     }
-
+    // after clicking on user it creates the chat room of the user 
     function chatWith1(name_user2, id_user2, img_user2, status_user2) {
         chatWith(name_user2, id_user2, img_user2, status_user2);
         messageLoad(id_user2);
     }
+    // it loads the chats of the user
     function messageLoad(id_user2) {
         var id_user1 = $("#id_user1").val();
         var id_user2 = $("#id_user2").val();
@@ -442,7 +444,6 @@
         var urlData = "id_user1=" + id_user1 + "&id_user2=" + id_user2;
         ajax.processPOST("/fetchMessage", urlData, postmessageLoad);
     }
-
     function postmessageLoad(res) {
         var id_user2 = $("#id_user2").val();
         var message_content = '<div id="chatbox_' + id_user2 + '" class="chat chatboxcontent active-chat"' +
@@ -476,59 +477,60 @@
                     '</div >';
             }
         }
-
         message_content += '</div >';
         $("#resultchat").html(message_content);
+        // this method is defined in asset/inbox.js
+        scrollDown();
     }
+    // save message to server
+    function saveMessageToServer(message) {
+        var id_user1 = $("#id_user1").val();
+        var id_user2 = $("#id_user2").val();
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&message=" + message;
+        // it storesa the data to FriendMessageController.js@storeMessage()
+        ajax.processPOST("/storeMessage", urlData, postsaveMessageToServer);
+    }
+
     // this function's work is to save mesaage to the server
     // this function is called from public/chatbox/chatjs/inbox.js 
     // in function clickTosendMessage() and function checkChatBoxInputKey()
 
     var socket = io.connect('http://localhost:3000');
-    // emit event
-    function saveMessageToServer(message) {
+
+    function postsaveMessageToServer(res) {
+        // alert(res.result._id);
         var id_user1 = $("#id_user1").val();
         var id_user2 = $("#id_user2").val();
+        $("#" + res.result._id).val(res.result._id);
+        // emit event
         socket.emit('sending_message', {
+            _id: res.result._id,
             message: message,
             id_user1: id_user1,
             id_user2: id_user2
         });
     }
+
     // listenevent
     socket.on('receiving_message', function (data) {
-        // var id_user2 = $("#id_user2").val();
-        var message_content;
-        // alert(data);
-        // if (data.id_user1 == id_user2) {
-            message_content =
-                '<div class="col-xs-12 p-b-10">' +
-                '<div class="chat-body">' +
-                '<div class="chat-text">' +
-                '<input type="hidden" name="message_object_id" id=\'\' value=\'\'>' +
-                '<p>' + data.message + '</p >' +
-                '<b>' + (new Date()).toISOString() + '</b>' +
-                '</div >' +
-                '</div >' +
-                '</div >';
-        // }
-        // else {
-        //     message_content =
-        //         '<div class="col-xs-12 p-b-10 odd">' +
-        //         '<div class="chat-body">' +
-        //         '<div class="chat-text">' +
-        //         '<input type="hidden" name="message_object_id" id=\'\' value=\'\'>' +
-        //         '<p>' + data.message + '</p>' +
-        //         '<b>' + (new Date()).toISOString() + '</b>' +
-        //         '<span class="msg-status msg-mega"><i' +
-        //         'class="fa fa-check"></i></span>' +
-        //         '</div >' +
-        //         '</div >' +
-        //         '</div >';
-        // }
+        var message_content =
+            '<div class="col-xs-12 p-b-10">' +
+            '<div class="chat-body">' +
+            '<div class="chat-text">' +
+            '<input type="hidden" name="message_object_id" id=\'' + data._id + '\' value=\'' + data._id + '\'>' +
+            '<p>' + data.message + '</p >' +
+            '<b>' + (new Date()).toISOString() + '</b>' +
+            '</div >' +
+            '</div >' +
+            '</div >';
         $("#resultchat").append(message_content);
+        // this method is defined in asset/inbox.js
+        scrollDown();
     });
 
+    // it shows that user is typing to another user
+    //  when key pressed in text box
     function addTyping() {
         var id_user2 = $("#id_user2").val();
         socket.emit('typing_on', {
@@ -538,6 +540,8 @@
     socket.on('typing_on', function (data) {
         $("#typing_on").html("<p id='display_typing_on'> typing...</p>");
     });
+    // it removes the user typing status on user chat
+    // when user press back key
     function removeTyping() {
         var id_user2 = $("#id_user2").val();
         socket.emit('typing_off', {
@@ -547,6 +551,8 @@
     socket.on('typing_off', function (data) {
         $("#display_typing_on").remove();
     });
+
+
     // Fired upon disconnection.
     // socket.on('disconnect', (reason) => {
     // if (reason === 'io server disconnect') {
@@ -555,12 +561,15 @@
     // }
     // else the socket will automatically try to reconnect
     // });
+
+
     // sending logout request to server
     $('#logout').on('click', function () {
         var ajax = new Ajax();
         var urlData = "";
         ajax.processPOST("/logout", urlData, postLogoutFunction);
     });
+    // after successful logout open the login page
     function postLogoutFunction(res) {
         if (res.status == 200)
             window.open("/userAuth", "_self");
@@ -571,13 +580,17 @@
     socket.on('new user', function (data) {
         // alert(data);
     });
+    // here we are register with socket
     var id_user1 = $("#id_user1").val();
     socket.emit('new user', id_user1);
-    // $(document).ready(function () {
-    //     // executes when HTML-Document is loaded and DOM is ready
-    //     var id_user1 = $("#id_user1").val();
-    //     socket.emit('new user', id_user1);
-    // });
+
+    // loding sidebar recentently messaged users 
+    $(document).ready(function () {
+        // var ajax = new Ajax();
+        // var urlData = ajax.create_url_data("");
+        // // send request to ChatboxController
+        // ajax.processPOST("", urlData, postSearchFunction);
+    });
 </script>
 
 </html>
