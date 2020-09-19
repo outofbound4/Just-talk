@@ -32,11 +32,7 @@ var schema = new Schema({
         required: true,
     },
 
-    recent_user: [{
-        userid: {
-            type: String,
-        },
-    }],
+    recent_user: [],
 
     created_at: {
         type: Date,
