@@ -1,6 +1,7 @@
 //init
 var validator = require("email-validator");
 var FriendMessage = require('../model/FriendMessage');
+var User = require('../model/User');
 
 class FriendMessageController {
     /**
@@ -29,6 +30,34 @@ class FriendMessageController {
          * block of code will run 
          */
         else {
+            // here checking if  user2 is present in user1's document or not
+            User.find({ '_id': req.body.id_user1, 'recent_user': { 'userid': req.body.id_user2 } }, function (errors, result) {
+                // if every things ok
+                if (Object.keys(result).length == 0) {
+                    // userid is not present then add userid to user.recent_user document
+                    User.findOne({ '_id': req.body.id_user1 }, function (errors, result) {
+                        result.recent_user.push({ 'userid': req.body.id_user2 });
+                        result.save().then(function (result) {
+                            console.log(result);
+                        });
+                    });
+                }
+            });
+            // here checking if  user1 is present in user2's document or not
+            User.find({ '_id': req.body.id_user2, 'recent_user': { 'userid': req.body.id_user1 } }, function (errors, result) {
+                // if every things ok
+                if (Object.keys(result).length == 0) {
+                    // userid is not present then add userid to user.recent_user document
+                    User.findOne({ '_id': req.body.id_user2 }, function (errors, result) {
+                        result.recent_user.push({ 'userid': req.body.id_user1 });
+                        result.save().then(function (result) {
+                            console.log(result);
+                        });
+                    });
+                }
+            });
+
+            // here storing message to FriendMessage document
             FriendMessage.create({
                 id_user1: req.body.id_user1,
                 id_user2: req.body.id_user2,
@@ -44,6 +73,7 @@ class FriendMessageController {
                             message: 'Error in storing data',
                         });
                     }
+                    // console.log(result);
                     // if every things ok
                     //senddind data to client page
                     return res.json({
@@ -86,7 +116,7 @@ class FriendMessageController {
                 function (errors, result) {
                     // iff error occurs
                     if (errors) {
-                        //sending errors to client page
+                        //sending errors to client pag
                         return res.json({
                             status: 11000,
                             message: 'Error in fetching data',
