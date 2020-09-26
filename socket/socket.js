@@ -2,6 +2,7 @@
 var Socket = require("socket.io");
 var io;
 var activeUsers = [];
+let clients = 0;
 class SocketConnection {
 
     // constructor 
@@ -31,9 +32,29 @@ class SocketConnection {
                 io.to(activeUsers[data]).emit("new user", data);
             });
 
-            Socket.on("disconnect", () => {
-
+            Socket.on('Offer', function (data) {
+                io.broadcast.emit("BackOffer", offer);
             });
+
+            Socket.on('Answer', function (data) {
+                io.broadcast.emit("BackAnswer", data);
+            });
+
+            Socket.on('Disconnect', function (data) {
+                io.broadcast.emit("Disconnect");
+            });
+
+            Socket.on("Initiate", function (data) {
+                console.log("in Initiate socket : " + data);
+                // io.to(activeUsers[data.id_user2]).emit('CreatePeer');
+                // io.to(activeUsers[data.id_user2]).emit('SessionActive');
+            });
+
+            // Socket.on("disconnect", () => {
+
+            // });
+
+
         });
     }
 }
