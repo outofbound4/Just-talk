@@ -196,7 +196,8 @@
                                         <i class="fa fa-phone font-24" aria-hidden="true"></i>
                                     </div>
                                     <div class="menu-item active pull-right">
-                                        <i class="fa fa-video-camera font-24" aria-hidden="true"></i>
+                                        <a href="javascript:videoCall()"><i class="fa fa-video-camera font-24"
+                                                aria-hidden="true"></i></a>
                                     </div>
 
                                     <div class="menu-item active dropdown pull-right">
@@ -423,10 +424,17 @@
                 "</a >" +
                 "</li >";
         }
+        if ($("#searchbox").val() == "") {
+            // this function called when searchBox becomes empty
+            // and loads the sidebar recent users
+            sidebarRecentUser();
+        }
+
         if (list == "") {
             $(".chat-right-aside").css({ 'visibility': 'hidden' });
             $("#pane-intro").css({ 'visibility': 'visible' });
-            $("#display").html("<p>No account found with this number or name</p>").css("color", "red");;
+            $("#display").html("<p>No account found with this number or name</p>").css("color", "red");
+
         }
         else
             $("#display").html(list);
@@ -497,7 +505,25 @@
     // in function clickTosendMessage() and function checkChatBoxInputKey()
 
     var socket = io.connect('http://localhost:3000');
-
+    // it will redirect to video call page
+    function videoCall() {
+        var id_user1 = $("#id_user1").val();
+        var id_user2 = $("#id_user2").val();
+        // it opens videochat window
+        let url = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&page=0";
+        window.open("/inVideoCall?" + url);
+        // send request to user through socket to join video call
+        socket.emit('connection to user', {
+            id_user1: id_user1,
+            id_user2: id_user2,
+        });
+    }
+    // opens video chat window for incomming video chat
+    socket.on("incomming video call", function (data) {
+        // it opens videochat window
+        let url = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&page=1";
+        window.open("/inVideoCall?" + url);
+    });
     function postsaveMessageToServer(res) {
         // alert(res.result._id);
         var id_user1 = $("#id_user1").val();
@@ -586,11 +612,47 @@
 
     // loding sidebar recentently messaged users 
     $(document).ready(function () {
-        // var ajax = new Ajax();
-        // var urlData = ajax.create_url_data("");
-        // // send request to ChatboxController
-        // ajax.processPOST("", urlData, postSearchFunction);
+        sidebarRecentUser();
     });
+
+    function sidebarRecentUser() {
+        var id_user1 = $("#id_user1").val();
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1;
+        // send request to SidebarRecentUser controller
+        ajax.processPOST("/sidebarRecentUser", urlData, postFunction);
+    }
+    // here getting data and making sidebar user's list
+    function postFunction(res) {
+        let list = "";
+        let result = res.result;
+        for (var i = 0; i < result.length; i++) {
+            list += "<li class='person chatboxhead active' value='" + result[i]._id + "' id='" + result[i]._id + "' data-chat='" + result[i]._id + "'" +
+                "href='javascript:void(0)'" +
+                "onclick=\"javascript:chatWith1('" + result[i].name + "','" + result[i]._id + "','deven.jpg','Online')\">" +
+
+                "<a href='javascript:void(0)'>" +
+                "<span class='userimage profile-picture min-profile-picture'><img " +
+                "src='" + result[i].profile_pic + "' alt='Img'" +
+                "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
+                "<span>" +
+                "<span class='bname personName'>" + result[i].name + "</span>" +
+                "<span class='personStatus'><span class='time Online'><i " +
+                "class='fa fa-circle'" +
+                "aria-hidden='true'></i></span></span> " +
+                "<span class='count'><span " +
+                "class='icon-meta unread-count'>2</span></span><br>" +
+                "<small class='preview'><span class='Online'>Online</span></small>" +
+                "</span>" +
+                "</a >" +
+                "</li >";
+        }
+        if (list == "") {
+            $("#display").html("<p>plz. search user and start conversation.</p>").css("color", "red");;
+        }
+        else
+            $("#display").html(list);
+    }
 </script>
 
 </html>
