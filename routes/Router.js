@@ -22,6 +22,8 @@ router.get("/ownprofile", (req, res) => Viewcontroller_obj.ownprofile(req, res))
 router.get("/otherprofile", (req, res) => Viewcontroller_obj.otherprofile(req, res));
 router.get("/userAuth", (req, res) => Viewcontroller_obj.userAuth(req, res));
 router.get("/editprofile", (req, res) => Viewcontroller_obj.editprofile(req, res));
+router.get("/inVideoCall", (req, res) => Viewcontroller_obj.inVideoCall(req, res));
+
 
 // ChatboxControlle router
 router.post("/usersearch", (req, res) => ChatboxControlle_obj.usersearch(req, res));
@@ -55,5 +57,13 @@ router.post("/fetchMessage", [
     check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
     check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
 ], (req, res) => FriendMessageController_obj.fetchMessage(req, res));
+
+//route for fetching sidebar data in SidebarRecentUser
+var SidebarRecentUser = require('../src/controller/SidebarRecentUser');
+const SidebarRecentUser_obj = new SidebarRecentUser(validationResult);
+router.post("/sidebarRecentUser", [
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => SidebarRecentUser_obj.sidebarRecentUser(req, res));
+
 
 module.exports = router;
