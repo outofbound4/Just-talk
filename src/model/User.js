@@ -14,7 +14,6 @@ var schema = new Schema({
     mobile: {
         type: String,
         require: true,
-        // index: true,
         unique: true,
         sparse: true,
     },
@@ -32,7 +31,7 @@ var schema = new Schema({
         required: true,
     },
 
-    recent_user: [],
+    recent_user: [{ userid: Schema.Types.ObjectId }],
 
     created_at: {
         type: Date,
