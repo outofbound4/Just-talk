@@ -31,11 +31,12 @@ class FriendMessageController {
          */
         else {
             // here checking if  user2 is present in user1's document or not
-            User.find({ '_id': req.body.id_user1, 'recent_user': { 'userid': req.body.id_user2 } }, function (errors, result) {
+            User.find({ '_id': req.body.id_user1, 'recent_user.userid': req.body.id_user2 }, function (errors, result) {
                 // if every things ok
                 if (Object.keys(result).length == 0) {
                     // userid is not present then add userid to user.recent_user document
                     User.findOne({ '_id': req.body.id_user1 }, function (errors, result) {
+                        // it will insert the data into user.result.recent_user
                         result.recent_user.push({ 'userid': req.body.id_user2 });
                         result.save().then(function (result) {
                             console.log(result);
@@ -44,11 +45,12 @@ class FriendMessageController {
                 }
             });
             // here checking if  user1 is present in user2's document or not
-            User.find({ '_id': req.body.id_user2, 'recent_user': { 'userid': req.body.id_user1 } }, function (errors, result) {
+            User.find({ '_id': req.body.id_user2, 'recent_user.userid': req.body.id_user1 }, function (errors, result) {
                 // if every things ok
                 if (Object.keys(result).length == 0) {
                     // userid is not present then add userid to user.recent_user document
                     User.findOne({ '_id': req.body.id_user2 }, function (errors, result) {
+                        // it will insert the data into user.result.recent_user
                         result.recent_user.push({ 'userid': req.body.id_user1 });
                         result.save().then(function (result) {
                             console.log(result);
