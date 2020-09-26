@@ -11,14 +11,14 @@ class ViewController {
     return res.render("home");
   }
   userAuth(req, res) {
-      return res.render("userAuth");
+    return res.render("userAuth");
   }
   chatbox(req, res) {
     // checking if session is set
     // console.log(req.session);
-    if(req.session._id) {
+    if (req.session._id) {
       // if session is set then go to next page
-      return res.render("chatbox", {session: req.session});
+      return res.render("chatbox", { session: req.session });
     }
     else {
       // if session not set the goto to login and register page
@@ -39,6 +39,9 @@ class ViewController {
     return res.render("editprofile");
   }
   
+  inVideoCall(req, res) {
+    return res.render("inVideoCall", { data: req.query });
+  }
 }
 
 module.exports = ViewController;
