@@ -23,9 +23,9 @@ class ChatboxControlle {
             });
         }
         // isNaN(searchkey) returns true if string is not number
-        // we are searching by name
+        // we are here searching by name
         if (isNaN(searchkey)) {
-            User.find({ name: { $regex: searchkey, $options: "i" } }, function (errors, result) {
+            User.find({ name: { $regex: searchkey, $options: "i" } }, '_id name profile_pic', function (errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
@@ -43,9 +43,9 @@ class ChatboxControlle {
                 });
             });
         }
-        // we are searching by number
+        // we are here searching by number
         else {
-            User.find({ mobile: { $regex: searchkey } }, function (errors, result) {
+            User.find({ mobile: { $regex: searchkey } }, '_id name profile_pic', function (errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
