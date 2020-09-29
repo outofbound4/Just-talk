@@ -2,7 +2,6 @@
 var Socket = require("socket.io");
 var io;
 var activeUsers = [];
-let clients = 0;
 class SocketConnection {
 
     // constructor 
@@ -13,6 +12,12 @@ class SocketConnection {
     listenConnection() {
         io.on('connection', function (Socket) {
             console.log("made Socket connection id : " + Socket.id);
+
+            // here adding user to socket
+            Socket.on('Add user to socket', function (userId) {
+                activeUsers[userId] = Socket.id;
+                io.to(activeUsers[userId]).emit("Added", userId);
+            });
 
             // here sending message to a particular person
             Socket.on('sending_message', function (data) {
@@ -26,28 +31,35 @@ class SocketConnection {
             Socket.on('typing_off', function (data) {
                 Socket.to(activeUsers[data.id_user2]).emit('typing_off', data);
             });
-            // called after user login or on chat page load
-            Socket.on("new user", function (data) {
-                activeUsers[data] = Socket.id;
-                io.to(activeUsers[data]).emit("new user", data);
+
+            // it will call when user click on video call button in chatbox.ejs
+            Socket.on('video call user1 initiate', function (data) {
+                // it will open video chat window to another user
+                Socket.to(activeUsers[data.id_user2]).emit('open video call window user2', {
+                    id_user1: data.id_user2,
+                    id_user2: data.id_user1,
+                });
             });
 
-            Socket.on('Offer', function (data) {
-                io.broadcast.emit("BackOffer", offer);
+            // called within the called page when user accept video call
+            Socket.on('accept', function (data) { //ok
+                // emits to the callie video page
+                io.to(activeUsers["vid" + data.id_user2]).emit("FrontAnswer", data);
             });
-
+            // called within the collie video page
             Socket.on('Answer', function (data) {
-                io.broadcast.emit("BackAnswer", data);
+                // emits to the called video page
+                io.to(activeUsers["vid" + data.id_user1]).emit("SignalAnswer", data);
             });
 
             Socket.on('Disconnect', function (data) {
-                io.broadcast.emit("Disconnect");
+                io.to(activeUsers[data.id_user2]).emit("Disconnect");
             });
-
-            Socket.on("Initiate", function (data) {
-                console.log("in Initiate socket : " + data);
-                // io.to(activeUsers[data.id_user2]).emit('CreatePeer');
-                // io.to(activeUsers[data.id_user2]).emit('SessionActive');
+            // called from the both collie and called video page
+            Socket.on("Video call window Initiate", function (data) {
+                activeUsers["vid" + data.id_user1] = Socket.id;
+                io.to(activeUsers["vid" + data.id_user1]).emit('CreatePeer');
+                io.to(activeUsers["vid" + data.id_user1]).emit('SessionActive');
             });
 
             // Socket.on("disconnect", () => {
