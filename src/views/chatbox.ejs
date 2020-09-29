@@ -513,15 +513,15 @@
         let url = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&page=0";
         window.open("/inVideoCall?" + url);
         // send request to user through socket to join video call
-        socket.emit('connection to user', {
+        socket.emit('video call user1 initiate', {
             id_user1: id_user1,
             id_user2: id_user2,
         });
     }
     // opens video chat window for incomming video chat
-    socket.on("incomming video call", function (data) {
+    socket.on("open video call window user2", function (data) {
         // it opens videochat window
-        let url = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&page=1";
+        let url = "id_user1=" + data.id_user1 + "&id_user2=" + data.id_user2 + "&page=1";
         window.open("/inVideoCall?" + url);
     });
     function postsaveMessageToServer(res) {
@@ -603,12 +603,12 @@
             alert("something went wrong on session destroyed");
     }
 
-    socket.on('new user', function (data) {
+    socket.on('Added', function (data) {
         // alert(data);
     });
     // here we are register with socket
     var id_user1 = $("#id_user1").val();
-    socket.emit('new user', id_user1);
+    socket.emit('Add user to socket', id_user1);
 
     // loding sidebar recentently messaged users 
     $(document).ready(function () {
