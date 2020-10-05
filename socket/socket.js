@@ -44,28 +44,47 @@ class SocketConnection {
             // called within the called page when user accept video call
             Socket.on('accept', function (data) { //ok
                 // emits to the callie video page
-                io.to(activeUsers["vid" + data.id_user2]).emit("FrontAnswer", data);
+                console.log("in accept, sarita");
+                io.to(activeUsers["vid" + data.id_user1]).emit("BackAccept", {
+                    id_user2: data.id_user2,
+                });
             });
             // called within the collie video page
             Socket.on('Answer', function (data) {
+                console.log("in ans from sarita, to gaurav(iduser2) :" + data.id_user2)
                 // emits to the called video page
-                io.to(activeUsers["vid" + data.id_user1]).emit("SignalAnswer", data);
+                io.to(activeUsers["vid" + data.id_user2]).emit("BackAnswer", {
+                    data: data.data,
+                });
             });
 
-            Socket.on('Disconnect', function (data) {
-                io.to(activeUsers[data.id_user2]).emit("Disconnect");
+            Socket.on('Offer', function (data1) {
+                console.log("in offer from gaurav,  to sarita(iduser2) : " + data1.id_user2);
+                // emits to the called video page
+                io.to(activeUsers["vid" + data1.id_user2]).emit("BackOffer", {
+                    data: data1.data,
+                });
             });
+
             // called from the both collie and called video page
-            Socket.on("Video call window Initiate", function (data) {
-                activeUsers["vid" + data.id_user1] = Socket.id;
-                io.to(activeUsers["vid" + data.id_user1]).emit('CreatePeer');
-                io.to(activeUsers["vid" + data.id_user1]).emit('SessionActive');
+            Socket.on("Initiator", function (data) {
+                console.log("in initiator, gaurav, socketId : " + activeUsers["vid" + data.id_user1]);
+
+                io.to(activeUsers["vid" + data.id_user1]).emit("CreatePeer", {
+                    id_user2: data.id_user2,
+                });
             });
 
+            Socket.on('Socket connection video call', function (data) {
+                activeUsers["vid" + data.id_user1] = Socket.id;
+                console.log("video connection initiate : " + activeUsers["vid" + data.id_user1])
+            });
             // Socket.on("disconnect", () => {
 
             // });
-
+            Socket.on('Disconnect', function (data) {
+                // io.to(activeUsers[data.id_user2]).emit("Disconnect");
+            });
 
         });
     }
