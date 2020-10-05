@@ -330,7 +330,7 @@ https://templatemo.com/tm-552-video-catalog
             justify-content: center;
             background-color: rgba(0, 0, 0, 0.4);
             cursor: pointer;
-            transition: all 0.3s ease:;
+            transition: all 0.3s ease;
         }
 
         .tm-overlay-icon {
@@ -756,6 +756,7 @@ https://templatemo.com/tm-552-video-catalog
         <input type="hidden" id="id_user2" , name="id_user2" value="<%= data.id_user2%>">
         <!-- it will show the page is incomming or outgoing -->
         <input type="hidden" id="page" , name="page" value="<%= data.page%>">
+
         <div class="position-relative">
             <div class="position-absolute tm-site-header">
                 <div class="container-fluid position-relative">
@@ -790,17 +791,34 @@ https://templatemo.com/tm-552-video-catalog
     <script src="/assets/jquery/jquery-3.5.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.7.2/simplepeer.min.js"></script> -->
+    <script src="./WebRTC/simplepeer.min.js"></script>
+
+
     <script>
         const socket = io.connect('http://localhost:3000');
-
+    </script>
+    <script src="./WebRTC/main.js"></script>
+    <script>
+        alert("main.js loaded")
         // id of calling user
         var id_user1 = document.getElementById("id_user1").value;
         // id of called user
         var id_user2 = document.getElementById("id_user2").value;
+        // it will give the page number
+        // here page = 0 means callie window and page = 1 means called window
+        var page = document.getElementById("page").value;
         // this stablish new connection
-        socket.emit("Video call window Initiate", {
+        // if (page == '0') {
+        //     // alert("in if  : " + page + ",  id_user1" + id_user1 + ",   id_user2" + id_user2);
+        //     socket.emit("Video call window Initiate", {
+        //         id_user1: id_user1,
+        //         // id_user2: id_user2,
+        //     });
+        // }
+
+        socket.emit("Socket connection video call", {
             id_user1: id_user1,
-            id_user2: id_user2,
         });
 
         function setVideoSize() {
@@ -920,6 +938,10 @@ https://templatemo.com/tm-552-video-catalog
                 id_user1: id_user1,
                 id_user2: id_user2,
             });
+            // FrontAnswer({
+            //     // id_user1: id_user1,
+            //     id_user2: id_user2,
+            // });
         }
         // this function is used to reject incomming call
         function reject() {
@@ -938,9 +960,17 @@ https://templatemo.com/tm-552-video-catalog
             // });
         };
 
-
+        // if (page == '0') {
+        //     socket.emit("Initiator", {
+        //         id_user1: id_user1,
+        //         id_user2: id_user2,
+        //     });
+        //     // // InitPeer('init');
+        //     // MakePeer({
+        //     //     id_user2: id_user2,
+        //     // });
+        // }
     </script>
-    <script src="./WebRTC/bundle.js"></script>
 
     <!-- this script is used to make user video movable -->
     <script>
@@ -988,6 +1018,7 @@ https://templatemo.com/tm-552-video-catalog
             }
         }
     </script>
+
 </body>
 
 </html>
