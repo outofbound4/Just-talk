@@ -103,6 +103,14 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
             // this functions work is to save mesaage to the server
             saveMessageToServer(message);
             removeTyping();
+
+            let listItem = $("#" + id_user2);
+            let index = $("li").index(listItem);
+            if (index != 1) {
+                let clonedLI = $("#display li:nth-child(" + index + ")");
+                listItem.remove();
+                clonedLI.clone().prependTo("#display");
+            }
         }
 
         return false;
@@ -168,6 +176,14 @@ function clickTosendMessage(id_user2) {
         // this functions work is to save mesaage to the server
         saveMessageToServer(message);
         removeTyping();
+
+        let listItem = $("#" + id_user2);
+        let index = $("li").index(listItem);
+        if (index != 1) {
+            let clonedLI = $("#display li:nth-child(" + index + ")");
+            listItem.remove();
+            clonedLI.clone().prependTo("#display");
+        }
     }
 
 
