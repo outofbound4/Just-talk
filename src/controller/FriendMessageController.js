@@ -58,6 +58,28 @@ class FriendMessageController {
                     });
                 }
             });
+            // here updation user1's recent message so that at the time of
+            // recent user sidebar loading we can use this messge to insert the sidebar
+            User.updateOne({ '_id': req.body.id_user1, 'recent_user.userid': req.body.id_user2 },
+                {
+                    '$set': { //{new: true}
+                        'recent_user.$.message': req.body.message,
+                        'recent_user.$.time': new Date(),
+                    }
+                }, function (err, result) {
+                    // console.log("in FriendMessageController" + result);
+                });
+            // here updation user2's recent message so that at the time of
+            // recent user sidebar loading we can use this messge to insert the sidebar
+            User.updateOne({ '_id': req.body.id_user2, 'recent_user.userid': req.body.id_user1 },
+                {
+                    '$set': {
+                        'recent_user.$.message': req.body.message,
+                        'recent_user.$.time': new Date(),
+                    }
+                }, function (err, result) {
+                    // console.log("in FriendMessageController" + result);
+                });
 
             // here storing message to FriendMessage document
             FriendMessage.create({
