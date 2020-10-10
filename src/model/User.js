@@ -31,7 +31,14 @@ var schema = new Schema({
         required: true,
     },
 
-    recent_user: [{ userid: Schema.Types.ObjectId }],
+    recent_user: [{
+        userid: Schema.Types.ObjectId,
+        message: String,
+        time: {
+            type: Date,
+            default: Date.now,
+        },
+    }],
 
     created_at: {
         type: Date,
