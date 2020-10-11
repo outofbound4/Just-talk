@@ -103,7 +103,7 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
             // this functions work is to save mesaage to the server
             saveMessageToServer(message);
             removeTyping();
-
+            $('#rm' + id_user2).text(message);
             let listItem = $("#" + id_user2);
             let index = $("li").index(listItem);
             if (index != 1) {
@@ -176,7 +176,7 @@ function clickTosendMessage(id_user2) {
         // this functions work is to save mesaage to the server
         saveMessageToServer(message);
         removeTyping();
-
+        $('#rm' + id_user2).text(message);
         let listItem = $("#" + id_user2);
         let index = $("li").index(listItem);
         if (index != 1) {
