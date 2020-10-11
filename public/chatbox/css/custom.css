@@ -1660,6 +1660,15 @@ ol, ul {
 .chatonline li a span.Offline { color: #aaaaaa; !important;}
 
 .chat-head .Online { color: #00c292; !important;}
+
+.cut-text { 
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 160px; 
+    height: 1.2em; 
+    white-space: nowrap;
+}
+
 .chat-head .Offline { color: #aaaaaa; !important;}
 .chat-head{
     cursor: pointer;
