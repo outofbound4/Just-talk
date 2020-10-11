@@ -2,6 +2,7 @@
 var Socket = require("socket.io");
 var io;
 var activeUsers = [];
+var lastSeen = [];
 class SocketConnection {
 
     // constructor 
@@ -16,7 +17,15 @@ class SocketConnection {
             // here adding user to socket
             Socket.on('Add user to socket', function (userId) {
                 activeUsers[userId] = Socket.id;
+                lastSeen[Socket.id] = 'Online';
                 io.to(activeUsers[userId]).emit("Added", userId);
+            });
+
+            // here sending message to a particular person
+            Socket.on('REQUEST LAST SEEN', function (data) {
+                io.to(activeUsers[data.id_user1]).emit("RESPONSE LAST SEEN", {
+                    lastSeen: lastSeen[activeUsers[data.id_user2]],
+                });
             });
 
             // here sending message to a particular person
@@ -29,7 +38,9 @@ class SocketConnection {
             });
             // called when user type backspace
             Socket.on('typing_off', function (data) {
-                Socket.to(activeUsers[data.id_user2]).emit('typing_off', data);
+                Socket.to(activeUsers[data.id_user2]).emit('typing_off', {
+                    lastSeen: lastSeen[activeUsers[data.id_user1]],
+                });
             });
 
             // it will call when user click on video call button in chatbox.ejs
@@ -79,13 +90,15 @@ class SocketConnection {
                 activeUsers["vid" + data.id_user1] = Socket.id;
                 console.log("video connection initiate : " + activeUsers["vid" + data.id_user1])
             });
-            // Socket.on("disconnect", () => {
-
-            // });
+            
             Socket.on('Disconnect', function (data) {
                 // io.to(activeUsers[data.id_user2]).emit("Disconnect");
             });
 
+            Socket.on("disconnect", () => {
+                lastSeen[Socket.id] = new Date();
+                console.log(lastSeen[Socket.id]);
+            });
         });
     }
 }
