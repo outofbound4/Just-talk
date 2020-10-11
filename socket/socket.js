@@ -97,7 +97,6 @@ class SocketConnection {
 
             Socket.on("disconnect", () => {
                 lastSeen[Socket.id] = new Date();
-                console.log(lastSeen[Socket.id]);
             });
         });
     }
