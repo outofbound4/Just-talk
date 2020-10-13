@@ -3,6 +3,7 @@ var Socket = require("socket.io");
 var io;
 var activeUsers = [];
 var lastSeen = [];
+var user = [];
 class SocketConnection {
 
     // constructor 
@@ -17,7 +18,9 @@ class SocketConnection {
             // here adding user to socket
             Socket.on('Add user to socket', function (userId) {
                 activeUsers[userId] = Socket.id;
+                user[Socket.id] = userId;
                 lastSeen[Socket.id] = 'Online';
+                Socket.broadcast.emit("ONLINE", userId);
                 io.to(activeUsers[userId]).emit("Added", userId);
             });
 
@@ -90,13 +93,17 @@ class SocketConnection {
                 activeUsers["vid" + data.id_user1] = Socket.id;
                 console.log("video connection initiate : " + activeUsers["vid" + data.id_user1])
             });
-            
+
             Socket.on('Disconnect', function (data) {
                 // io.to(activeUsers[data.id_user2]).emit("Disconnect");
             });
 
             Socket.on("disconnect", () => {
                 lastSeen[Socket.id] = new Date();
+                Socket.broadcast.emit("OFFLINE", {
+                    id_user2: user[Socket.id],
+                    lastSeen: lastSeen[Socket.id]
+                });
             });
         });
     }
