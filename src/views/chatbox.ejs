@@ -643,9 +643,7 @@
                 "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
                 "<span>" +
                 "<span class='bname personName'>" + result[i].name + "</span>" +
-                "<span class='personStatus'><span class='time Online'><i " +
-                "class='fa fa-circle'" +
-                "aria-hidden='true'></i></span></span> " +
+                "<span class='personStatus" + result[i]._id + "'></span> " +
                 "<span class='count'><span " +
                 "class='icon-meta unread-count'>2</span></span><br>" +
                 "<small class='preview cut-text'><span id='rm" + result[i]._id + "' class='Online '>" + messages[i] + "</span></small>" +
@@ -660,19 +658,39 @@
             $("#display").html(list);
     }
 
-    // after clicking on user it creates the chat room of the user 
+    // it shows if user is active or not in sidebar
+    socket.on('ONLINE', function (data) {
+        let personStatus = $(".personStatus" + data);
+        personStatus.html("<span class='time Online'><i class='fa fa-circle aria-hidden='true'></i></span>");
+    });
+
+    // if user disconnect it shows user is offline
+    socket.on('OFFLINE', function (data) {
+
+        let id_user2 = $("#id_user2").val();
+        if (id_user2 == data.id_user2)
+            $("#typing_on").text(data.lastSeen);
+
+        let personStatus = $(".personStatus" + data.id_user2);
+        personStatus.html("");
+    });
+
+    // it shows the last seen of user when click on sidebar user
+    socket.on('RESPONSE LAST SEEN', function (data) {
+        // alert(data.lastSeen.toLocaleDateString())
+        $("#typing_on").text(data.lastSeen);
+    });
+
+    // after clicking on user it creates the chat room of the user
     function chatWith2(name_user2, id_user2, img_user2, status_user2) {
         chatWith(name_user2, id_user2, img_user2, status_user2);
+
         let id_user1 = $("#id_user1").val();
         socket.emit('REQUEST LAST SEEN', {
             id_user1: id_user1,
             id_user2: id_user2,
         });
 
-        socket.on('RESPONSE LAST SEEN', function (data) {
-            alert(JSON.stringify(data));
-            $("#typing_on").text(data.lastSeen);
-        });
         // it will load the chat messages
         messageLoad(id_user2);
     }
