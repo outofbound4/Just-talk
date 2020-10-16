@@ -39,7 +39,7 @@ class FriendMessageController {
                         // it will insert the data into user.result.recent_user
                         result.recent_user.push({ 'userid': req.body.id_user2 });
                         result.save().then(function (result) {
-                            console.log(result);
+                            // console.log("in FriendMessagecontroller : " + result);
                         });
                     });
                 }
@@ -53,7 +53,7 @@ class FriendMessageController {
                         // it will insert the data into user.result.recent_user
                         result.recent_user.push({ 'userid': req.body.id_user1 });
                         result.save().then(function (result) {
-                            console.log(result);
+                            // console.log("in FriendMessageController" + result);
                         });
                     });
                 }
