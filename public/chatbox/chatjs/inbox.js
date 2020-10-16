@@ -111,6 +111,17 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
                 listItem.remove();
                 clonedLI.clone().prependTo("#display");
             }
+
+            // it is for getting sidebar data when user search and text to another user
+            let SearchBoxVal = document.getElementById('searchbox').value;
+            if (SearchBoxVal != '') {
+                var ajax = new Ajax();
+                var urlData = ajax.create_url_data("searchboxForm");
+                // send request to ChatboxController
+                // postSearchFunction() is defined in chatbox.js
+                ajax.processPOST("/usersearch", urlData, postSearchFunction);
+                document.getElementById('searchbox').value = '';
+            }
         }
 
         return false;
@@ -183,6 +194,17 @@ function clickTosendMessage(id_user2) {
             let clonedLI = $("#display li:nth-child(" + index + ")");
             listItem.remove();
             clonedLI.clone().prependTo("#display");
+        }
+
+        // it is for getting sidebar data when user search and text to another user
+        let SearchBoxVal = document.getElementById('searchbox').value;
+        if (SearchBoxVal != '') {
+            var ajax = new Ajax();
+            var urlData = ajax.create_url_data("searchboxForm");
+            // send request to ChatboxController
+            // postSearchFunction() is defined in chatbox.js
+            ajax.processPOST("/usersearch", urlData, postSearchFunction);
+            document.getElementById('searchbox').value = '';
         }
     }
 
