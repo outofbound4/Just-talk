@@ -183,9 +183,10 @@
                             </div>
                             <div class="chat-body">
                                 <div class="chat-main">
-                                    <h2 class="chat-header-title" dir="auto">
+                                    <!-- <h4 class="chat-header-title" dir="auto"> -->
+                                    <h4 class="chat-title chat-header-title" dir="auto">
                                         <span class="wchatellips personName">&nbsp;</span>
-                                    </h2>
+                                    </h4>
                                 </div>
                                 <div class="chat-status wchatellips" id="typing_on">
                                     <!--last seen today at 8:52 PM-->
@@ -414,12 +415,8 @@
                 "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
                 "<span>" +
                 "<span class='bname personName'>" + result[i].name + "</span>" +
-                "<span class='personStatus'><span class='time Online'><i " +
-                "class='fa fa-circle'" +
-                "aria-hidden='true'></i></span></span> " +
-                "<span class='count'><span " +
-                "class='icon-meta unread-count'>2</span></span><br>" +
-                "<small class='preview'><span class='Online'>Online</span></small>" +
+                "<br>" +
+                "<small class='preview'><span class='Online'>New User</span></small>" +
                 "</span>" +
                 "</a >" +
                 "</li >";
@@ -490,6 +487,9 @@
         // this method is defined in asset/inbox.js
         scrollDown();
     }
+    // this function's work is to save mesaage to the server
+    // this function is called from public/chatbox/chatjs/inbox.js 
+    // in function clickTosendMessage() and function checkChatBoxInputKey()
     // save message to server
     function saveMessageToServer(message) {
         var id_user1 = $("#id_user1").val();
@@ -499,10 +499,6 @@
         // it storesa the data to FriendMessageController.js@storeMessage()
         ajax.processPOST("/storeMessage", urlData, postsaveMessageToServer);
     }
-
-    // this function's work is to save mesaage to the server
-    // this function is called from public/chatbox/chatjs/inbox.js 
-    // in function clickTosendMessage() and function checkChatBoxInputKey()
 
     var socket = io.connect('http://localhost:3000');
     // it will redirect to video call page
@@ -550,11 +546,62 @@
             '</div >' +
             '</div >' +
             '</div >';
-        $("#resultchat").append(message_content);
-
-        // this method is defined in asset/inbox.js
-        scrollDown();
+        let id_user2 = $("#id_user2").val();
+        if (data.id_user1 == id_user2) {
+            $("#resultchat").append(message_content);
+            // this method is defined in asset/inbox.js
+            scrollDown();
+        }
+        // checks if user present in recent list of sidebar or not
+        let listItem = $("#" + data.id_user1);
+        let index = $("li").index(listItem);
+        // if list not present in recent list in sidebar then create new sidebar list
+        // here index = -1 represent user not in sidebar recent list
+        if (index == -1) {
+            getUserById(data.id_user1, makeSidebarUser);
+        }
+        else {
+            let listItem = $("#" + data.id_user1);
+            let index = $("li").index(listItem);
+            if (index != 1) {
+                let clonedLI = $("#display li:nth-child(" + index + ")");
+                listItem.remove();
+                clonedLI.clone().prependTo("#display");
+            }
+        }
+        
+        $('#rm' + data.id_user1).text(data.message);
     });
+
+    // it will get the user data with its id
+    function getUserById(userid, callback) {
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + userid;
+        // send request to user controller
+        ajax.processPOST("/getUserById", urlData, callback);
+    }
+    // it will make sidebar User
+    function makeSidebarUser(res) {
+        let result = res.result;
+        let list = "<li class='person chatboxhead active' data-value='" + result._id + "' id='" + result._id + "' data-chat='" + result._id + "'" +
+            "href='javascript:void(0)'" +
+            "onclick=\"javascript:chatWith2('" + result.name + "','" + result._id + "','deven.jpg','Online')\">" +
+            "<a href='javascript:void(0)'>" +
+            "<span class='userimage profile-picture min-profile-picture'><img " +
+            "src='" + result.profile_pic + "' alt='Img'" +
+            "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
+            "<span>" +
+            "<span class='bname personName'>" + result.name + "</span>" +
+            "<span class='personStatus" + result._id + "'><span class='time Online'>" +
+            "<i class='fa fa-circle aria-hidden='true'></i></span></span> " +
+            "<span class='count'><span " +
+            "class='icon-meta unread-count'>2</span></span><br>" +
+            "<small class='preview cut-text'><span id='rm" + result._id + "' class='Online '></span></small>" +
+            "</span>" +
+            "</a >" +
+            "</li >";
+        $("#display").prepend(list);
+    }
 
     // it shows that user is typing to another user
     //  when key pressed in text box
@@ -578,9 +625,8 @@
         });
     }
     socket.on('typing_off', function (data) {
-        // it will add the last seen of id_user1
+        // it will add the last seen of id_user2
         $("#typing_on").text(data.lastSeen);
-        // $("#display_typing_on").remove();
     });
 
 
@@ -615,18 +661,55 @@
     var id_user1 = $("#id_user1").val();
     socket.emit('Add user to socket', id_user1);
 
-    // loding sidebar recentently messaged users 
-    $(document).ready(function () {
-        sidebarRecentUser();
+    // it shows if user is active or not in sidebar
+    socket.on('ONLINE', function (data) {
+        let id_user2 = $("#id_user2").val();
+        if (id_user2 == data)
+            $("#typing_on").text("Online");
+
+        let personStatus = $(".personStatus" + data);
+        personStatus.html("<span class='time Online'><i class='fa fa-circle aria-hidden='true'></i></span>");
     });
 
-    function sidebarRecentUser() {
-        var id_user1 = $("#id_user1").val();
-        var ajax = new Ajax();
-        var urlData = "id_user1=" + id_user1;
-        // send request to SidebarRecentUser controller
-        ajax.processPOST("/sidebarRecentUser", urlData, postFunction);
+    // if user disconnect it shows user is offline
+    socket.on('OFFLINE', function (data) {
+
+        let id_user2 = $("#id_user2").val();
+        if (id_user2 == data.id_user2)
+            $("#typing_on").text(data.lastSeen);
+
+        let personStatus = $(".personStatus" + data.id_user2);
+        personStatus.html("");
+    });
+
+    // it shows the green circle as a status of online
+    socket.on('RESPONSE SIDEBAR ONLINE', function (data) {
+        let personStatus;
+        for (let i = 0; i < data.ids.length; i++) {
+            personStatus = $(".personStatus" + data.ids[i]);
+            personStatus.html("<span class='time Online'><i class='fa fa-circle aria-hidden='true'></i></span>");
+        }
+    });
+
+    // it shows the last seen of user when click on sidebar user
+    socket.on('RESPONSE LAST SEEN', function (data) {
+        $("#typing_on").text(data.lastSeen);
+    });
+
+    // after clicking on user it creates the chat room of the user
+    function chatWith2(name_user2, id_user2, img_user2, status_user2) {
+        chatWith(name_user2, id_user2, img_user2, status_user2);
+
+        let id_user1 = $("#id_user1").val();
+        socket.emit('REQUEST LAST SEEN', {
+            id_user1: id_user1,
+            id_user2: id_user2,
+        });
+
+        // it will load the chat messages
+        messageLoad(id_user2);
     }
+
     // here getting data and making sidebar user's list
     function postFunction(res) {
         let list = "";
@@ -654,46 +737,28 @@
         if (list == "") {
             $("#display").html("<p>plz. search user and start conversation.</p>").css("color", "red");;
         }
-        else
+        else {
             $("#display").html(list);
+            // it will show the green circle as online status to sidebar
+            socket.emit('SIDEBAR ONLINE', {
+                id_user1: id_user1,
+                ids: res.ids,
+            });
+        }
     }
 
-    // it shows if user is active or not in sidebar
-    socket.on('ONLINE', function (data) {
-        let personStatus = $(".personStatus" + data);
-        personStatus.html("<span class='time Online'><i class='fa fa-circle aria-hidden='true'></i></span>");
-    });
-
-    // if user disconnect it shows user is offline
-    socket.on('OFFLINE', function (data) {
-
-        let id_user2 = $("#id_user2").val();
-        if (id_user2 == data.id_user2)
-            $("#typing_on").text(data.lastSeen);
-
-        let personStatus = $(".personStatus" + data.id_user2);
-        personStatus.html("");
-    });
-
-    // it shows the last seen of user when click on sidebar user
-    socket.on('RESPONSE LAST SEEN', function (data) {
-        // alert(data.lastSeen.toLocaleDateString())
-        $("#typing_on").text(data.lastSeen);
-    });
-
-    // after clicking on user it creates the chat room of the user
-    function chatWith2(name_user2, id_user2, img_user2, status_user2) {
-        chatWith(name_user2, id_user2, img_user2, status_user2);
-
-        let id_user1 = $("#id_user1").val();
-        socket.emit('REQUEST LAST SEEN', {
-            id_user1: id_user1,
-            id_user2: id_user2,
-        });
-
-        // it will load the chat messages
-        messageLoad(id_user2);
+    // it fetches the sidebar data
+    function sidebarRecentUser() {
+        var id_user1 = $("#id_user1").val();
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1;
+        // send request to SidebarRecentUser controller
+        ajax.processPOST("/sidebarRecentUser", urlData, postFunction);
     }
+    // loding sidebar recentently messaged users 
+    $(document).ready(function () {
+        sidebarRecentUser();
+    });
 </script>
 
 </html>
