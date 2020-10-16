@@ -41,6 +41,10 @@ router.post("/login", [
     check('mobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
     check('password', 'password must not be empty').not().isEmpty(),
 ], (req, res) => UserAuthController_obj.login(req, res));
+//route for getting  user by its id
+router.post("/getUserById", [
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty(),
+], (req, res) => UserAuthController_obj.getUserById(req, res));
 // rout for logout
 router.post("/logout", (req, res) => UserAuthController_obj.logout(req, res));
 
