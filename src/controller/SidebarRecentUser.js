@@ -55,6 +55,7 @@ class SidebarRecentUser {
                             message: 'data fetching successful',
                             result: data,
                             messages: messages,
+                            ids: ids,
                         });
                     }
                 });
