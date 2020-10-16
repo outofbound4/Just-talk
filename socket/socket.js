@@ -30,6 +30,18 @@ class SocketConnection {
                     lastSeen: lastSeen[activeUsers[data.id_user2]],
                 });
             });
+            
+            // here sending message to a particular person
+            Socket.on('SIDEBAR ONLINE', function (data) {
+                let ids = [];
+                for(let i = 0; i < data.ids.length; i++) {
+                    if(lastSeen[activeUsers[data.ids[i]]] == 'Online')
+                        ids.push(data.ids[i]);
+                }
+                io.to(activeUsers[data.id_user1]).emit("RESPONSE SIDEBAR ONLINE", {
+                    ids: ids,
+                });
+            });
 
             // here sending message to a particular person
             Socket.on('sending_message', function (data) {
