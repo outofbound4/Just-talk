@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <!-- Styles -->
     <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <!-- <link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet" id="fontawesome"> -->
+    <link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet" id="fontawesome">
     <!-- Animation CSS -->
     <link href="/chatbox/css/animate.css" rel="stylesheet">
     <link href="/chatbox/css/custom.css" rel="stylesheet" id="style">
@@ -22,8 +22,13 @@
     <!-- color CSS you can use different color css from css/colors folder -->
     <!-- We have chosen the skin-blue (blue.css) for this starter
                 page. However, you can choose any other skin from folder css / colors .
- -->
-    <link href="/chatbox/css/colors/green.css" id="theme" rel="stylesheet">
+    -->
+    <!-- <link href="/chatbox/css/colors/green.css" id="theme" rel="stylesheet"> -->
+    <link href="/chatbox/css/colors/purple.css" id="theme" rel="stylesheet">
+    <!-- <link href="/chatbox/css/colors/megna.css" id="theme" rel="stylesheet"> -->
+    <!-- <link href="/chatbox/css/colors/gray.css" id="theme" rel="stylesheet"> -->
+    <!-- <link href="/chatbox/css/colors/blue.css" id="theme" rel="stylesheet">
+    <link href="/chatbox/css/colors/default.css" id="theme" rel="stylesheet"> -->
     <!-- Emoji One JS -->
     <link rel="stylesheet" href="/chatbox/smiley/assets/sprites/emojione.sprites.css" />
     <script src="/chatbox/smiley/js/emojione.min.js"></script>
@@ -336,8 +341,10 @@
                     </ul>
                     <ul id="mainthemecolors" class="m-t-20">
                         <li><b>Theme (Light/Dark)</b></li>
-                        <li><a href="javascript:void(0)" maintheme="style-light" class="light-theme working">1</a></li>
-                        <li><a href="javascript:void(0)" maintheme="style-dark" class="dark-theme">2</a></li>
+                        <li><a href="#" onclick="javascript:mainthemehref('/chatbox/css/style-light.css', 'maintheme')"
+                                maintheme="style-light" class="light-theme working">1</a></li>
+                        <li><a href="#" onclick="javascript:mainthemehref('/chatbox/css/style-dark.css', 'maintheme')"
+                                maintheme="style-dark" class="dark-theme">2</a></li>
                     </ul>
                     <ul id="themecolors" class="m-t-20">
                         <li><b>With Color Effect</b></li>
@@ -369,6 +376,21 @@
 
     </div>
 </body>
+<script>
+    function mainthemehref(newHRFLink, oldLinkID) {
+        alert(newHRFLink);
+        var oldlink = document.getElementById(oldLinkID);
+        var newlink = document.createElement("link");
+        newlink.setAttribute("rel", "stylesheet");
+        newlink.setAttribute("id", oldLinkID);
+        newlink.setAttribute("type", "text/css");
+        newlink.setAttribute("href", newHRFLink);
+
+        document.getElementsByTagName("head").item(6).replaceChild(newlink, oldlink);
+        // let a = document.getElementById('maintheme');
+        // a.href = hrefLink;
+    }
+</script>
 <script src="/assets/jquery/jquery-1.11.1.min.js"></script>
 <!--- Popper.js -->
 <script src="/Popper/popper.min.js" crossorigin="anonymous"></script>
@@ -466,6 +488,15 @@
                     '</div >' +
                     '</div >' +
                     '</div >';
+
+                if (res.result[i].status != 2) {
+                    // Emit 'markSeen' event
+                    socket.emit('markSeen', {
+                        _id: res.result[i]._id,
+                        id_user1: res.result[i].id_user1,
+                        id_user2: res.result[i].id_user2,
+                    });
+                }
             }
             else {
                 message_content +=
@@ -474,10 +505,15 @@
                     '<div class="chat-text">' +
                     '<input type="hidden" name="message_object_id" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
                     '<p>' + res.result[i].message + '</p>' +
-                    '<b>' + res.result[i].time + '</b>' +
-                    '<span class="msg-status msg-mega"><i' +
-                    'class="fa fa-check"></i></span>' +
-                    '</div >' +
+                    '<b>' + res.result[i].time + '</b>';
+                if (res.result[i].status == 1)
+                    message_content += '<span class="msg-status"><i class="fa fa-check-square-o"></i></span>';
+                else if(res.result[i].status == 2)
+                    message_content += '<span class="msg-status"><i class="fa fa-child"></i></span>';
+                else
+                    message_content += '<span class="msg-status"><i class="fa fa-check"></i></span>';
+
+                message_content += '</div >' +
                     '</div >' +
                     '</div >';
             }
@@ -521,18 +557,33 @@
         window.open("/inVideoCall?" + url, "_self");
     });
     function postsaveMessageToServer(res) {
-        // alert(res.result._id);
-        var id_user1 = $("#id_user1").val();
-        var id_user2 = $("#id_user2").val();
-        $("#" + res.result._id).val(res.result._id);
+        let result = res.result;
+        $('#resultchat').children().last().find('input').attr('id', result._id);
+        $('#resultchat').children().last().find('input').val(result._id);
+        $('#resultchat').children().last().find('span').attr('id', 'msg-' + result._id);
+
+        $('#msg-' + result._id).html('<i class="fa fa-check"></i>');
         // emit event
         socket.emit('sending_message', {
-            _id: res.result._id,
-            message: message,
-            id_user1: id_user1,
-            id_user2: id_user2
+            _id: result._id,
+            message: result.message,
+            id_user1: result.id_user1,
+            id_user2: result.id_user2,
         });
     }
+
+    // it will update the read, delivery status of message in database
+    function updateMessageStatus(messageObjectID, status) {
+        var ajax = new Ajax();
+        var urlData = "_id=" + messageObjectID + "&status=" + status;
+        // send request to SidebarRecentUser controller
+        if (status == 1)
+            ajax.processPOST("/updateMessageStatus", urlData, delivered);
+        else
+            ajax.processPOST("/updateMessageStatus", urlData, markedSeen);
+
+    }
+
 
     // listenevent
     socket.on('receiving_message', function (data) {
@@ -551,6 +602,12 @@
             $("#resultchat").append(message_content);
             // this method is defined in asset/inbox.js
             scrollDown();
+            // Emit 'markSeen' event
+            socket.emit('markSeen', {
+                _id: data._id,
+                id_user1: data.id_user1,
+                id_user2: data.id_user2,
+            });
         }
         // checks if user present in recent list of sidebar or not
         let listItem = $("#" + data.id_user1);
@@ -569,10 +626,28 @@
                 clonedLI.clone().prependTo("#display");
             }
         }
-        
+
         $('#rm' + data.id_user1).text(data.message);
+
+        if (data.id_user1 != id_user2) {
+            // Emit 'received' event
+            // here _id is message object id
+            socket.emit('received', {
+                _id: data._id,
+                id_user1: data.id_user1,
+                id_user2: data.id_user2,
+            });
+        }
     });
 
+    // Handler for 'delivered' event
+    socket.on('delivered', function (message) {
+        updateMessageStatus(message._id, 1);
+    });
+    // it will call after updating delivered status to database
+    function delivered(res) {
+        $('#msg-' + res._id).html("<i class='fa fa-check-square-o'></i>");
+    }
     // it will get the user data with its id
     function getUserById(userid, callback) {
         var ajax = new Ajax();
@@ -596,7 +671,7 @@
             "<i class='fa fa-circle aria-hidden='true'></i></span></span> " +
             "<span class='count'><span " +
             "class='icon-meta unread-count'>2</span></span><br>" +
-            "<small class='preview cut-text'><span id='rm" + result._id + "' class='Online '></span></small>" +
+            "<small class='preview cut-text'><span id='rm" + result._id + "' class='Online '></span><span></span></small>" +
             "</span>" +
             "</a >" +
             "</li >";
@@ -709,7 +784,14 @@
         // it will load the chat messages
         messageLoad(id_user2);
     }
-
+    // Handler for 'markedSeen' event
+    socket.on('markedSeen', function (message) {
+        updateMessageStatus(message._id, 2);
+    });
+    // it will call after updating seen status to database
+    function markedSeen(res) {
+        $('#msg-' + res._id).html("<i class='fa fa-child'></i>");
+    }
     // here getting data and making sidebar user's list
     function postFunction(res) {
         let list = "";
@@ -729,7 +811,7 @@
                 "<span class='personStatus" + result[i]._id + "'></span> " +
                 "<span class='count'><span " +
                 "class='icon-meta unread-count'>2</span></span><br>" +
-                "<small class='preview cut-text'><span id='rm" + result[i]._id + "' class='Online '>" + messages[i] + "</span></small>" +
+                "<small class='preview cut-text'><span id='rm" + result[i]._id + "' class='Online '>" + messages[i] + "</span><span></span></small>" +
                 "</span>" +
                 "</a >" +
                 "</li >";
