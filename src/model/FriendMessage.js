@@ -15,6 +15,10 @@ var schema = new Schema({
         type: String,
         require: true,
     },
+    status: {
+        type: Number,
+        default: 0,
+    },
     time: {
         type: Date,
         default: Date.now,
