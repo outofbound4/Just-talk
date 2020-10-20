@@ -86,11 +86,12 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
             message = emojione.shortnameToImage(message); // Set imotions
             // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
             $("#resultchat").append('<div class="col-xs-12 p-b-10 odd">' +
+                '<input type="hidden" name="message_object_id" id="" value="">' +
                 '<div class="chat-body">' +
                 '<div class="chat-text">' +
-                '<input type="hidden" name="message_object_id" id="" value="">' +
                 '<p>' + message + '</p>' +
-                '<b>' + (new Date()).toISOString() + '</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
+                '<b>' + (new Date()).toISOString() + '</b>' +
+                '<span class="msg-status"><i class="fa fa-paper-plane"></i></span>' +
                 '</div>' +
                 '</div>' +
                 '</div>');
@@ -171,11 +172,12 @@ function clickTosendMessage(id_user2) {
 
         // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
         $("#resultchat").append('<div class="col-xs-12 p-b-10 odd">' +
+            '<input type="hidden" name="message_object_id" id="" value="">' +
             '<div class="chat-body">' +
             '<div class="chat-text">' +
-            '<input type="hidden" name="message_object_id" id="" value="">' +
             '<p>' + message + '</p>' +
-            '<b>' + (new Date()).toISOString() + '</b><span class="msg-status msg-' + id_user2 + '"><i class="fa fa-check"></i></span>' +
+            '<b>' + (new Date()).toISOString() + '</b>' +
+            '<span class="msg-status"><i class="fa fa-paper-plane"></i></span>' +
             '</div>' +
             '</div>' +
             '</div>');
