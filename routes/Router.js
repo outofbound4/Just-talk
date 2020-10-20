@@ -61,6 +61,11 @@ router.post("/fetchMessage", [
     check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
     check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
 ], (req, res) => FriendMessageController_obj.fetchMessage(req, res));
+// router for update read, delivery message status
+router.post("/updateMessageStatus", [
+    check('_id', '_id must not be empty').not().isEmpty().trim().escape(),
+    check('status', 'status must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => FriendMessageController_obj.updateMessageStatus(req, res));
 
 //route for fetching sidebar data in SidebarRecentUser
 var SidebarRecentUser = require('../src/controller/SidebarRecentUser');
