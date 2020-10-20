@@ -157,6 +157,36 @@ class FriendMessageController {
         }
     }
 
+    updateMessageStatus(req, res) {
+        let errors = this.validationResult(req);
+        /* If some error occurs, then this 
+         *  block of code will run 
+         */
+        if (!errors.isEmpty()) {
+            //sending errors to client page
+            return res.json({
+                status: 400,
+                message: 'Required Param Empty',
+                errors: errors,
+            });
+        }
+        /* If no error occurs, then this 
+         * block of code will run 
+         */
+        FriendMessage.updateOne({ '_id': req.body._id },
+            {
+                '$set': {
+                    'status': req.body.status,
+                }
+            }, function (err, result) {
+                return res.json({
+                    status: 200,
+                    message: 'Updated successfully',
+                    _id: req.body._id,
+                });
+            });
+    }
+
 }
 
 module.exports = FriendMessageController;
