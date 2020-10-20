@@ -30,12 +30,12 @@ class SocketConnection {
                     lastSeen: lastSeen[activeUsers[data.id_user2]],
                 });
             });
-            
+
             // here sending message to a particular person
             Socket.on('SIDEBAR ONLINE', function (data) {
                 let ids = [];
-                for(let i = 0; i < data.ids.length; i++) {
-                    if(lastSeen[activeUsers[data.ids[i]]] == 'Online')
+                for (let i = 0; i < data.ids.length; i++) {
+                    if (lastSeen[activeUsers[data.ids[i]]] == 'Online')
                         ids.push(data.ids[i]);
                 }
                 io.to(activeUsers[data.id_user1]).emit("RESPONSE SIDEBAR ONLINE", {
@@ -108,6 +108,24 @@ class SocketConnection {
 
             Socket.on('Disconnect', function (data) {
                 // io.to(activeUsers[data.id_user2]).emit("Disconnect");
+            });
+
+            // Handler for 'received' event
+            Socket.on('received', function (data) {
+                // Emit 'delivered' event
+                io.to(activeUsers[data.id_user1]).emit('delivered', {
+                    _id: data._id,
+                    id_user2: data.id_user2,
+                });
+            });
+            // Handler for 'markSeen' event
+            Socket.on('markSeen', function (data) {
+                console.log("in socket markSeen, data.id_user1 : " + data.id_user1);
+                // Emit 'markedSeen' event
+                io.to(activeUsers[data.id_user1]).emit('markedSeen', {
+                    _id: data._id,
+                    id_user2: data.id_user2,
+                });
             });
 
             Socket.on("disconnect", () => {
