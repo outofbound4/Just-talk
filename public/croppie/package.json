@@ -1,0 +1,93 @@
+{
+  "_args": [
+    [
+      "croppie",
+      "/media/gaurav/PROGRAM4/MCA/NodeJS/chatapp"
+    ]
+  ],
+  "_from": "croppie@latest",
+  "_hasShrinkwrap": false,
+  "_id": "croppie@2.6.5",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/croppie",
+  "_nodeVersion": "10.16.3",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/croppie_2.6.5_1592312710726_0.11417675132332605"
+  },
+  "_npmUser": {
+    "email": "thedustinsmith@gmail.com",
+    "name": "dbsy9d"
+  },
+  "_npmVersion": "6.11.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "croppie",
+    "raw": "croppie",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/croppie/-/croppie-2.6.5.tgz",
+  "_shasum": "67d76855b2983bdcd8aa348367398b2b8ef277cf",
+  "_shrinkwrap": null,
+  "_spec": "croppie",
+  "_where": "/media/gaurav/PROGRAM4/MCA/NodeJS/chatapp",
+  "authors": [
+    "Dustin Smith <thedustinsmith@gmail.com>",
+    "Ethan Calvert <calvert1591@gmail.com>"
+  ],
+  "bugs": {
+    "url": "https://github.com/Foliotek/Croppie/issues"
+  },
+  "dependencies": {},
+  "description": "A simple javascript image cropper",
+  "devDependencies": {
+    "gh-pages": "^0.11.0",
+    "mocha": "2.4.5",
+    "uglify-js": "3.3.15"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 6,
+    "integrity": "sha512-IlChnVUGG5T3w2gRZIaQgBtlvyuYnlUWs2YZIXXR3H9KrlO1PtBT3j+ykxvy9eZIWhk+V5SpBmhCQz5UXKrEKQ==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJe6MOHCRA9TVsSAnZWagAANWIP/0oBCLtvux1qVT7K65uw\nh36/U8n89Hu5p1s8hTy2FN0MDfIjnMHT63IpDnMw4CWEUtLsC/cisb2nhkvx\n3CPEvt7H8XEDNeXpghBG/XwdUqsKUXOJUH8Iqtty0AC+qm8BellZCoKP9za1\nMgaILxAatYgs0k7VhqgbwJ1atBC0cGkCIwT3oUhO8UfKKCJEYRGGZaoN1Bmg\ntCpfVMyz4rvUg1F12JBReZy2q2hr+E9AByDEyEIsCIgljwbJGHt7AfwNKPXt\n//3flzpTKkk6lRg9gfmsD0VQHx93nelrheeKHLZY4lkgRcnrXLRAjj8bAGis\nfoXJu/BpuSXS1GwoGilLH6miiAXO8yyP1uRfiZ5MI6FDdCyryE+uwx96cSsB\nqSQpU5qXo3UKY0eYt/w3IAkUy7nS0M9W2rH4OMz+Puz1bzIA+TsNxU3GN9ZE\n3hUPkxGBF4PDi0NXnH3yUvRV0q8ichy6Z/WJBAYjTyQm8ta5tRRPkWnWGYKH\nINHqz/OUuM2WKuUZRL6ez+8MCpzfDxuV5kYiTLuu79m7038hvwdnTCwiQfew\nshFgb53e3CV6//P+LFpfkvwgNb+E+q6RGttUMPW1lv1XjGc2bNz68heP5Tsr\n7BHWNpW64hkke7X6z7xLIJaDZHiHMK2JEvTiRG0M/jnjWygkGON/X6HztXYZ\nDrR2\r\n=rz3A\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "67d76855b2983bdcd8aa348367398b2b8ef277cf",
+    "tarball": "https://registry.npmjs.org/croppie/-/croppie-2.6.5.tgz",
+    "unpackedSize": 92693
+  },
+  "gitHead": "8998b1e35a79f5c8f920e7fa76f72523bffc8df5",
+  "homepage": "http://foliotek.github.io/Croppie",
+  "keywords": [
+    "crop",
+    "cropper",
+    "cropping",
+    "image"
+  ],
+  "license": "MIT",
+  "main": "croppie.js",
+  "maintainers": [
+    {
+      "name": "dbsy9d",
+      "email": "thedustinsmith@gmail.com"
+    }
+  ],
+  "name": "croppie",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Foliotek/Croppie.git"
+  },
+  "scripts": {
+    "deploy": "node deploy.js",
+    "test": "mocha test/unit",
+    "uglify": "uglifyjs croppie.js -c -m -r '$,require,exports' -o croppie.min.js"
+  },
+  "version": "2.6.5"
+}
