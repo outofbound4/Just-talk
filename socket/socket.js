@@ -4,6 +4,8 @@ var io;
 var activeUsers = [];
 var lastSeen = [];
 var user = [];
+var messages = {};
+var online = 'Online';
 class SocketConnection {
 
     // constructor 
@@ -19,7 +21,7 @@ class SocketConnection {
             Socket.on('Add user to socket', function (userId) {
                 activeUsers[userId] = Socket.id;
                 user[Socket.id] = userId;
-                lastSeen[Socket.id] = 'Online';
+                lastSeen[Socket.id] = online;
                 Socket.broadcast.emit("ONLINE", userId);
                 io.to(activeUsers[userId]).emit("Added", userId);
             });
@@ -35,7 +37,7 @@ class SocketConnection {
             Socket.on('SIDEBAR ONLINE', function (data) {
                 let ids = [];
                 for (let i = 0; i < data.ids.length; i++) {
-                    if (lastSeen[activeUsers[data.ids[i]]] == 'Online')
+                    if (lastSeen[activeUsers[data.ids[i]]] == online)
                         ids.push(data.ids[i]);
                 }
                 io.to(activeUsers[data.id_user1]).emit("RESPONSE SIDEBAR ONLINE", {
@@ -45,7 +47,12 @@ class SocketConnection {
 
             // here sending message to a particular person
             Socket.on('sending_message', function (data) {
-                io.to(activeUsers[data.id_user2]).emit("receiving_message", data);
+                if (lastSeen[activeUsers[data.id_user2]] == online) {
+                    io.to(activeUsers[data.id_user2]).emit("receiving_message", data);
+                } else {
+                    // messages[data.id_user1] = data;
+                    // console.log(messages[data.id_user1]);
+                }
             });
             // called when user type message to another user
             Socket.on('typing_on', function (data) {
@@ -120,7 +127,6 @@ class SocketConnection {
             });
             // Handler for 'markSeen' event
             Socket.on('markSeen', function (data) {
-                console.log("in socket markSeen, data.id_user1 : " + data.id_user1);
                 // Emit 'markedSeen' event
                 io.to(activeUsers[data.id_user1]).emit('markedSeen', {
                     _id: data._id,
