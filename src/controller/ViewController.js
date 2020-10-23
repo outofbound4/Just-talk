@@ -28,13 +28,6 @@ class ViewController {
   contactlist(req, res) {
     return res.render("contactlist");
   }
-  ownprofile(req, res) {
-    return res.render("ownprofile");
-  }
-
-  otherprofile(req, res) {
-    return res.render("otherprofile");
-  }
   editprofile(req, res) {
     return res.render("editprofile");
   }
