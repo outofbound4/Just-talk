@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang=" ">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="">
+    <!-- title -->
+    <title>Chat Box</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/croppie/croppie.css" />
+    <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/brands.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/solid.css">
+    <style>
+        body {
+            background: rgb(79, 23, 99)
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #BA68C8
+        }
+
+        .profile-button {
+            background: rgb(99, 39, 120);
+            box-shadow: none;
+            border: none
+        }
+
+        .profile-button:hover {
+            background: #682773
+        }
+
+        .profile-button:focus {
+            background: #682773;
+            box-shadow: none
+        }
+
+        .profile-button:active {
+            background: #682773;
+            box-shadow: none
+        }
+
+        .back:hover {
+            color: #682773;
+            cursor: pointer
+        }
+
+        .labels {
+            font-size: 11px
+        }
+
+        .add-experience:hover {
+            background: #BA68C8;
+            color: #fff;
+            cursor: pointer;
+            border: solid 1px #BA68C8
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-4 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-4 py-5">
+                    <img class="rounded-circle mt-2" id="image" name=""
+                        src="/images/people.png">
+
+                    <label for="profile_pic" class="mt-5 mb-5">
+                        Edit <span><i class="fa fa-edit"></i></span>
+                    </label>
+                    <input type="file" class="mt-5 mb-5 btn btn-primary profile-button" name="profile_pic"
+                        id="profile_pic" accept="image/*" style="display: none" />
+                    <br />
+                </div>
+            </div>
+            <div class="col-md-5 border-right">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Profile Settings</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label class="labels">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="labels">Mobile Number</label>
+                            <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Mobile number" value="">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="labels">Email ID</label>
+                            <input type="text" name="email" id="email" class="form-control" placeholder="Email id" value="">
+                        </div>
+
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="labels">Status</label>
+                            <input type="text" name="statusbar" id="statusbar" class="form-control" placeholder="Hey! I'm using just-talk" value="">
+                        </div>
+
+                    </div>
+                    <div class="mt-5 text-center">
+                        <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script src="/assets/jquery/jquery-3.5.1.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/croppie/croppie.js"></script>
+<script src="/ajax/ajax.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $image_crop = $('#image_demo').croppie({
+            enableExif: true,
+            viewport: {
+                width: 200,
+                height: 200,
+                type: 'circle', //'square' //circle
+            },
+            boundary: {
+                width: 300,
+                height: 300
+            }
+        });
+
+        $('#profile_pic').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                $image_crop.croppie('bind', {
+                    url: event.target.result
+                }).then(function () {
+                    console.log('jQuery bind complete');
+                });
+            }
+            reader.readAsDataURL(this.files[0]);
+            $('#uploadimageModal').modal('show');
+        });
+
+        $('.crop_image').click(function (event) {
+            $image_crop.croppie('result', {
+                type: 'canvas',
+                size: 'viewport'
+            }).then(function (response) {
+                $('#image').attr('src', response);
+                $('#uploadimageModal').modal('hide');
+            })
+        });
+
+    });
+</script>
+
+</html>
+
+<div id="uploadimageModal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <p>Select Image</p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8 text-center">
+                        <div id="image_demo" style="width:350px; margin-top:30px"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <button class=" mt-5 mb-2 btn btn-success crop_image">Select</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
