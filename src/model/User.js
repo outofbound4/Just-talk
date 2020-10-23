@@ -6,11 +6,15 @@ var schema = new Schema({
         type: String,
         required: true,
     },
-    // email: {
-    //     type: String,
-    //     unique: true,
-    //     lowercase: true,
-    // },
+    statusbar: {
+        type: String,
+        default: "Hey! I'm using just-talk",
+    },
+    email: {
+        type: String,
+        unique: true,
+        lowercase: true,
+    },
     mobile: {
         type: String,
         require: true,
