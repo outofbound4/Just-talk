@@ -11,8 +11,10 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <!-- Styles -->
-    <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet" id="fontawesome">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.min.css" >
+    <link rel="stylesheet" href="/assets/fontawesome/css/brands.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/solid.css">
     <!-- Animation CSS -->
     <link href="/chatbox/css/animate.css" rel="stylesheet">
     <link href="/chatbox/css/custom.css" rel="stylesheet" id="style">
@@ -115,7 +117,7 @@
                                     <div class="chat-avatar">
                                         <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
                                             <div class="avatar-body userimage">
-                                                <a href="/ownprofile">
+                                                <a href="/editprofile">
                                                     <img src="" alt="Img" class="avatar-image is-loaded bg-theme"
                                                         width="100%">
                                                 </a>
@@ -124,7 +126,7 @@
                                     </div>
                                     <div class="chat-body">
                                         <div class="chat-main">
-                                            <a href="/ownprofile">
+                                            <a href="/editprofile">
                                                 <h2 class="chat-title" dir="auto">
                                                     <span class="wchatellips personName"><%= session.name %></span>
                                                 </h2>
@@ -341,19 +343,19 @@
                     </ul>
                     <ul id="mainthemecolors" class="m-t-20">
                         <li><b>Theme (Light/Dark)</b></li>
-                        <li><a href="#" onclick="javascript:mainthemehref('/chatbox/css/style-light.css', 'maintheme')"
+                        <li><a href="#" onclick="mainthemehref('/chatbox/css/style-light.css', 'maintheme')"
                                 maintheme="style-light" class="light-theme working">1</a></li>
-                        <li><a href="#" onclick="javascript:mainthemehref('/chatbox/css/style-dark.css', 'maintheme')"
+                        <li><a href="#" onclick="mainthemehref('/chatbox/css/style-dark.css', 'maintheme')"
                                 maintheme="style-dark" class="dark-theme">2</a></li>
                     </ul>
                     <ul id="themecolors" class="m-t-20">
                         <li><b>With Color Effect</b></li>
-                        <li><a href="javascript:void(0)" theme="default" class="default-theme">1</a></li>
-                        <li><a href="javascript:void(0)" theme="green" class="green-theme">2</a></li>
-                        <li><a href="javascript:void(0)" theme="gray" class="yellow-theme">3</a></li>
-                        <li><a href="javascript:void(0)" theme="blue" class="blue-theme">4</a></li>
-                        <li><a href="javascript:void(0)" theme="purple" class="purple-theme working">5</a></li>
-                        <li><a href="javascript:void(0)" theme="megna" class="megna-theme">6</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/default.css', 'theme')" theme="default" class="default-theme">1</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/green.css', 'theme')" theme="green" class="green-theme">2</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/gray.css', 'theme')" theme="gray" class="yellow-theme">3</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/blue.css', 'theme')" theme="blue" class="blue-theme">4</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/purple.css', 'theme')" theme="purple" class="purple-theme working">5</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/megna.css', 'theme')" theme="megna" class="megna-theme">6</a></li>
                     </ul>
 
                 </div>
@@ -377,6 +379,20 @@
     </div>
 </body>
 <script>
+    function themeHRF(newHRFLink, oldLinkID) {
+        alert(newHRFLink);
+        var oldlink = document.getElementById(oldLinkID);
+        oldlink.href = newHRFLink;
+        // var newlink = document.createElement("link");
+        // newlink.setAttribute("rel", "stylesheet");
+        // newlink.setAttribute("id", oldLinkID);
+        // newlink.setAttribute("type", "text/css");
+        // newlink.setAttribute("href", newHRFLink);
+
+        // document.getElementsByTagName("head").item(oldLinkID).replaceChild(newlink, oldlink);
+        // let a = document.getElementById('maintheme');
+        // a.href = hrefLink;
+    }
     function mainthemehref(newHRFLink, oldLinkID) {
         alert(newHRFLink);
         var oldlink = document.getElementById(oldLinkID);
@@ -386,10 +402,12 @@
         newlink.setAttribute("type", "text/css");
         newlink.setAttribute("href", newHRFLink);
 
-        document.getElementsByTagName("head").item(6).replaceChild(newlink, oldlink);
+        document.getElementsByTagName("head").item(oldLinkID).replaceChild(newlink, oldlink);
         // let a = document.getElementById('maintheme');
         // a.href = hrefLink;
     }
+
+
 </script>
 <script src="/assets/jquery/jquery-1.11.1.min.js"></script>
 <!--- Popper.js -->
@@ -507,9 +525,9 @@
                     '<p>' + res.result[i].message + '</p>' +
                     '<b>' + res.result[i].time + '</b>';
                 if (res.result[i].status == 1)
-                    message_content += '<span class="msg-status"><i class="fa fa-check-square-o"></i></span>';
+                    message_content += '<span class="msg-status"><i class="fas fa-check-double"></i></span>';
                 else if(res.result[i].status == 2)
-                    message_content += '<span class="msg-status"><i class="fa fa-child"></i></span>';
+                    message_content += '<span class="msg-status"><i class="fas fa-check-double" style="color:green"></i></span>';
                 else
                     message_content += '<span class="msg-status"><i class="fa fa-check"></i></span>';
 
@@ -637,6 +655,8 @@
                 id_user1: data.id_user1,
                 id_user2: data.id_user2,
             });
+
+
         }
     });
 
@@ -646,7 +666,7 @@
     });
     // it will call after updating delivered status to database
     function delivered(res) {
-        $('#msg-' + res._id).html("<i class='fa fa-check-square-o'></i>");
+        $('#msg-' + res._id).html("<i class='fas fa-check-double'></i>");
     }
     // it will get the user data with its id
     function getUserById(userid, callback) {
@@ -790,7 +810,7 @@
     });
     // it will call after updating seen status to database
     function markedSeen(res) {
-        $('#msg-' + res._id).html("<i class='fa fa-child'></i>");
+        $('#msg-' + res._id).html("<i class='fas fa-check-double' style='color:green'></i>");
     }
     // here getting data and making sidebar user's list
     function postFunction(res) {
@@ -810,7 +830,7 @@
                 "<span class='bname personName'>" + result[i].name + "</span>" +
                 "<span class='personStatus" + result[i]._id + "'></span> " +
                 "<span class='count'><span " +
-                "class='icon-meta unread-count'>2</span></span><br>" +
+                "class='icon-meta unread-count' id='unreadCount'>2</span></span><br>" +
                 "<small class='preview cut-text'><span id='rm" + result[i]._id + "' class='Online '>" + messages[i] + "</span><span></span></small>" +
                 "</span>" +
                 "</a >" +
