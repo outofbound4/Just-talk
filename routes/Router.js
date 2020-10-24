@@ -39,10 +39,6 @@ router.post("/login", [
     check('mobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
     check('password', 'password must not be empty').not().isEmpty(),
 ], (req, res) => UserAuthController_obj.login(req, res));
-//route for getting  user by its id
-router.post("/getUserById", [
-    check('id_user1', 'id_user1 must not be empty').not().isEmpty(),
-], (req, res) => UserAuthController_obj.getUserById(req, res));
 // rout for logout
 router.post("/logout", (req, res) => UserAuthController_obj.logout(req, res));
 
@@ -72,5 +68,22 @@ router.post("/sidebarRecentUser", [
     check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
 ], (req, res) => SidebarRecentUser_obj.sidebarRecentUser(req, res));
 
-
+//route for UserController
+var UserController = require('../src/controller/UserController');
+const UserController_obj = new UserController(validationResult);
+//route for getting  user by its id
+router.post("/getUserById", [
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty(),
+], (req, res) => UserController_obj.getUserById(req, res));
+// rout for update user profile pic
+router.post("/updateImage", [
+    check('_id', '_id must not be empty').not().isEmpty(),
+    check('profile_pic', 'profile_pic must not be empty').not().isEmpty(),
+], (req, res) => UserController_obj.updateImage(req, res));
+// rout for update user profile
+router.post("/updateProfile", [
+    check('_id', '_id must not be empty').not().isEmpty(),
+    check('name', 'name must not be empty').not().isEmpty(),
+    check('email', 'email must not be empty').not().isEmpty(),
+], (req, res) => UserController_obj.updateProfile(req, res));
 module.exports = router;
