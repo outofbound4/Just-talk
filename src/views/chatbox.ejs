@@ -11,8 +11,8 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <!-- Styles -->
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.min.css" >
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/brands.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/solid.css">
     <!-- Animation CSS -->
@@ -350,12 +350,18 @@
                     </ul>
                     <ul id="themecolors" class="m-t-20">
                         <li><b>With Color Effect</b></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/default.css', 'theme')" theme="default" class="default-theme">1</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/green.css', 'theme')" theme="green" class="green-theme">2</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/gray.css', 'theme')" theme="gray" class="yellow-theme">3</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/blue.css', 'theme')" theme="blue" class="blue-theme">4</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/purple.css', 'theme')" theme="purple" class="purple-theme working">5</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/megna.css', 'theme')" theme="megna" class="megna-theme">6</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/default.css', 'theme')" theme="default"
+                                class="default-theme">1</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/green.css', 'theme')" theme="green"
+                                class="green-theme">2</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/gray.css', 'theme')" theme="gray"
+                                class="yellow-theme">3</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/blue.css', 'theme')" theme="blue"
+                                class="blue-theme">4</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/purple.css', 'theme')" theme="purple"
+                                class="purple-theme working">5</a></li>
+                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/megna.css', 'theme')" theme="megna"
+                                class="megna-theme">6</a></li>
                     </ul>
 
                 </div>
@@ -526,7 +532,7 @@
                     '<b>' + res.result[i].time + '</b>';
                 if (res.result[i].status == 1)
                     message_content += '<span class="msg-status"><i class="fas fa-check-double"></i></span>';
-                else if(res.result[i].status == 2)
+                else if (res.result[i].status == 2)
                     message_content += '<span class="msg-status"><i class="fas fa-check-double" style="color:green"></i></span>';
                 else
                     message_content += '<span class="msg-status"><i class="fa fa-check"></i></span>';
@@ -644,7 +650,7 @@
                 clonedLI.clone().prependTo("#display");
             }
         }
-
+        alert("data.id_user1 : " + data.id_user1 + ",  data.message : " + data.message);
         $('#rm' + data.id_user1).text(data.message);
 
         if (data.id_user1 != id_user2) {
@@ -816,8 +822,10 @@
     function postFunction(res) {
         let list = "";
         let result = res.result;
+        let ids = res.ids;
         let messages = res.messages;
-        for (let i = 0; i < result.length; i++) {
+        
+        for (let i = 0; i < ids.length; i++) {
             list += "<li class='person chatboxhead active' data-value='" + result[i]._id + "' id='" + result[i]._id + "' data-chat='" + result[i]._id + "'" +
                 "href='javascript:void(0)'" +
                 "onclick=\"javascript:chatWith2('" + result[i].name + "','" + result[i]._id + "','deven.jpg','Online')\">" +
