@@ -41,25 +41,33 @@ class SidebarRecentUser {
             // Get the User whose _id are in that set.
             var data = [];
             var messages = [];
+
             for (let i = 0; i < ids.length; i++) {
-                User.findOne({ '_id': ids[i] }, '_id name profile_pic', function (error, result) {
-                    // result contains the user of recent list
-                    // here we are inserting the recent message to the result JSON object
-                    messages[i] = sortedArray[i].message;
-                    data.push(result);
-                    // it doesn't send data to untill all the data are fetched
-                    if (i == ids.length - 1) {
-                        // sending sidebar data to user
-                        return res.json({
-                            status: 200,
-                            message: 'data fetching successful',
-                            result: data,
-                            messages: messages,
-                            ids: ids,
-                        });
-                    }
-                });
+                messages[i] = sortedArray[i].message;
             }
+
+            User.find({ '_id': { $in: ids } }, '_id name profile_pic statusbar', function (error, result) {
+                // console.log(ids);
+                // console.log("\n")
+                // console.log(result);
+                let resultSortedArray = [];
+                for (let i = 0; i < ids.length; i++) {
+                    for (let j = 0; j < ids.length; j++) {
+                        if (result[j]._id.toString() == ids[i]) {
+                            resultSortedArray.push(result[j]);
+                        }
+                    }
+                }
+                return res.json({
+                    status: 200,
+                    message: 'data fetching successful',
+                    result: resultSortedArray,
+                    messages: messages,
+                    ids: ids,
+                });
+
+            });
+            
         });
     }
 }
