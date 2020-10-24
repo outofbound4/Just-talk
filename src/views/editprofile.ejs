@@ -63,17 +63,18 @@
 
 <body>
     <div class="container rounded bg-white mt-5 mb-5">
+        <input type="hidden" id="id_user1" name="_id" value="<%= session._id%>">
         <div class="row">
             <div class="col-md-4 border-right">
                 <div class="d-flex flex-column align-items-center text-center p-4 py-5">
-                    <img class="rounded-circle mt-2" id="image" name=""
-                        src="/images/people.png">
+                    <img class="rounded-circle mt-2" id="profile_pic" name="profile_pic"
+                        src="<%= session.profile_pic%>">
 
-                    <label for="profile_pic" class="mt-5 mb-5">
+                    <label for="upload_image" class="mt-5 mb-5">
                         Edit <span><i class="fa fa-edit"></i></span>
                     </label>
-                    <input type="file" class="mt-5 mb-5 btn btn-primary profile-button" name="profile_pic"
-                        id="profile_pic" accept="image/*" style="display: none" />
+                    <input type="file" class="mt-5 mb-5 btn btn-primary profile-button" name="upload_image"
+                        id="upload_image" accept="image/*" style="display: none" />
                     <br />
                 </div>
             </div>
@@ -85,30 +86,35 @@
                     <div class="row mt-2">
                         <div class="col-md-12">
                             <label class="labels">Name</label>
-                            <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="">
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Name"
+                                value="<%= session.name%>">
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-12">
                             <label class="labels">Mobile Number</label>
-                            <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Mobile number" value="">
+                            <input type="text" name="mobile" id="mobile" class="form-control"
+                                placeholder="Mobile number" value="<%= session.mobile%>">
                         </div>
 
                         <div class="col-md-12">
                             <label class="labels">Email ID</label>
-                            <input type="text" name="email" id="email" class="form-control" placeholder="Email id" value="">
+                            <input type="text" name="email" id="email" class="form-control" placeholder="Email id"
+                                value="<%= session.email%>">
                         </div>
 
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label class="labels">Status</label>
-                            <input type="text" name="statusbar" id="statusbar" class="form-control" placeholder="Hey! I'm using just-talk" value="">
+                            <input type="text" name="statusbar" id="statusbar" class="form-control"
+                                placeholder="Hey! I'm using just-talk" value="<%= session.statusbar%>">
                         </div>
 
                     </div>
                     <div class="mt-5 text-center">
-                        <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+                        <button class="btn btn-primary profile-button" onclick="update()" type="button">Save
+                            Profile</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +129,10 @@
 <script src="/ajax/ajax.js"></script>
 <script>
     $(document).ready(function () {
-
+        // it checks if user don't have a profile pic then set default logo profile
+        if ($('#profile_pic').attr('src') == '') {
+            $('#profile_pic').attr('src', '/images/people.png');
+        }
         $image_crop = $('#image_demo').croppie({
             enableExif: true,
             viewport: {
@@ -137,7 +146,7 @@
             }
         });
 
-        $('#profile_pic').on('change', function () {
+        $('#upload_image').on('change', function () {
             var reader = new FileReader();
             reader.onload = function (event) {
                 $image_crop.croppie('bind', {
@@ -155,12 +164,41 @@
                 type: 'canvas',
                 size: 'viewport'
             }).then(function (response) {
-                $('#image').attr('src', response);
+                $('#profile_pic').attr('src', response);
                 $('#uploadimageModal').modal('hide');
+                // here we update user profile
+
+                let image = $('#profile_pic').attr('src');
+                let _id = $("#id_user1").val();
+                let ajax = new Ajax();
+                let urlData = "_id=" + _id + "&profile_pic=" + image;
+                alert("url : " + urlData);
+                ajax.processPOST("/updateImage", urlData, updateImage);
             })
         });
 
     });
+
+    function updateImage(res) {
+        alert(JSON.stringify(res));
+    }
+    // here we are updating name email, phone
+    function update() {
+        let _id = $("#id_user1").val();
+        let name = $("#name").val();
+        let mobile = $("#mobile").val();
+        let email = $("#email").val();
+        let statusbar = $("#statusbar").val();
+
+        let ajax = new Ajax();
+        let urlData = "_id=" + _id + "&name=" + name + "&mobile=" +
+            mobile + "&email=" + email + "&statusbar=" + statusbar;
+            alert("url : " + urlData);
+        ajax.processPOST("/updateProfile", urlData, updateProfile);
+    }
+    function updateProfile(res) {
+        alert(JSON.stringify(res));
+    }
 </script>
 
 </html>
