@@ -101,6 +101,7 @@
                             <label class="labels">Email ID</label>
                             <input type="text" name="email" id="email" class="form-control" placeholder="Email id"
                                 value="<%= session.email%>">
+                            <p id='validEmail' style="color: coral;"></p>
                         </div>
 
                     </div>
@@ -112,6 +113,7 @@
                         </div>
 
                     </div>
+                    <p id='requiredFiledError' style="color: coral;"></p>
                     <div class="mt-5 text-center">
                         <button class="btn btn-primary profile-button" onclick="update()" type="button">Save
                             Profile</button>
@@ -133,6 +135,7 @@
         if ($('#profile_pic').attr('src') == '') {
             $('#profile_pic').attr('src', '/images/people.png');
         }
+        // it cropes the image
         $image_crop = $('#image_demo').croppie({
             enableExif: true,
             viewport: {
@@ -167,16 +170,16 @@
                 $('#profile_pic').attr('src', response);
                 $('#uploadimageModal').modal('hide');
                 // here we update user profile
-
+                // it encode the image to base64
                 let image = $('#profile_pic').attr('src');
+                let imageDataURL = btoa(image);
+                // it sends encoded image to server
                 let _id = $("#id_user1").val();
                 let ajax = new Ajax();
-                let urlData = "_id=" + _id + "&profile_pic=" + image;
-                alert("url : " + urlData);
+                let urlData = "_id=" + _id + "&profile_pic=" + imageDataURL;
                 ajax.processPOST("/updateImage", urlData, updateImage);
             })
         });
-
     });
 
     function updateImage(res) {
@@ -189,15 +192,31 @@
         let mobile = $("#mobile").val();
         let email = $("#email").val();
         let statusbar = $("#statusbar").val();
-
-        let ajax = new Ajax();
-        let urlData = "_id=" + _id + "&name=" + name + "&mobile=" +
-            mobile + "&email=" + email + "&statusbar=" + statusbar;
+        if (isEmail(email) == true) {
+            let ajax = new Ajax();
+            let urlData = "_id=" + _id + "&name=" + name + "&mobile=" +
+                mobile + "&email=" + email + "&statusbar=" + statusbar;
             alert("url : " + urlData);
-        ajax.processPOST("/updateProfile", urlData, updateProfile);
+            ajax.processPOST("/updateProfile", urlData, updateProfile);
+        }
+        else {
+            $("#validEmail").text("Please Enter valid email.");
+        }
     }
     function updateProfile(res) {
-        alert(JSON.stringify(res));
+        if (res.status == 400) {
+            $("#requiredFiledError").text("All fields are required.");
+        }
+        else {
+            alert(JSON.stringify(res));
+        }
+
+    }
+
+    // it validates email
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
     }
 </script>
 
