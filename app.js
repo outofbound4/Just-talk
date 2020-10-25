@@ -28,6 +28,8 @@ app.use(bodyParser.json()); // API response en JSON
 app.use(
   // get post non encode URL
   bodyParser.urlencoded({
+    limit: '2mb',
+    parameterLimit: 10,
     extended: true
   })
 );
