@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 const { check, validationResult } = require('express-validator');
+const validator = require('validator')
 
 
 var Viewcontroller = require('../src/controller/ViewController');
@@ -84,6 +85,7 @@ router.post("/updateImage", [
 router.post("/updateProfile", [
     check('_id', '_id must not be empty').not().isEmpty(),
     check('name', 'name must not be empty').not().isEmpty(),
+    check('email', 'email must be valid').isEmail(),
     check('email', 'email must not be empty').not().isEmpty(),
 ], (req, res) => UserController_obj.updateProfile(req, res));
 module.exports = router;
