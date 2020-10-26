@@ -46,7 +46,7 @@ class SidebarRecentUser {
                 messages[i] = sortedArray[i].message;
             }
 
-            User.find({ '_id': { $in: ids } }, '_id name profile_pic statusbar', function (error, result) {
+            User.find({ '_id': { $in: ids } }, '_id name profile_pic statusbar email', function (error, result) {
                 // console.log(ids);
                 // console.log("\n")
                 // console.log(result);
