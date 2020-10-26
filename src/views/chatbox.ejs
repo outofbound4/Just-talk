@@ -118,8 +118,8 @@
                                         <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
                                             <div class="avatar-body userimage">
                                                 <a href="/editprofile">
-                                                    <img src="" alt="Img" class="avatar-image is-loaded bg-theme"
-                                                        width="100%">
+                                                    <img src="<%= session.profile_pic%>" alt="Img"
+                                                        class="avatar-image is-loaded bg-theme" width="100%">
                                                 </a>
                                             </div>
                                         </div>
@@ -182,8 +182,7 @@
                             <div class="chat-avatar" id="launchProfile">
                                 <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
                                     <div class="avatar-body userimage profile-picture">
-                                        <img src="storage/user_image/Kristina.jpg" alt="img"
-                                            class="avatar-image is-loaded bg-theme" width="100%">
+                                        <img src="" alt="img" class="avatar-image is-loaded bg-theme" width="100%">
                                         &nbsp;
                                     </div>
                                 </div>
@@ -451,9 +450,10 @@
         let list = "";
         let result = res.result;
         for (var i = 0; i < result.length; i++) {
-            list += "<li class='person chatboxhead active' data-value='" + result[i]._id + "' id='" + result[i]._id + "' data-chat='" + result[i]._id + "'" +
+            list += '<li class=\'person chatboxhead active\' data-statusbar="' + result[i].statusbar + '"' +
+                "data-email='" + result[i].email + "' data-value='" + result[i]._id + "' id='" + result[i]._id + "'" +
                 "href='javascript:void(0)'" +
-                "onclick=\"javascript:chatWith1('" + result[i].name + "','" + result[i]._id + "','deven.jpg','Online')\">" +
+                "onclick=\"javascript:chatWith1('" + result[i].name + "','" + result[i]._id + "','" + result[i].profile_pic + "')\">" +
 
                 "<a href='javascript:void(0)'>" +
                 "<span class='userimage profile-picture min-profile-picture'><img " +
@@ -483,8 +483,8 @@
             $("#display").html(list);
     }
     // after clicking on user it creates the chat room of the user 
-    function chatWith1(name_user2, id_user2, img_user2, status_user2) {
-        chatWith(name_user2, id_user2, img_user2, status_user2);
+    function chatWith1(name_user2, id_user2, img_user2) {
+        chatWith(name_user2, id_user2, img_user2);
         messageLoad(id_user2);
     }
     // it loads the chats of the user
@@ -650,7 +650,6 @@
                 clonedLI.clone().prependTo("#display");
             }
         }
-        alert("data.id_user1 : " + data.id_user1 + ",  data.message : " + data.message);
         $('#rm' + data.id_user1).text(data.message);
 
         if (data.id_user1 != id_user2) {
@@ -679,14 +678,16 @@
         var ajax = new Ajax();
         var urlData = "id_user1=" + userid;
         // send request to user controller
+        // it sends request to UserController
         ajax.processPOST("/getUserById", urlData, callback);
     }
     // it will make sidebar User
     function makeSidebarUser(res) {
         let result = res.result;
-        let list = "<li class='person chatboxhead active' data-value='" + result._id + "' id='" + result._id + "' data-chat='" + result._id + "'" +
+        let list = '<li class=\'person chatboxhead active\' data-statusbar="' + result.statusbar + '"' +
+            "data-email='" + result.email + "' data-value='" + result._id + "' id='" + result._id + "'" +
             "href='javascript:void(0)'" +
-            "onclick=\"javascript:chatWith2('" + result.name + "','" + result._id + "','deven.jpg','Online')\">" +
+            "onclick=\"javascript:chatWith2('" + result.name + "','" + result._id + "','" + result.profile_pic + "')\">" +
             "<a href='javascript:void(0)'>" +
             "<span class='userimage profile-picture min-profile-picture'><img " +
             "src='" + result.profile_pic + "' alt='Img'" +
@@ -798,8 +799,8 @@
     });
 
     // after clicking on user it creates the chat room of the user
-    function chatWith2(name_user2, id_user2, img_user2, status_user2) {
-        chatWith(name_user2, id_user2, img_user2, status_user2);
+    function chatWith2(name_user2, id_user2, img_user2) {
+        chatWith(name_user2, id_user2, img_user2);
 
         let id_user1 = $("#id_user1").val();
         socket.emit('REQUEST LAST SEEN', {
@@ -824,11 +825,12 @@
         let result = res.result;
         let ids = res.ids;
         let messages = res.messages;
-        
+
         for (let i = 0; i < ids.length; i++) {
-            list += "<li class='person chatboxhead active' data-value='" + result[i]._id + "' id='" + result[i]._id + "' data-chat='" + result[i]._id + "'" +
+            list += '<li class=\'person chatboxhead active\' data-statusbar="' + result[i].statusbar + '"' +
+                "data-email='" + result[i].email + "' data-value='" + result[i]._id + "' id='" + result[i]._id + "'" +
                 "href='javascript:void(0)'" +
-                "onclick=\"javascript:chatWith2('" + result[i].name + "','" + result[i]._id + "','deven.jpg','Online')\">" +
+                "onclick=\"javascript:chatWith2('" + result[i].name + "','" + result[i]._id + "','" + result[i].profile_pic + "')\">" +
 
                 "<a href='javascript:void(0)'>" +
                 "<span class='userimage profile-picture min-profile-picture'><img " +
