@@ -177,6 +177,7 @@
                 let _id = $("#id_user1").val();
                 let ajax = new Ajax();
                 let urlData = "_id=" + _id + "&profile_pic=" + imageDataURL;
+                // it sends request to UserController
                 ajax.processPOST("/updateImage", urlData, updateImage);
             })
         });
@@ -191,7 +192,8 @@
         let name = $("#name").val();
         let mobile = $("#mobile").val();
         let email = $("#email").val();
-        let statusbar = $("#statusbar").val();
+        // here encoding sidebar status in base64
+        let statusbar = btoa($("#statusbar").val());
         if (isEmail(email) == true) {
             let ajax = new Ajax();
             let urlData = "_id=" + _id + "&name=" + name + "&mobile=" +
