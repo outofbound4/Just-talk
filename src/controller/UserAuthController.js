@@ -50,6 +50,7 @@ class UserAuthController {
                     req.session.name = result.name;
                     req.session.profile_pic = result.profile_pic;
                     req.session.email = result.email;
+                    req.session.statusbar = result.statusbar;
                     req.session._id = result._id;
                     // console.log(req.session);
                     //senddind data to client page
@@ -99,6 +100,7 @@ class UserAuthController {
                         req.session.name = result[0].name;
                         req.session.profile_pic = result[0].profile_pic;
                         req.session.email = result[0].email;
+                        req.session.statusbar = result[0].statusbar;
                         req.session._id = result[0]._id;
                         //  returning data to user
                         return res.json({
