@@ -9,21 +9,21 @@ function scrollDown() {
     $(".scroll-down").css({ 'visibility': 'hidden' });
 }
 
-function chatWith(name_user2, id_user2, img_user2, status_user2) {
+function chatWith(name_user2, id_user2, img_user2) {
     if ($("#pane-intro").css('visibility') == 'visible') {
         $("#pane-intro").css({ 'visibility': 'hidden' });
         $(".chat-right-aside").css({ 'visibility': 'visible' });
     }
-    createChatBox(name_user2, id_user2, img_user2, status_user2);
+    createChatBox(id_user2);
     scrollDown();
-    $('.top2').attr("data-user", name_user2)
-        .attr("data-image", img_user2);
+    $('.top2').attr("data-user", name_user2);
+    $('#launchProfile').find('img').attr('src', img_user2);
     $("#id_user2").val(id_user2);
     $('.chat-header-title').text(name_user2);
 
 }
 
-function createChatBox(name_user2, id_user2, img_user2, status_user2, minimizeChatBox) {
+function createChatBox( id_user2, minimizeChatBox) {
     var chatFormTpl =
         '<div class="block-wchat" id="chatForm_' + id_user2 + '">' +
         '<div id="typing_on"></div>' +
