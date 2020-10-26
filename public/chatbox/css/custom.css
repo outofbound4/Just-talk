@@ -20,9 +20,13 @@
     margin-top: 30px;
 }
 .thumb-lg {
+    height: auto;
+    width: auto;
+}
+/* .thumb-lg {
     height: 88px;
     width: 88px;
-}
+} */
 .text-white {
     color: #ffffff;
 }
