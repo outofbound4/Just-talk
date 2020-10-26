@@ -31,7 +31,7 @@ class UserController {
          */
         else {
             //finding the user credentials
-            User.find({ '_id': req.body.id_user1 }, '_id name profile_pic',
+            User.find({ '_id': req.body.id_user1 }, '_id name profile_pic statusbar email',
 
                 function (error, result) {
                     if (error) {
@@ -75,7 +75,7 @@ class UserController {
             let bufferObj = Buffer.from(req.body.profile_pic, "base64");
             // Encode the Buffer as a utf8 string 
             let decodedImage = bufferObj.toString("utf8");
-            
+
             User.updateOne({ '_id': req.body._id },
                 {
                     '$set': {
@@ -109,10 +109,15 @@ class UserController {
          * block of code will run 
          */
         else {
+            // Create a buffer from the string 
+            let bufferObj = Buffer.from(req.body.statusbar, "base64");
+            // Encode the Buffer as a utf8 string 
+            let statusbar = bufferObj.toString("utf8");
+
             User.updateOne({ '_id': req.body._id },
                 {
                     '$set': {
-                        'statusbar': req.body.statusbar,
+                        'statusbar': statusbar,
                         'name': req.body.name,
                         'email': req.body.email,
                         'mobile': req.body.mobile,
