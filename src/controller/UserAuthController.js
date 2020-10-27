@@ -12,57 +12,7 @@ class UserAuthController {
         this.validationResult = validationResult;
     }
 
-    register(req, res) {
-        let errors = this.validationResult(req);
-        /* If some error occurs, then this 
-         *  block of code will run 
-         */
-        if (!errors.isEmpty()) {
-            //sending errors to client page
-            return res.json({
-                status: 400,
-                message: 'Required Param Empty',
-                errors: errors,
-            });
-        }
-        /* If no error occurs, then this 
-         * block of code will run 
-         */
-        else {
-            User.create({
-                name: req.body.name,
-                mobile: req.body.mobile,
-                password: req.body.password,
-            },
-
-                function (errors, result) {
-                    // iff error occurs
-                    if (errors) {
-                        //sending errors to client page
-                        return res.json({
-                            status: 11000,
-                            message: 'duplicate key error collection. Mobile number already exist',
-                        });
-                    }
-                    // if every things ok
-                    //setting session
-                    req.session.mobile = result.mobile;
-                    req.session.name = result.name;
-                    req.session.profile_pic = result.profile_pic;
-                    req.session.email = result.email;
-                    req.session.statusbar = result.statusbar;
-                    req.session._id = result._id;
-                    // console.log(req.session);
-                    //senddind data to client page
-                    return res.json({
-                        status: 200,
-                        message: 'inserted data in user Module',
-                        result: result,
-                    });
-                });
-        }
-    }
-
+    
     login(req, res) {
         let errors = this.validationResult(req);
         /* If some error occurs, then this 
@@ -81,7 +31,7 @@ class UserAuthController {
         */
         else {
             //finding the user credentials
-            User.find({ mobile: req.body.mobile }, function (errors, result) {
+            User.find({ 'email': req.body.email }, function (errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
@@ -120,7 +70,7 @@ class UserAuthController {
                 else {
                     return res.json({
                         status: 421,
-                        message: 'mobile number not registered',
+                        message: 'email not registered',
                     });
                 }
             });
