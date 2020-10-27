@@ -24,6 +24,12 @@ var schema = new Schema({
     profile_pic: {
         type: String,
     },
+    emailVerifiactionToken: {
+        type: String,
+    },
+    emailVerificationExpiryTime: {
+        type: Date,
+    },
     email_verified_at: {
         type: Date,
     },
