@@ -27,17 +27,9 @@ router.get("/inVideoCall", (req, res) => Viewcontroller_obj.inVideoCall(req, res
 // ChatboxControlle router
 router.post("/usersearch", (req, res) => ChatboxControlle_obj.usersearch(req, res));
 
-//route for registration or new users
-// UserAuthController router
-router.post("/register", [
-    //check not empty fields
-    check('name', 'name must not be empty').not().isEmpty().trim().escape(),
-    check('mobile', 'Mobile number should contains 3 digits').isLength({ min: 3 }),
-    check('password', 'Password length should be 3 characters').isLength({ min: 3 }),
-], (req, res) => UserAuthController_obj.register(req, res));
 //route for login of registered user
 router.post("/login", [
-    check('mobile', 'EmailMobile must not be empty').not().isEmpty().trim().escape(),
+    check('email', 'email must not be empty').not().isEmpty().trim().escape(),
     check('password', 'password must not be empty').not().isEmpty(),
 ], (req, res) => UserAuthController_obj.login(req, res));
 // rout for logout
@@ -83,9 +75,22 @@ router.post("/updateImage", [
 ], (req, res) => UserController_obj.updateImage(req, res));
 // rout for update user profile
 router.post("/updateProfile", [
-    check('_id', '_id must not be empty').not().isEmpty(),
-    check('name', 'name must not be empty').not().isEmpty(),
+    check('_id', '_id must not be empty').not().isEmpty().trim().escape(),
+    check('name', 'name must not be empty').not().isEmpty().trim().escape(),
     check('email', 'email must be valid').isEmail(),
-    check('email', 'email must not be empty').not().isEmpty(),
+    check('email', 'email must not be empty').not().isEmpty().trim().escape(),
 ], (req, res) => UserController_obj.updateProfile(req, res));
+
+//route for NodeMaillerController
+var NodeMaillerController = require('../src/controller/NodeMaillerController');
+const NodeMaillerController_obj = new NodeMaillerController(validationResult);
+//route for registration or new users
+router.post("/register", [
+    //check not empty fields
+    check('email', 'email must be valid').isEmail(),
+    check('email', 'email must not be empty').not().isEmpty().trim().escape(),
+    check('name', 'name must not be empty').not().isEmpty().trim().escape(),
+    check('password', 'Password length should be 3 characters').isLength({ min: 3 }),
+], (req, res) => NodeMaillerController_obj.register(req, res));
+
 module.exports = router;
