@@ -204,7 +204,8 @@
             <div class="login-show">
                 <h2>LOGIN</h2>
                 <form action="" id="login">
-                    <input type="text" name="mobile" placeholder="Mobile" required>
+                    <input type="text" name="email" id="emailLogin" placeholder="Email" required>
+                    <p id='validEmailLogin' style="color: coral;"></p>
                     <input type="password" name="password" placeholder="Password" required>
                     <input type="button" id="btnLogin" value="Login">
                     <a href="">Forgot password?</a>
@@ -214,9 +215,11 @@
                 <h2>REGISTER</h2>
                 <form id="register" action="">
                     <input type="text" name="name" placeholder="Name" required>
-                    <input type="text" name="mobile" placeholder="Mobile" required>
+                    <input type="text" id="emailRegister" name="email" placeholder="Email" required>
+                    <p id='validEmailRegister' style="color: coral;"></p>
                     <input type="password" name="password" placeholder="Password" required>
                     <input type="password" placeholder="Confirm Password" required>
+                    <p id='LinkVrificationMessage' style="color: red;"></p>
                     <input type="button" id="btnRegister" value="Register">
                     <p id="400"></p>
                 </form>
@@ -228,10 +231,17 @@
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="/ajax/ajax.js"></script>
 <script>
+
     $('#btnLogin').on('click', function () {
-        var ajax = new Ajax();
-        var urlData = ajax.create_url_data("login");
-        ajax.processPOST("/login", urlData, postFunctionLogin);
+        let email = $("#emailLogin").val();
+        if (isEmail(email) == true) {
+            var ajax = new Ajax();
+            var urlData = ajax.create_url_data("login");
+            ajax.processPOST("/login", urlData, postFunctionLogin);
+        }
+        else {
+            $("#validEmailLogin").text("Please Enter valid email.");
+        }
     });
 
     function postFunctionLogin(res) {
@@ -258,25 +268,36 @@
     }
 
     $('#btnRegister').on('click', function () {
-        var ajax = new Ajax();
-        var urlData = ajax.create_url_data("register");
-        ajax.processPOST("/register", urlData, postFunctionRegister);
+        let email = $("#emailRegister").val();
+        if (isEmail(email) == true) {
+            var ajax = new Ajax();
+            var urlData = ajax.create_url_data("register");
+            ajax.processPOST("/register", urlData, postFunctionRegister);
+        } else {
+            $("#validEmailRegister").text("Please Enter valid email.");
+        }
     });
 
     function postFunctionRegister(res) {
+        alert(JSON.stringify(res));
         if (res.status === 400) {
             alert(res.message);
         }
         else if (res.status === 11000) {
             alert(res.message);
         }
-        else if (res.status === 200) {
-            // alert(res.message);
-            window.open("/chatbox", "_self");
+        else if (res.status === true) {
+            $("#LinkVrificationMessage").text("Verification link has been sent to your email. Thanks!!");
         }
         else {
-            alert("Somthing went wrong.......");
+            alert("Somthing went wrong : " + JSON.stringify(res));
         }
+    }
+
+    // it validates email
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
     }
 </script>
 <script>
