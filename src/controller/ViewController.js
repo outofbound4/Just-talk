@@ -25,8 +25,11 @@ class ViewController {
       return res.render("userAuth");
     }
   }
-  contactlist(req, res) {
-    return res.render("contactlist");
+  forgetPassword(req, res) {
+    return res.render("forgetPassword");
+  }
+  changePassword(req, res) {
+    return res.render("changePassword");
   }
   editprofile(req, res) {
     return res.render("editprofile");
