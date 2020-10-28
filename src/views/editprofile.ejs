@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/brands.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/solid.css">
-    <link href="/css/pageLoading.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/pageLoading.css" >
 
     <style>
         body {
@@ -98,13 +98,13 @@
                         <div class="col-md-12">
                             <label class="labels">Mobile Number</label>
                             <input type="text" name="mobile" id="mobile" class="form-control"
-                                placeholder="Mobile number" value="<%= session.mobile%>">
+                                placeholder="Mobile number" value="123467891" disabled>
                         </div>
 
                         <div class="col-md-12">
                             <label class="labels">Email ID</label>
                             <input type="text" name="email" id="email" class="form-control" placeholder="Email id"
-                                value="<%= session.email%>">
+                                value="<%= session.email%>" disabled>
                             <p id='validEmail' style="color: coral;"></p>
                         </div>
 
@@ -117,9 +117,15 @@
                         </div>
 
                     </div>
-                    <p id='requiredFiledError' style="color: coral;"></p>
-                    <div class="mt-5 text-center">
-                        <button class="btn btn-primary profile-button" onclick="update()" type="button">Save
+                    <div class="col-md-12 mt-3 text-center">
+                        <p id='requiredFiledError' style="color: coral;"></p>
+                    </div>
+                    <div class="col-md-12 mt-3 text-center" id="loader" style="display: none;">
+                        <div class="loader"></div>
+                    </div>
+
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-primary profile-button" onclick="update()" id="buttonUpdate">Save
                             Profile</button>
                     </div>
                 </div>
@@ -199,17 +205,21 @@
     }
     // here we are updating name email, phone
     function update() {
+        // it displays the page loader
+        $('#buttonUpdate').hide();
+        $('#loader').show();
+
         let _id = $("#id_user1").val();
         let name = $("#name").val();
         let mobile = $("#mobile").val();
         let email = $("#email").val();
+
         // here encoding sidebar status in base64
         let statusbar = btoa($("#statusbar").val());
         if (isEmail(email) == true) {
             let ajax = new Ajax();
             let urlData = "_id=" + _id + "&name=" + name + "&mobile=" +
                 mobile + "&email=" + email + "&statusbar=" + statusbar;
-            alert("url : " + urlData);
             ajax.processPOST("/updateProfile", urlData, updateProfile);
         }
         else {
@@ -217,11 +227,16 @@
         }
     }
     function updateProfile(res) {
+        $('#buttonUpdate').show();
+        $('#loader').hide();
         if (res.status == 400) {
             $("#requiredFiledError").text("All fields are required.");
         }
+        else if (res.status == 200) {
+            $("#requiredFiledError").text("Profile Updated.");
+        }
         else {
-            alert(JSON.stringify(res));
+            $("#requiredFiledError").text("Something went wrong.");
         }
 
     }
