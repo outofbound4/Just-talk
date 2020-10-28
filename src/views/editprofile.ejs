@@ -7,12 +7,14 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="">
     <!-- title -->
-    <title>Chat Box</title>
+    <title>Edit profile</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/croppie/croppie.css" />
     <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/brands.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/solid.css">
+    <link href="/css/pageLoading.css" rel="stylesheet">
+
     <style>
         body {
             background: rgb(79, 23, 99)
@@ -70,6 +72,8 @@
                     <img class="rounded-circle mt-2" id="profile_pic" name="profile_pic"
                         src="<%= session.profile_pic%>">
 
+                    <p id='imgUploadedStatus' class="mt-2 mb-2" style="color: red;"></p>
+                    <div class="loader" id="imgUpload" style="float: right; display: none;"></div>
                     <label for="upload_image" class="mt-5 mb-5">
                         Edit <span><i class="fa fa-edit"></i></span>
                     </label>
@@ -106,7 +110,7 @@
 
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="labels">Status</label>
                             <input type="text" name="statusbar" id="statusbar" class="form-control"
                                 placeholder="Hey! I'm using just-talk" value="<%= session.statusbar%>">
@@ -169,6 +173,9 @@
             }).then(function (response) {
                 $('#profile_pic').attr('src', response);
                 $('#uploadimageModal').modal('hide');
+
+                // profile pic uploading gif
+                $("#imgUpload").show();
                 // here we update user profile
                 // it encode the image to base64
                 let image = $('#profile_pic').attr('src');
@@ -184,7 +191,11 @@
     });
 
     function updateImage(res) {
-        alert(JSON.stringify(res));
+        $("#imgUpload").hide();
+        if (res.status == 200)
+            $("#imgUploadedStatus").text("Profile pic uploaded successfully.");
+        else
+            $("#imgUploadedStatus").text("Something went wrong in uploading.");
     }
     // here we are updating name email, phone
     function update() {
