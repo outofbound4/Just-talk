@@ -18,7 +18,8 @@ const ChatboxControlle_obj = new ChatboxControlle(validationResult);
 // View controller router
 router.get("/home", (req, res) => Viewcontroller_obj.home(req, res));
 router.get("/chatbox", (req, res) => Viewcontroller_obj.chatbox(req, res));
-router.get("/contactlist", (req, res) => Viewcontroller_obj.contactlist(req, res));
+router.get("/forgetPassword", (req, res) => Viewcontroller_obj.forgetPassword(req, res));
+router.get("/changePassword", (req, res) => Viewcontroller_obj.changePassword(req, res));
 router.get("/userAuth", (req, res) => Viewcontroller_obj.userAuth(req, res));
 router.get("/editprofile", (req, res) => Viewcontroller_obj.editprofile(req, res));
 router.get("/inVideoCall", (req, res) => Viewcontroller_obj.inVideoCall(req, res));
@@ -92,5 +93,10 @@ router.post("/register", [
     check('name', 'name must not be empty').not().isEmpty().trim().escape(),
     check('password', 'Password length should be 3 characters').isLength({ min: 3 }),
 ], (req, res) => NodeMaillerController_obj.register(req, res));
+router.post("/forgotPassword", [
+    //check not empty fields
+    check('email', 'email must be valid').isEmail(),
+    check('email', 'email must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => NodeMaillerController_obj.forgotPassword(req, res));
 
 module.exports = router;
