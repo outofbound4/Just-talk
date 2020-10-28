@@ -82,6 +82,9 @@ class UserController {
                         'profile_pic': decodedImage,
                     }
                 }, function (err, result) {
+                    // adding profile pic to session
+                    req.session.profile_pic = decodedImage;
+                    // sends json data to client
                     return res.json({
                         status: 200,
                         message: 'Updated successfully',
@@ -112,17 +115,21 @@ class UserController {
             // Create a buffer from the string 
             let bufferObj = Buffer.from(req.body.statusbar, "base64");
             // Encode the Buffer as a utf8 string 
+            let _id = req.body._id;
             let statusbar = bufferObj.toString("utf8");
-
-            User.updateOne({ '_id': req.body._id },
+            let email = req.body.email;
+            let name = req.body.name;
+            let mobile = req.body.mobile;
+            User.updateOne({ '_id': _id },
                 {
                     '$set': {
                         'statusbar': statusbar,
-                        'name': req.body.name,
-                        'email': req.body.email,
-                        'mobile': req.body.mobile,
+                        'name': name,
                     }
                 }, function (err, result) {
+                    // adding items to session
+                    req.session.name = name;
+                    req.session.statusbar = statusbar;
                     return res.json({
                         status: 200,
                         message: 'Updated successfully',
