@@ -34,10 +34,10 @@ function sendMailToUser(from, to, subject, text, res) {
         'status': false,
         'message': "error in sending message"
       });
-  
+
     } else {
-       //sending errors to client page
-       return res.json({
+      //sending errors to client page
+      return res.json({
         'status': true,
         'message': info.response,
       });
@@ -115,7 +115,7 @@ class NodeMailer {
                 let subject = "Just-Talk Email verification";
                 let text = "here you will get the link to activate your account";
                 // here we are calling sendMailToUser function
-                 sendMailToUser(from, to, subject, text, res);
+                sendMailToUser(from, to, subject, text, res);
               });
           }
           else {
@@ -160,6 +160,57 @@ class NodeMailer {
               let text = "here you will get the link to activate your account";
               sendMailToUser(from, to, subject, text, res);
             });
+        }
+      });
+    }
+  }
+
+  // it sends the forget password reset link to user
+  forgotPassword(req, res) {
+    let errors = this.validationResult(req);
+    /* If some error occurs, then this 
+     *  block of code will run 
+     */
+    if (!errors.isEmpty()) {
+      //sending errors to client page
+      return res.json({
+        status: 400,
+        message: 'Required Param Empty',
+        errors: errors,
+      });
+    }
+    /* If no error occurs, then this 
+     * block of code will run 
+     */
+    else {
+      let email = req.body.email;
+      // finding the user credentials
+      User.find({ email: email }, function (errors, result) {
+        if (errors) {
+          //sending errors to client page
+          return res.json({
+            status: 500,
+            message: 'data fetching error occurs',
+            errors: errors,
+          });
+        }
+        // console.log(result)
+        // if everything ok
+        //checking if result exists
+        if (Object.keys(result).length !== 0) {
+          // if every things ok
+          let from = config.EMAIL.ADMIN_EMAIL;
+          let to = email;
+          let subject = "Just-Talk Email verification";
+          let text = "here you will get the link to activate your account";
+          // here we are calling sendMailToUser function
+          sendMailToUser(from, to, subject, text, res);
+        }
+        else {
+          return res.json({
+            status: 'emailNotRegistered',
+            message: 'this email is not registered email.',
+          });
         }
       });
     }
