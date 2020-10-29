@@ -33,6 +33,11 @@ router.post("/login", [
     check('email', 'email must not be empty').not().isEmpty().trim().escape(),
     check('password', 'password must not be empty').not().isEmpty(),
 ], (req, res) => UserAuthController_obj.login(req, res));
+// rout for verify email address
+router.get("/verifyEmail", [
+    check('_id', '_id must not be empty').not().isEmpty().trim().escape(),
+    check('token', 'token must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => UserAuthController_obj.verifyEmail(req, res));
 // rout for logout
 router.post("/logout", (req, res) => UserAuthController_obj.logout(req, res));
 
