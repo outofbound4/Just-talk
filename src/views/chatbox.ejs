@@ -499,8 +499,15 @@
         var id_user2 = $("#id_user2").val();
         var message_content = '<div id="chatbox_' + id_user2 + '" class="chat chatboxcontent active-chat"' +
             'data-chat="person_' + id_user2 + '" client="' + id_user2 + '">';
-
+        let date;
         for (var i = 0; i < res.result.length; i++) {
+            let messageDate = new Date(res.result[i].time).getDate();
+            let formatedDate2 = dateConvert2(new Date(res.result[i].time));
+            if (date != messageDate) {
+                date = messageDate;
+                message_content += '<div class="" style="text-align: center;"><h2 style="color: green;font-weight: bold;">' + formatedDate2.date + '</h2></div>';
+            }
+
             if (res.result[i].id_user1 == id_user2) {
                 message_content +=
                     '<div class="col-xs-12 p-b-10">' +
@@ -508,7 +515,7 @@
                     '<div class="chat-text">' +
                     '<input type="hidden" name="message_object_id" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
                     '<p>' + res.result[i].message + '</p >' +
-                    '<b>' + res.result[i].time + '</b>' +
+                    '<b>' + formatedDate2.time + '</b>' +
                     '</div >' +
                     '</div >' +
                     '</div >';
@@ -529,7 +536,7 @@
                     '<div class="chat-text">' +
                     '<input type="hidden" name="message_object_id" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
                     '<p>' + res.result[i].message + '</p>' +
-                    '<b>' + res.result[i].time + '</b>';
+                    '<b>' + formatedDate2.time + '</b>';
                 if (res.result[i].status == 1)
                     message_content += '<span class="msg-status"><i class="fas fa-check-double"></i></span>';
                 else if (res.result[i].status == 2)
@@ -546,6 +553,89 @@
         $("#resultchat").html(message_content);
         // this method is defined in asset/inbox.js
         scrollDown();
+    }
+    function dateConvert2(dateobj) {
+        var year = dateobj.getFullYear();
+        var month = ("0" + (dateobj.getMonth() + 1)).slice(-2);
+        var date = ("0" + dateobj.getDate()).slice(-2);
+        var hours = ("0" + dateobj.getHours()).slice(-2);
+        var minutes = ("0" + dateobj.getMinutes()).slice(-2);
+        var seconds = ("0" + dateobj.getSeconds()).slice(-2);
+        var day = dateobj.getDay();
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var dates = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var converted_date = "";
+
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        var currentMonth = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+        var currentdate = ("0" + (currentDate.getDate())).slice(-2);
+
+
+        var dateDiff = parseInt(currentdate) - parseInt(date);
+
+        if (currentYear == year) {
+            if ((currentMonth == month) && (dateDiff < 7)) {
+                switch (dateDiff) {
+                    case 0:
+                        if (date > 12) {
+                            converted_date = {
+                                'date': 'Today',
+                                'time': (hours - 12) + "." + minutes + " PM",
+                            }
+                        } else {
+                            converted_date = {
+                                'date': 'Today',
+                                'time': hours + "." + minutes + " AM",
+                            }
+                        }
+                        break;
+                    case 1:
+                        if (date > 12) {
+                            converted_date = {
+                                'date': 'Yesterday',
+                                'time': (hours - 12) + "." + minutes + " PM",
+                            }
+                        } else {
+                            converted_date = {
+                                'date': 'Yesterday',
+                                'time': hours + "." + minutes + " AM",
+                            }
+                        }
+                        break;
+                    default:
+                        if (date > 12) {
+                            converted_date = {
+                                'date': dates[parseInt(day)],
+                                'time': (hours - 12) + "." + minutes + " PM",
+                            }
+                        } else {
+                            converted_date = {
+                                'date': dates[parseInt(day)],
+                                'time': hours + "." + minutes + " AM",
+                            }
+                        }
+                }
+            } else {
+                if (date > 12) {
+                    converted_date = {
+                        'date': date + " " + months[parseInt(month) - 1],
+                        'time': (hours - 12) + "." + minutes + " PM",
+                    }
+                } else {
+                    converted_date = {
+                        'date': date + " " + months[parseInt(month) - 1],
+                        'time': hours + "." + minutes + " AM",
+                    }
+                }
+            }
+        } else {
+            converted_date = {
+                'date': year + " " + months[parseInt(month) - 1] + " " + date,
+                'time': hours + "." + minutes + " AM",
+            }
+        }
+        return converted_date;
     }
     // this function's work is to save mesaage to the server
     // this function is called from public/chatbox/chatjs/inbox.js 
@@ -780,8 +870,7 @@
         let id_user2 = $("#id_user2").val();
         if (id_user2 == data.id_user2) {
             var date = new Date(data.lastSeen);
-            var format = "YYYY-MMM-DD DDD";
-            let formatedDate = dateConvert(date, format)
+            let formatedDate = dateConvert(date)
             $("#typing_on").text("Last Seen " + formatedDate);
         }
 
@@ -806,14 +895,13 @@
         }
         else {
             var date = new Date(data.lastSeen);
-            var format = "YYYY-MMM-DD DDD";
-            let formatedDate = dateConvert(date, format)
+            let formatedDate = dateConvert(date)
             $("#typing_on").text("Last Seen " + formatedDate);
         }
 
     });
 
-    function dateConvert(dateobj, format) {
+    function dateConvert(dateobj) {
         var year = dateobj.getFullYear();
         var month = ("0" + (dateobj.getMonth() + 1)).slice(-2);
         var date = ("0" + dateobj.getDate()).slice(-2);
@@ -844,7 +932,7 @@
                         if (date > 12) {
                             converted_date = "today At " + (hours - 12) + "." + minutes + " PM";
                         } else {
-                            converted_date = " At " + hours + "." + minutes + " AM";
+                            converted_date = "today At " + hours + "." + minutes + " AM";
                         }
                         break;
                     case 1:
@@ -869,14 +957,9 @@
                 }
             }
         } else {
-            switch (format) {
-                case "YYYY-MM-DD":
-                    converted_date = year + "-" + month + "-" + date;
-                    break;
-                case "YYYY-MMM-DD DDD":
-                    converted_date = year + "-" + months[parseInt(month) - 1] + "-" + date + " " + dates[parseInt(day)];
-                    break;
-            }
+
+            converted_date = year + "-" + months[parseInt(month) - 1] + "-" + date + " " + dates[parseInt(day)];
+
         }
 
         return converted_date;
