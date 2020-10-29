@@ -208,6 +208,7 @@
                     <input type="text" name="email" id="emailLogin" placeholder="Email" required>
                     <p id='validEmailLogin' style="color: coral;"></p>
                     <input type="password" name="password" placeholder="Password" required>
+                    <p id='LoginResponse' style="color: red;"></p>
                     <div class="loader" id="loginLoader" style="float: right; display: none;"></div>
                     <input type="button" id="btnLogin" value="Login">
                     <a href="/forgetPassword">Forgot password?</a>
@@ -221,7 +222,7 @@
                     <p id='validEmailRegister' style="color: coral;"></p>
                     <input type="password" name="password" placeholder="Password" required>
                     <input type="password" placeholder="Confirm Password" required>
-                    <p id='LinkVrificationMessage' style="color: red;"></p>
+                    <p id='RegisterResponse' style="color: red;"></p>
                     <div class="loader" id="registerLoading" style="float: right; display: none;"></div>
                     <input type="button" id="btnRegister" value="Register">
                     <p id="400"></p>
@@ -253,24 +254,21 @@
     function postFunctionLogin(res) {
         $('#btnLogin').show();
         $('#loginLoader').hide();
+        
         if (res.status === 400) {
-            alert(res.message);
-        }
-        else if (res.status === 500) {
-            alert(res.message);
+            $("#LoginResponse").text("All fields are mendatory.");
         }
         else if (res.status === 200) {
-            // alert(res.message);
             window.open("/chatbox", "_self");
         }
         else if (res.status === 422) {
-            alert(res.message);
+            $("#LoginResponse").text("Unauthorised user, password incorrect.");
         }
         else if (res.status === 421) {
-            alert(res.message);
+            $("#LoginResponse").text("Email not registered.");
         }
         else {
-            alert("Somthing went wrong.......");
+            $("#LoginResponse").text("Something went wrong.");
 
         }
     }
@@ -293,19 +291,20 @@
         $('#btnRegister').show();
         
         if (res.status === 400) {
-            alert(res.message);
-        }
-        else if (res.status === 11000) {
-            alert(res.message);
+            $("#RegisterResponse").text("All fields are mendatory.");
         }
         else if (res.status === true) {
-            $("#LinkVrificationMessage").text("Verification link has been sent to your email. Thanks!!");
+            $("#RegisterResponse").text("Verification link has been sent to your email. Thanks!!");
         }
         else if (res.status === false) {
-            $("#LinkVrificationMessage").text("Please Check your internet connectivity. Thanks!!");
+            $("#RegisterResponse").text("Please Check your internet connectivity. Thanks!!");
         }
+        else if (res.status === 'userExist') {
+            $("#RegisterResponse").text("Email id already registered.");
+        }
+        
         else {
-            alert("Somthing went wrong : " + JSON.stringify(res));
+            $("#RegisterResponse").text("Something went wrong.");
         }
     }
 
