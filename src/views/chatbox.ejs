@@ -684,6 +684,7 @@
     // it will make sidebar User
     function makeSidebarUser(res) {
         let result = res.result;
+        $("#display").find('p').remove();
         let list = '<li class=\'person chatboxhead active\' data-statusbar="' + result.statusbar + '"' +
             "data-email='" + result.email + "' data-value='" + result._id + "' id='" + result._id + "'" +
             "href='javascript:void(0)'" +
@@ -777,8 +778,13 @@
     socket.on('OFFLINE', function (data) {
 
         let id_user2 = $("#id_user2").val();
-        if (id_user2 == data.id_user2)
-            $("#typing_on").text(data.lastSeen);
+        if (id_user2 == data.id_user2) {
+            var date = new Date(data.lastSeen);
+            var format = "YYYY-MMM-DD DDD";
+            let formatedDate = dateConvert(date, format)
+            $("#typing_on").text("Last Seen: " + formatedDate);
+        }
+
 
         let personStatus = $(".personStatus" + data.id_user2);
         personStatus.html("");
@@ -795,8 +801,86 @@
 
     // it shows the last seen of user when click on sidebar user
     socket.on('RESPONSE LAST SEEN', function (data) {
-        $("#typing_on").text(data.lastSeen);
+        if (data.lastSeen == 'Online') {
+            $("#typing_on").text(data.lastSeen);
+        }
+        else {
+            var date = new Date(data.lastSeen);
+            var format = "YYYY-MMM-DD DDD";
+            let formatedDate = dateConvert(date, format)
+            $("#typing_on").text("Last Seen: " + formatedDate);
+        }
+
     });
+
+    function dateConvert(dateobj, format) {
+        var year = dateobj.getFullYear();
+        var month = ("0" + (dateobj.getMonth() + 1)).slice(-2);
+        var date = ("0" + dateobj.getDate()).slice(-2);
+        var hours = ("0" + dateobj.getHours()).slice(-2);
+        var minutes = ("0" + dateobj.getMinutes()).slice(-2);
+        var seconds = ("0" + dateobj.getSeconds()).slice(-2);
+        var day = dateobj.getDay();
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var dates = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var converted_date = "";
+
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        var currentMonth = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+        var currentdate = ("0" + (currentDate.getDate())).slice(-2);
+        // var currenthours = ("0" + (currentDate.getHours())).slice(-2);
+        // var currentminutes = ("0" + (currentDate.getMinutes())).slice(-2);
+
+        var dateDiff = parseInt(currentdate) - parseInt(date);
+
+        if (currentYear == year) {
+            if ((currentMonth == month) && (dateDiff < 7)) {
+                switch (dateDiff) {
+                    case 0:
+                        // if ((parseInt(currenthours) - parseInt(hours)) == 0) {
+                        //     converted_date = (parseInt(currentminutes) - parseInt(minutes)) + " minutes ago.";
+                        // }
+                        if (date > 12) {
+                            converted_date = " At " + (hours - 12) + "." + minutes + " PM";
+                        } else {
+                            converted_date = " At " + hours + "." + minutes + " AM";
+                        }
+                        break;
+                    case 1:
+                        if (date > 12) {
+                            converted_date = "Yesterday, At " + (hours - 12) + "." + minutes + " PM";
+                        } else {
+                            converted_date = "Yesterday, At " + hours + "." + minutes + " AM";
+                        }
+                        break;
+                    default:
+                        if (date > 12) {
+                            converted_date = dates[parseInt(day)] + " At " + (hours - 12) + "." + minutes + " PM";
+                        } else {
+                            converted_date = dates[parseInt(day)] + " At " + hours + "." + minutes + " AM";
+                        }
+                }
+            } else {
+                if (date > 12) {
+                    converted_date = date + "-" + months[parseInt(month) - 1] + " At " + (hours - 12) + "." + minutes + " PM";
+                } else {
+                    converted_date = date + "-" + months[parseInt(month) - 1] + " At " + hours + "." + minutes + " AM";
+                }
+            }
+        } else {
+            switch (format) {
+                case "YYYY-MM-DD":
+                    converted_date = year + "-" + month + "-" + date;
+                    break;
+                case "YYYY-MMM-DD DDD":
+                    converted_date = year + "-" + months[parseInt(month) - 1] + "-" + date + " " + dates[parseInt(day)];
+                    break;
+            }
+        }
+
+        return converted_date;
+    }
 
     // after clicking on user it creates the chat room of the user
     function chatWith2(name_user2, id_user2, img_user2) {
