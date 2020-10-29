@@ -782,7 +782,7 @@
             var date = new Date(data.lastSeen);
             var format = "YYYY-MMM-DD DDD";
             let formatedDate = dateConvert(date, format)
-            $("#typing_on").text("Last Seen: " + formatedDate);
+            $("#typing_on").text("Last Seen " + formatedDate);
         }
 
 
@@ -808,7 +808,7 @@
             var date = new Date(data.lastSeen);
             var format = "YYYY-MMM-DD DDD";
             let formatedDate = dateConvert(date, format)
-            $("#typing_on").text("Last Seen: " + formatedDate);
+            $("#typing_on").text("Last Seen " + formatedDate);
         }
 
     });
@@ -842,7 +842,7 @@
                         //     converted_date = (parseInt(currentminutes) - parseInt(minutes)) + " minutes ago.";
                         // }
                         if (date > 12) {
-                            converted_date = " At " + (hours - 12) + "." + minutes + " PM";
+                            converted_date = "today At " + (hours - 12) + "." + minutes + " PM";
                         } else {
                             converted_date = " At " + hours + "." + minutes + " AM";
                         }
