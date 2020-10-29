@@ -12,7 +12,7 @@ class UserAuthController {
         this.validationResult = validationResult;
     }
 
-    
+
     login(req, res) {
         let errors = this.validationResult(req);
         /* If some error occurs, then this 
@@ -85,6 +85,65 @@ class UserAuthController {
                 status: 200,
                 message: 'Logout successfull',
             });
+    }
+
+    // it verifies the email
+    verifyEmail(req, res) {
+        let errors = this.validationResult(req);
+        /* If some error occurs, then this 
+         *  block of code will run 
+         */
+        if (!errors.isEmpty()) {
+            //sending errors to client page
+            return res.json({
+                status: 400,
+                message: 'Required Param Empty',
+                errors: errors,
+            });
+        }
+        /* If no error occurs, then this 
+        * block of code will run 
+        */
+        else {
+            let _id = req.query._id;
+            let emailVerifiactionToken = req.query.token;
+            //finding the user credentials
+            User.findOne({ '_id': _id }, "emailVerifiactionToken emailVerificationExpiryTime email_verified_at", function (errors, result) {
+                if (errors) {
+                    //sending errors to client page
+                    return res.json({
+                        status: 500,
+                        message: 'data fetching error occurs',
+                        errors: errors,
+                    });
+                }
+                // if everything ok
+                //  && (result.email_verified_at == 'undefined')
+                let CurrentTime = new Date();
+                let timeDifference = CurrentTime - result.emailVerificationExpiryTime;
+                if ((result.emailVerifiactionToken.toString() == emailVerifiactionToken) && (result.email_verified_at == null) && (timeDifference < 0)) {
+                    User.updateOne({ '_id': _id },
+                        {
+                            '$set': {
+                                'email_verified_at': CurrentTime,
+                            }
+                        }, function (err, result) {
+                            console.log(err);
+                            console.log(result);
+                            // sends json data to client
+                            return res.send("<div class='text-center'><h2 style='color:green;'>Email verification done. Thanks!!</h2></div>");
+                        });
+                }
+                else {
+                    console.log("emailVerifiactionToken : " + emailVerifiactionToken);
+                    console.log("result.emailVerifiactionToken : " + result.emailVerifiactionToken);
+                    console.log("result.email_verified_at : " + result.email_verified_at);
+                    console.log("timeDifference : " + timeDifference);
+
+                    return res.send("<div style='text-center'><h2 style='color:red;'>Link expired. Thanks!!</h2></div>");
+                }
+            });
+        }
     }
 }
 module.exports = UserAuthController;
