@@ -76,7 +76,7 @@ class NodeMailer {
       let name = req.body.name;
       let password = req.body.password;
       //finding the user credentials
-      User.find({ email: email }, function (errors, result) {
+      User.find({ email: email }, "email_verified_at", function (errors, result) {
         if (errors) {
           //sending errors to client page
           return res.json({
@@ -89,7 +89,7 @@ class NodeMailer {
         // if everything ok
         //checking if result exists
         if (Object.keys(result).length !== 0) {
-          if (result[0].email_verified_at != 'undefined') {
+          if (result[0].email_verified_at == null) {
             // generating email authentication tocken
             let verificationToken = randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
             // adding 30 minutes to current time
@@ -108,14 +108,26 @@ class NodeMailer {
                 }
               }, function (err, result) {
                 // update message
-                console.log(result);
-                // if every things ok
-                let from = config.EMAIL.ADMIN_EMAIL;
-                let to = email;
-                let subject = "Just-Talk Email verification";
-                let text = "here you will get the link to activate your account";
-                // here we are calling sendMailToUser function
-                sendMailToUser(from, to, subject, text, res);
+                // console.log(result);
+                User.findOne({ email: email }, "_id", function (errors, result) {
+                  if (errors) {
+                    //sending errors to client page
+                    return res.json({
+                      status: 500,
+                      message: 'data fetching error occurs',
+                      errors: errors,
+                    });
+                  }
+                  let _id = result._id;
+                  // if every things ok
+                  let from = config.EMAIL.ADMIN_EMAIL;
+                  let to = email;
+                  let subject = "Just-Talk Email verification";
+                  let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
+                  // here we are calling sendMailToUser function
+                  sendMailToUser(from, to, subject, text, res);
+                });
+
               });
           }
           else {
@@ -143,6 +155,7 @@ class NodeMailer {
           },
 
             function (errors, result) {
+              let _id = result._id;
               // iff error occurs
               if (errors) {
                 //sending errors to client page
@@ -157,7 +170,7 @@ class NodeMailer {
               let from = config.EMAIL.ADMIN_EMAIL;
               let to = email;
               let subject = "Just-Talk Email verification";
-              let text = "here you will get the link to activate your account";
+              let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
               sendMailToUser(from, to, subject, text, res);
             });
         }
