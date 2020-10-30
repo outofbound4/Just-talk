@@ -104,4 +104,13 @@ router.post("/forgotPassword", [
     check('email', 'email must not be empty').not().isEmpty().trim().escape(),
 ], (req, res) => NodeMaillerController_obj.forgotPassword(req, res));
 
+//route for UnreadCountController
+var UnreadCountController = require('../src/controller/UnreadCountController');
+const UnreadCountController_obj = new UnreadCountController(validationResult);
+//route for update unread message count
+router.post("/incUnreadCount", [
+    //check not empty fields
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
+    check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => UnreadCountController_obj.incUnreadCount(req, res));
 module.exports = router;
