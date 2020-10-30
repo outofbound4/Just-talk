@@ -820,7 +820,14 @@
             incUnreadCount(id_user1, data.id_user1, incUnreadCountPOST);
         }
     });
-
+    socket.on('NOT ONLINE', function (data) {
+        // it is for unread message count to page
+        // it is called when we message to someone and that is not online
+        incUnreadCount(data.id_user2, data.id_user1, NotOnlinePOST);
+    });
+    function NotOnlinePOST(res) {
+        // alert(JSON.stringify(res))
+    }
     // it update unread count to database
     function incUnreadCount(id_user1, id_user2, callback) {
         var ajax = new Ajax();
@@ -830,7 +837,10 @@
     }
     // it displays the unread count to page
     function incUnreadCountPOST(res) {
-        alert(JSON.stringify(res));
+
+        $("#unreadCount" + res.id_user2).html("<span class='icon-meta unread-count' >" +
+            res.unreadMessage + "</span>");
+
     }
     // Handler for 'delivered' event
     socket.on('delivered', function (message) {
@@ -1075,9 +1085,21 @@
             id_user1: id_user1,
             id_user2: id_user2,
         });
-
+        // it set zero to database of unreadMessage
+        removeMessageCount(id_user1, id_user2);
         // it will load the chat messages
         messageLoad(id_user2);
+    }
+    // it set message count to database to zero
+    function removeMessageCount(id_user1, id_user2) {
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1 + "&id_user2=" + id_user2;
+        // it sends request to UnreadCountController.js
+        ajax.processPOST("/removeMessageCount", urlData, POSTremoveMessageCount);
+    }
+    function POSTremoveMessageCount(res) {
+        // alert(JSON.stringify(res));
+        $("#unreadCount" + res.id_user2).html("");
     }
     // Handler for 'markedSeen' event
     socket.on('markedSeen', function (message) {
@@ -1107,8 +1129,7 @@
                 "<span>" +
                 "<span class='bname personName'>" + result[i].name + "</span>" +
                 "<span class='personStatus" + result[i]._id + "'></span> " +
-                "<span class='count'><span " +
-                "class='icon-meta unread-count' id='unreadCount'>2</span></span><br>" +
+                "<span class='count' id='unreadCount" + result[i]._id + "'></span><br>" +
                 "<small class='preview cut-text'><span id='rm" + result[i]._id + "' class='Online '>" + messages[i] + "</span><span></span></small>" +
                 "</span>" +
                 "</a >" +
@@ -1124,9 +1145,25 @@
                 id_user1: id_user1,
                 ids: res.ids,
             });
+            // it show the unread message count on the sidebar
+            showUnreadCount(id_user1);
         }
     }
+    // it fetches the unread message count from the server
+    function showUnreadCount(id_user1) {
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1;
+        // it sends request to UnreadCountController.js
+        ajax.processPOST("/showUnreadCount", urlData, POSTshowUnreadCount);
+    }
+    function POSTshowUnreadCount(res) {
+        let result = res.result;
 
+        for (let i = 0; i < result.length; i++) {
+            $("#unreadCount" + result[i].id_user2).html("<span class='icon-meta unread-count' >" +
+                result[i].unreadMessage + "</span>");
+        }
+    }
     // it fetches the sidebar data
     function sidebarRecentUser() {
         var id_user1 = $("#id_user1").val();
