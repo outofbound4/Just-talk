@@ -113,4 +113,16 @@ router.post("/incUnreadCount", [
     check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
     check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
 ], (req, res) => UnreadCountController_obj.incUnreadCount(req, res));
+//route for showing unread message count
+router.post("/showUnreadCount", [
+    //check not empty fields
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => UnreadCountController_obj.showUnreadCount(req, res));
+//route for removing unread message count
+router.post("/removeMessageCount", [
+    //check not empty fields
+    check('id_user1', 'id_user1 must not be empty').not().isEmpty().trim().escape(),
+    check('id_user2', 'id_user2 must not be empty').not().isEmpty().trim().escape(),
+], (req, res) => UnreadCountController_obj.removeMessageCount(req, res));
+
 module.exports = router;
