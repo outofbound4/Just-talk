@@ -49,8 +49,7 @@ class SocketConnection {
                 if (lastSeen[activeUsers[data.id_user2]] == online) {
                     io.to(activeUsers[data.id_user2]).emit("receiving_message", data);
                 } else {
-                    // messages[data.id_user1] = data;
-                    // console.log(messages[data.id_user1]);
+                    io.to(activeUsers[data.id_user1]).emit("NOT ONLINE", data);
                 }
             });
             // called when user type message to another user
