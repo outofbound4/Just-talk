@@ -505,7 +505,11 @@
             let formatedDate2 = dateConvert2(new Date(res.result[i].time));
             if (date != messageDate) {
                 date = messageDate;
-                message_content += '<div class="" style="text-align: center;"><h2 style="color: green;font-weight: bold;">' + formatedDate2.date + '</h2></div>';
+                message_content += '<div class="col-xs-12 p-b-10" style="text-align: center;">' +
+                    '<div class="chat-body">' +
+                    '<div class="chat-text">' +
+                    '<h2 class="messageDate" style="color: green;font-weight: bold;">' + formatedDate2.date + '</h2>' +
+                    '</div></div></div>';
             }
 
             if (res.result[i].id_user1 == id_user2) {
@@ -578,7 +582,19 @@
             if ((currentMonth == month) && (dateDiff < 7)) {
                 switch (dateDiff) {
                     case 0:
-                        if (date > 12) {
+                        if (hours == 12) {
+                            converted_date = {
+                                'date': 'Today',
+                                'time': "12." + minutes + " PM",
+                            }
+                        }
+                        else if (hours == 24) {
+                            converted_date = {
+                                'date': 'Today',
+                                'time': "12." + minutes + " AM",
+                            }
+                        }
+                        else if (hours > 12) {
                             converted_date = {
                                 'date': 'Today',
                                 'time': (hours - 12) + "." + minutes + " PM",
@@ -591,7 +607,19 @@
                         }
                         break;
                     case 1:
-                        if (date > 12) {
+                        if (hours == 12) {
+                            converted_date = {
+                                'date': 'Yesterday',
+                                'time': "12." + minutes + " PM",
+                            }
+                        }
+                        else if (hours == 24) {
+                            converted_date = {
+                                'date': 'Yesterday',
+                                'time': "12." + minutes + " AM",
+                            }
+                        }
+                        else if (hours > 12) {
                             converted_date = {
                                 'date': 'Yesterday',
                                 'time': (hours - 12) + "." + minutes + " PM",
@@ -604,7 +632,19 @@
                         }
                         break;
                     default:
-                        if (date > 12) {
+                        if (hours == 12) {
+                            converted_date = {
+                                'date': dates[parseInt(day)],
+                                'time': "12." + minutes + " PM",
+                            }
+                        }
+                        else if (hours == 24) {
+                            converted_date = {
+                                'date': dates[parseInt(day)],
+                                'time': "12." + minutes + " AM",
+                            }
+                        }
+                        else if (hours > 12) {
                             converted_date = {
                                 'date': dates[parseInt(day)],
                                 'time': (hours - 12) + "." + minutes + " PM",
@@ -617,7 +657,19 @@
                         }
                 }
             } else {
-                if (date > 12) {
+                if (hours == 12) {
+                    converted_date = {
+                        'date': date + " " + months[parseInt(month) - 1],
+                        'time': "12." + minutes + " PM",
+                    }
+                }
+                else if (hours == 24) {
+                    converted_date = {
+                        'date': date + " " + months[parseInt(month) - 1],
+                        'time': "12." + minutes + " AM",
+                    }
+                }
+                else if (hours > 12) {
                     converted_date = {
                         'date': date + " " + months[parseInt(month) - 1],
                         'time': (hours - 12) + "." + minutes + " PM",
@@ -701,17 +753,30 @@
 
     // listenevent
     socket.on('receiving_message', function (data) {
-        var message_content =
+        let id_user2 = $("#id_user2").val();
+        let id_user1 = $("#id_user1").val();
+        let previousMessageDate = $(".messageDate").last().text()
+        let currentMessageDate = dateConvert2(new Date());
+        var message_content = '';
+        if (previousMessageDate != currentMessageDate.date) {
+            message_content = '<div class="col-xs-12 p-b-10" style="text-align: center;">' +
+                '<div class="chat-body">' +
+                '<div class="chat-text">' +
+                '<h2 class="messageDate" style="color: green;font-weight: bold;">' + currentMessageDate.date + '</h2>' +
+                '</div></div></div>';
+        }
+
+        message_content +=
             '<div class="col-xs-12 p-b-10">' +
             '<div class="chat-body">' +
             '<div class="chat-text">' +
             '<input type="hidden" name="message_object_id" id=\'' + data._id + '\' value=\'' + data._id + '\'>' +
             '<p>' + data.message + '</p >' +
-            '<b>' + (new Date()).toISOString() + '</b>' +
+            '<b>' + currentMessageDate.time + '</b>' +
             '</div >' +
             '</div >' +
             '</div >';
-        let id_user2 = $("#id_user2").val();
+
         if (data.id_user1 == id_user2) {
             $("#resultchat").append(message_content);
             // this method is defined in asset/inbox.js
@@ -730,10 +795,11 @@
         // here index = -1 represent user not in sidebar recent list
         if (index == -1) {
             getUserById(data.id_user1, makeSidebarUser);
+            // incUnreadCount(id_user1, data.id_user1, incUnreadCountPOST);
         }
         else {
-            let listItem = $("#" + data.id_user1);
-            let index = $("li").index(listItem);
+            // let listItem = $("#" + data.id_user1);
+            // let index = $("li").index(listItem);
             if (index != 1) {
                 let clonedLI = $("#display li:nth-child(" + index + ")");
                 listItem.remove();
@@ -750,11 +816,22 @@
                 id_user1: data.id_user1,
                 id_user2: data.id_user2,
             });
-
-
+            // it is for unread message count to page
+            incUnreadCount(id_user1, data.id_user1, incUnreadCountPOST);
         }
     });
 
+    // it update unread count to database
+    function incUnreadCount(id_user1, id_user2, callback) {
+        var ajax = new Ajax();
+        var urlData = "id_user1=" + id_user1 + "&id_user2=" + id_user2;
+        // it sends request to UnreadCountController.js
+        ajax.processPOST("/incUnreadCount", urlData, callback);
+    }
+    // it displays the unread count to page
+    function incUnreadCountPOST(res) {
+        alert(JSON.stringify(res));
+    }
     // Handler for 'delivered' event
     socket.on('delivered', function (message) {
         updateMessageStatus(message._id, 1);
@@ -929,28 +1006,52 @@
                         // if ((parseInt(currenthours) - parseInt(hours)) == 0) {
                         //     converted_date = (parseInt(currentminutes) - parseInt(minutes)) + " minutes ago.";
                         // }
-                        if (date > 12) {
+                        if (hours == 12) {
+                            converted_date = "today At 12." + minutes + " PM";
+                        }
+                        else if (hours == 24) {
+                            converted_date = "today At 12." + minutes + " PM";
+                        }
+                        else if (hours > 12) {
                             converted_date = "today At " + (hours - 12) + "." + minutes + " PM";
                         } else {
                             converted_date = "today At " + hours + "." + minutes + " AM";
                         }
                         break;
                     case 1:
-                        if (date > 12) {
+                        if (hours == 12) {
+                            converted_date = "Yesterday At 12." + minutes + " PM";
+                        }
+                        else if (hours == 24) {
+                            converted_date = "Yesterday At 12." + minutes + " AM";
+                        }
+                        else if (hours > 12) {
                             converted_date = "Yesterday, At " + (hours - 12) + "." + minutes + " PM";
                         } else {
                             converted_date = "Yesterday, At " + hours + "." + minutes + " AM";
                         }
                         break;
                     default:
-                        if (date > 12) {
+                        if (hours == 12) {
+                            converted_date = dates[parseInt(day)] + " At 12." + minutes + " PM";
+                        }
+                        else if (hours == 24) {
+                            converted_date = dates[parseInt(day)] + " At 12." + minutes + " AM";
+                        }
+                        else if (hours > 12) {
                             converted_date = dates[parseInt(day)] + " At " + (hours - 12) + "." + minutes + " PM";
                         } else {
                             converted_date = dates[parseInt(day)] + " At " + hours + "." + minutes + " AM";
                         }
                 }
             } else {
-                if (date > 12) {
+                if (hours == 12) {
+                    converted_date = date + "-" + months[parseInt(month) - 1] + " At 12." + minutes + " PM";
+                }
+                else if (hours == 24) {
+                    converted_date = date + "-" + months[parseInt(month) - 1] + " At 12." + minutes + " AM";
+                }
+                else if (hours > 12) {
                     converted_date = date + "-" + months[parseInt(month) - 1] + " At " + (hours - 12) + "." + minutes + " PM";
                 } else {
                     converted_date = date + "-" + months[parseInt(month) - 1] + " At " + hours + "." + minutes + " AM";
