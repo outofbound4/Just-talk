@@ -4,7 +4,6 @@ var io;
 var activeUsers = [];
 var lastSeen = [];
 var user = [];
-var messages = {};
 var online = 'Online';
 class SocketConnection {
 
