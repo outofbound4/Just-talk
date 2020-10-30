@@ -23,7 +23,7 @@ function chatWith(name_user2, id_user2, img_user2) {
 
 }
 
-function createChatBox( id_user2, minimizeChatBox) {
+function createChatBox(id_user2, minimizeChatBox) {
     var chatFormTpl =
         '<div class="block-wchat" id="chatForm_' + id_user2 + '">' +
         '<div id="typing_on"></div>' +
@@ -85,22 +85,34 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
             message = $words.join(' ');
             message = emojione.shortnameToImage(message); // Set imotions
             // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
-            $("#resultchat").append('<div class="col-xs-12 p-b-10 odd">' +
+            let previousMessageDate = $(".messageDate").last().text();
+            // this method ids defined in chatbox.ejs and formate date and time
+            let currentMessageDate = dateConvert2(new Date());
+            var message_content = '';
+            if (previousMessageDate != currentMessageDate.date) {
+                message_content = '<div class="col-xs-12 p-b-10" style="text-align: center;">' +
+                    '<div class="chat-body">' +
+                    '<div class="chat-text">' +
+                    '<h2 class="messageDate" style="color: green;font-weight: bold;">' + currentMessageDate.date + '</h2>' +
+                    '</div></div></div>';
+            }
+            message_content += '<div class="col-xs-12 p-b-10 odd">' +
                 '<input type="hidden" name="message_object_id" id="" value="">' +
                 '<div class="chat-body">' +
                 '<div class="chat-text">' +
                 '<p>' + message + '</p>' +
-                '<b>' + (new Date()).toISOString() + '</b>' +
+                '<b>' + currentMessageDate.time + '</b>' +
                 '<span class="msg-status"><i class="fa fa-paper-plane"></i></span>' +
                 '</div>' +
                 '</div>' +
-                '</div>');
+                '</div>'
+            $("#resultchat").append(message_content);
 
             $(".target-emoji").css({ 'display': 'none' });
             $('.wchat-filler').css({ 'height': 0 + 'px' });
 
             scrollDown();
-            // this function is defined in Views/chatbox.ejs 
+            // this function is defined in Views/chatbox.ejs
             // this functions work is to save mesaage to the server
             saveMessageToServer(message);
             removeTyping();
@@ -171,16 +183,28 @@ function clickTosendMessage(id_user2) {
         message = emojione.shortnameToImage(message);  // Set imotions
 
         // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
-        $("#resultchat").append('<div class="col-xs-12 p-b-10 odd">' +
+        let previousMessageDate = $(".messageDate").last().text();
+        // this method ids defined in chatbox.ejs and formate date and time
+        let currentMessageDate = dateConvert2(new Date());
+        var message_content = '';
+        if (previousMessageDate != currentMessageDate.date) {
+            message_content = '<div class="col-xs-12 p-b-10" style="text-align: center;">' +
+                '<div class="chat-body">' +
+                '<div class="chat-text">' +
+                '<h2 class="messageDate" style="color: green;font-weight: bold;">' + currentMessageDate.date + '</h2>' +
+                '</div></div></div>';
+        }
+        message_content += '<div class="col-xs-12 p-b-10 odd">' +
             '<input type="hidden" name="message_object_id" id="" value="">' +
             '<div class="chat-body">' +
             '<div class="chat-text">' +
             '<p>' + message + '</p>' +
-            '<b>' + (new Date()).toISOString() + '</b>' +
+            '<b>' + currentMessageDate.time + '</b>' +
             '<span class="msg-status"><i class="fa fa-paper-plane"></i></span>' +
             '</div>' +
             '</div>' +
-            '</div>');
+            '</div>'
+        $("#resultchat").append(message_content);
 
         $(".target-emoji").css({ 'display': 'none' });
         $('.wchat-filler').css({ 'height': 0 + 'px' });
