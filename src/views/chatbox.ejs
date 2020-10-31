@@ -415,6 +415,7 @@
 
 </script>
 <script src="/assets/jquery/jquery-1.11.1.min.js"></script>
+<script src="/assets/jquery/jquery-3.5.1.min.js"></script>
 <!--- Popper.js -->
 <script src="/Popper/popper.min.js" crossorigin="anonymous"></script>
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
@@ -483,7 +484,7 @@
             $("#display").html(list);
     }
     // after clicking on user it creates the chat room of the user 
-    function chatWith1(name_user2, id_user2, img_user2) {
+    function chatWith1(name_user2, id_user2, img_user2, email, status) {
         chatWith(name_user2, id_user2, img_user2);
         messageLoad(id_user2);
     }
@@ -729,6 +730,7 @@
         $('#resultchat').children().last().find('span').attr('id', 'msg-' + result._id);
 
         $('#msg-' + result._id).html('<i class="fa fa-check"></i>');
+
         // emit event
         socket.emit('sending_message', {
             _id: result._id,
@@ -736,6 +738,14 @@
             id_user1: result.id_user1,
             id_user2: result.id_user2,
         });
+
+        // it is for getting sidebar data when user search and text to another user
+        let SearchBoxVal = document.getElementById('searchbox').value;
+        if (SearchBoxVal != '') {
+            sidebarRecentUser();
+            document.getElementById('searchbox').value = '';
+        }
+        $('#rm' + id_user2).text(message);
     }
 
     // it will update the read, delivery status of message in database
@@ -805,7 +815,7 @@
         // if list not present in recent list in sidebar then create new sidebar list
         // here index = -1 represent user not in sidebar recent list
         if (index == -1) {
-            getUserById(data.id_user1, makeSidebarUser);
+            getUserById(data.id_user1);
         }
         else {
             if (index != 1) {
@@ -847,12 +857,12 @@
         $('#msg-' + res._id).html("<i class='fas fa-check-double'></i>");
     }
     // it will get the user data with its id
-    function getUserById(userid, callback) {
+    function getUserById(userid) {
         var ajax = new Ajax();
         var urlData = "id_user1=" + userid;
         // send request to user controller
         // it sends request to UserController
-        ajax.processPOST("/getUserById", urlData, callback);
+        ajax.processPOST("/getUserById", urlData, makeSidebarUser);
     }
     // it will make sidebar User
     function makeSidebarUser(res) {
@@ -870,8 +880,8 @@
             "<span class='bname personName'>" + result.name + "</span>" +
             "<span class='personStatus" + result._id + "'><span class='time Online'>" +
             "<i class='fa fa-circle aria-hidden='true'></i></span></span> " +
-            "<span class='count' id='unreadCount" + result._id + "'></span><br>" +
-            "<small class='preview cut-text'><span id='rm" + result._id + "' class='Online '></span><span></span></small>" +
+            "<span class='count' id='unreadCount" + result._id + "'><span class='icon-meta unread-count' >1</span></span><br>" +
+            "<small class='preview cut-text'><span id='rm" + result._id + "' class='Online '>New Message</span><span></span></small>" +
             "</span>" +
             "</a >" +
             "</li >";
