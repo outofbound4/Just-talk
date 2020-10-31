@@ -134,15 +134,17 @@ class UnreadcCountController {
             UnreadMessageCount.find({ 'id_user1': id_user1, 'id_user2': id_user2, },
                 function (err, result) {
                     // console.log(result);
-                    result[0].unreadMessage = 0;
-                    result[0].save().then(function (result) {
-                        //senddind data to client page
-                        return res.json({
-                            'status': 200,
-                            'id_user2': id_user2,
-                            'message': 'Updated successfully',
+                    if (Object.keys(result).length != 0) {
+                        result[0].unreadMessage = 0;
+                        result[0].save().then(function (result) {
+                            //senddind data to client page
+                            return res.json({
+                                'status': 200,
+                                'id_user2': id_user2,
+                                'message': 'Updated successfully',
+                            });
                         });
-                    });
+                    }
                 });
         }
     }
