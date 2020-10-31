@@ -116,7 +116,7 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
             // this functions work is to save mesaage to the server
             saveMessageToServer(message);
             removeTyping();
-            $('#rm' + id_user2).text(message);
+
             let listItem = $("#" + id_user2);
             let index = $("li").index(listItem);
             if (index != 1) {
@@ -126,15 +126,14 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
             }
 
             // it is for getting sidebar data when user search and text to another user
-            let SearchBoxVal = document.getElementById('searchbox').value;
-            if (SearchBoxVal != '') {
-                var ajax = new Ajax();
-                var urlData = ajax.create_url_data("searchboxForm");
-                // send request to ChatboxController
-                // postSearchFunction() is defined in chatbox.js
-                ajax.processPOST("/usersearch", urlData, postSearchFunction);
-                document.getElementById('searchbox').value = '';
-            }
+            // let SearchBoxVal = document.getElementById('searchbox').value;
+            // if (SearchBoxVal != '') {
+            //     sidebarRecentUser();
+            //     document.getElementById('searchbox').value = '';
+
+            // }
+
+            // $('#rm' + id_user2).text(message);
         }
 
         return false;
@@ -213,7 +212,7 @@ function clickTosendMessage(id_user2) {
         // this functions work is to save mesaage to the server
         saveMessageToServer(message);
         removeTyping();
-        $('#rm' + id_user2).text(message);
+
         let listItem = $("#" + id_user2);
         let index = $("li").index(listItem);
         if (index != 1) {
@@ -222,16 +221,13 @@ function clickTosendMessage(id_user2) {
             clonedLI.clone().prependTo("#display");
         }
 
-        // it is for getting sidebar data when user search and text to another user
-        let SearchBoxVal = document.getElementById('searchbox').value;
-        if (SearchBoxVal != '') {
-            var ajax = new Ajax();
-            var urlData = ajax.create_url_data("searchboxForm");
-            // send request to ChatboxController
-            // postSearchFunction() is defined in chatbox.js
-            ajax.processPOST("/usersearch", urlData, postSearchFunction);
-            document.getElementById('searchbox').value = '';
-        }
+        // // it is for getting sidebar data when user search and text to another user
+        // let SearchBoxVal = document.getElementById('searchbox').value;
+        // if (SearchBoxVal != '') {
+        //     sidebarRecentUser();
+        //     document.getElementById('searchbox').value = '';
+        // }
+        // $('#rm' + id_user2).text(message);
     }
 
 
