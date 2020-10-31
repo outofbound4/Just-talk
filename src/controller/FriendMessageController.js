@@ -30,62 +30,78 @@ class FriendMessageController {
          * block of code will run 
          */
         else {
+            let message = req.body.message;
+            let id_user1 = req.body.id_user1;
+            let id_user2 = req.body.id_user2;
             // here checking if  user2 is present in user1's document or not
-            User.find({ '_id': req.body.id_user1, 'recent_user.userid': req.body.id_user2 }, function (errors, result) {
+            User.find({ '_id': id_user1, 'recent_user.userid': id_user2 }, "recent_user", function (errors, result) {
                 // if every things ok
                 if (Object.keys(result).length == 0) {
                     // userid is not present then add userid to user.recent_user document
                     User.findOne({ '_id': req.body.id_user1 }, function (errors, result) {
                         // it will insert the data into user.result.recent_user
-                        result.recent_user.push({ 'userid': req.body.id_user2 });
+                        result.recent_user.push({
+                            'userid': id_user2,
+                            'message': message,
+                            'time': new Date(),
+                        });
                         result.save().then(function (result) {
                             // console.log("in FriendMessagecontroller : " + result);
                         });
                     });
                 }
+                else {
+                    // here updation user1's recent message so that at the time of
+                    // recent user sidebar loading we can use this messge to insert the sidebar
+                    for (let i = 0; i < result[0].recent_user.length; i++) {
+                        if (result[0].recent_user[i].userid == id_user2) {
+                            result[0].recent_user[i].message = message;
+                            result[0].recent_user[i].time = new Date();
+                            result[0].save().then(function (result) {
+                                // console.log("in FriendMessagecontroller : " + result);
+                            });
+                        }
+                    }
+                }
             });
+
             // here checking if  user1 is present in user2's document or not
-            User.find({ '_id': req.body.id_user2, 'recent_user.userid': req.body.id_user1 }, function (errors, result) {
+            User.find({ '_id': id_user2, 'recent_user.userid': id_user1 }, "recent_user", function (errors, result) {
                 // if every things ok
                 if (Object.keys(result).length == 0) {
                     // userid is not present then add userid to user.recent_user document
                     User.findOne({ '_id': req.body.id_user2 }, function (errors, result) {
                         // it will insert the data into user.result.recent_user
-                        result.recent_user.push({ 'userid': req.body.id_user1 });
+                        result.recent_user.push({
+                            'userid': id_user1,
+                            'message': message,
+                            'time': new Date(),
+                        });
                         result.save().then(function (result) {
                             // console.log("in FriendMessageController" + result);
                         });
                     });
                 }
+                else {
+                    // here updation user2's recent message so that at the time of
+                    // recent user sidebar loading we can use this messge to insert the sidebar
+                    for (let i = 0; i < result[0].recent_user.length; i++) {
+                        if (result[0].recent_user[i].userid == id_user1) {
+                            result[0].recent_user[i].message = message;
+                            result[0].recent_user[i].time = new Date();
+                            result[0].save().then(function (result) {
+                                // console.log("in FriendMessagecontroller : " + result);
+                            });
+                        }
+                    }
+                }
             });
-            // here updation user1's recent message so that at the time of
-            // recent user sidebar loading we can use this messge to insert the sidebar
-            User.updateOne({ '_id': req.body.id_user1, 'recent_user.userid': req.body.id_user2 },
-                {
-                    '$set': { //{new: true}
-                        'recent_user.$.message': req.body.message,
-                        'recent_user.$.time': new Date(),
-                    }
-                }, function (err, result) {
-                    // console.log("in FriendMessageController" + result);
-                });
-            // here updation user2's recent message so that at the time of
-            // recent user sidebar loading we can use this messge to insert the sidebar
-            User.updateOne({ '_id': req.body.id_user2, 'recent_user.userid': req.body.id_user1 },
-                {
-                    '$set': {
-                        'recent_user.$.message': req.body.message,
-                        'recent_user.$.time': new Date(),
-                    }
-                }, function (err, result) {
-                    // console.log("in FriendMessageController" + result);
-                });
-
+            
             // here storing message to FriendMessage document
             FriendMessage.create({
-                id_user1: req.body.id_user1,
-                id_user2: req.body.id_user2,
-                message: req.body.message,
+                id_user1: id_user1,
+                id_user2: id_user2,
+                message: message,
             },
 
                 function (errors, result) {
