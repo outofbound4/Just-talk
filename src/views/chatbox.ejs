@@ -385,7 +385,7 @@
 </body>
 <script>
     function themeHRF(newHRFLink, oldLinkID) {
-        alert(newHRFLink);
+        // alert(newHRFLink);
         var oldlink = document.getElementById(oldLinkID);
         oldlink.href = newHRFLink;
         // var newlink = document.createElement("link");
@@ -399,7 +399,7 @@
         // a.href = hrefLink;
     }
     function mainthemehref(newHRFLink, oldLinkID) {
-        alert(newHRFLink);
+        // alert(newHRFLink);
         var oldlink = document.getElementById(oldLinkID);
         var newlink = document.createElement("link");
         newlink.setAttribute("rel", "stylesheet");
@@ -788,27 +788,7 @@
                 id_user2: data.id_user2,
             });
         }
-        // checks if user present in recent list of sidebar or not
-        let listItem = $("#" + data.id_user1);
-        let index = $("li").index(listItem);
-        // if list not present in recent list in sidebar then create new sidebar list
-        // here index = -1 represent user not in sidebar recent list
-        if (index == -1) {
-            getUserById(data.id_user1, makeSidebarUser);
-            // incUnreadCount(id_user1, data.id_user1, incUnreadCountPOST);
-        }
         else {
-            // let listItem = $("#" + data.id_user1);
-            // let index = $("li").index(listItem);
-            if (index != 1) {
-                let clonedLI = $("#display li:nth-child(" + index + ")");
-                listItem.remove();
-                clonedLI.clone().prependTo("#display");
-            }
-        }
-        $('#rm' + data.id_user1).text(data.message);
-
-        if (data.id_user1 != id_user2) {
             // Emit 'received' event
             // here _id is message object id
             socket.emit('received', {
@@ -819,6 +799,22 @@
             // it is for unread message count to page
             incUnreadCount(id_user1, data.id_user1, incUnreadCountPOST);
         }
+        // checks if user present in recent list of sidebar or not
+        let listItem = $("#" + data.id_user1);
+        let index = $("li").index(listItem);
+        // if list not present in recent list in sidebar then create new sidebar list
+        // here index = -1 represent user not in sidebar recent list
+        if (index == -1) {
+            getUserById(data.id_user1, makeSidebarUser);
+        }
+        else {
+            if (index != 1) {
+                let clonedLI = $("#display li:nth-child(" + index + ")");
+                listItem.remove();
+                clonedLI.clone().prependTo("#display");
+            }
+        }
+        $('#rm' + data.id_user1).text(data.message);
     });
     socket.on('NOT ONLINE', function (data) {
         // it is for unread message count to page
@@ -874,8 +870,7 @@
             "<span class='bname personName'>" + result.name + "</span>" +
             "<span class='personStatus" + result._id + "'><span class='time Online'>" +
             "<i class='fa fa-circle aria-hidden='true'></i></span></span> " +
-            "<span class='count'><span " +
-            "class='icon-meta unread-count'>2</span></span><br>" +
+            "<span class='count' id='unreadCount" + result._id + "'></span><br>" +
             "<small class='preview cut-text'><span id='rm" + result._id + "' class='Online '></span><span></span></small>" +
             "</span>" +
             "</a >" +
