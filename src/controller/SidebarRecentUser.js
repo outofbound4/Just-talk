@@ -32,27 +32,21 @@ class SidebarRecentUser {
          */
 
         User.find({ '_id': req.body.id_user1 }, function (error, result) {
-
             let sortedArray = result[0].recent_user.sort(function (a, b) {
                 return new Date(b.time) - new Date(a.time);
             });
             // Map the result[0].recent_user into an array of just the userid
             var ids = sortedArray.map(function (doc) { return doc.userid; });
             // Get the User whose _id are in that set.
-            var data = [];
             var messages = [];
 
             for (let i = 0; i < ids.length; i++) {
                 messages[i] = sortedArray[i].message;
             }
-
             User.find({ '_id': { $in: ids } }, '_id name profile_pic statusbar email', function (error, result) {
-                // console.log(ids);
-                // console.log("\n")
-                // console.log(result);
                 let resultSortedArray = [];
-                for (let i = 0; i < ids.length; i++) {
-                    for (let j = 0; j < ids.length; j++) {
+                for (let i = 0; i < result.length; i++) {
+                    for (let j = 0; j < result.length; j++) {
                         if (result[j]._id.toString() == ids[i]) {
                             resultSortedArray.push(result[j]);
                         }
