@@ -145,6 +145,12 @@ class UnreadcCountController {
                             });
                         });
                     }
+                    else {
+                        return res.json({
+                            'status': 200,
+                            'message': 'already done initialization with 0.',
+                        });
+                    }
                 });
         }
     }
