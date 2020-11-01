@@ -60,6 +60,7 @@ class FriendMessageController {
                             result[0].save().then(function (result) {
                                 // console.log("in FriendMessagecontroller : " + result);
                             });
+                            break;
                         }
                     }
                 }
@@ -92,6 +93,7 @@ class FriendMessageController {
                             result[0].save().then(function (result) {
                                 // console.log("in FriendMessagecontroller : " + result);
                             });
+                            break;
                         }
                     }
                 }
