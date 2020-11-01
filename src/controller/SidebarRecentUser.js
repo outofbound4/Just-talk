@@ -31,7 +31,7 @@ class SidebarRecentUser {
          * block of code will run 
          */
 
-        User.find({ '_id': req.body.id_user1 }, function (error, result) {
+        User.find({ '_id': req.body.id_user1 }, "recent_user", function (error, result) {
             let sortedArray = result[0].recent_user.sort(function (a, b) {
                 return new Date(b.time) - new Date(a.time);
             });
