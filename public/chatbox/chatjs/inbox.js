@@ -17,7 +17,13 @@ function chatWith(name_user2, id_user2, img_user2) {
     createChatBox(id_user2);
     scrollDown();
     $('.top2').attr("data-user", name_user2);
-    $('#launchProfile').find('img').attr('src', img_user2);
+    if (img_user2 == 'undefined') {
+        $('#launchProfile').find('.profile-picture').
+            html('<img src="/images/defaultUser.png" alt="img" class="avatar-image is-loaded bg-theme" width="100%">');
+    }
+    else {
+        $('#launchProfile').find('img').attr('src', img_user2);
+    }
     $("#id_user2").val(id_user2);
     $('.chat-header-title').text(name_user2);
 
@@ -124,16 +130,6 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
                 listItem.remove();
                 clonedLI.clone().prependTo("#display");
             }
-
-            // it is for getting sidebar data when user search and text to another user
-            // let SearchBoxVal = document.getElementById('searchbox').value;
-            // if (SearchBoxVal != '') {
-            //     sidebarRecentUser();
-            //     document.getElementById('searchbox').value = '';
-
-            // }
-
-            // $('#rm' + id_user2).text(message);
         }
 
         return false;
