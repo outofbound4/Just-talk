@@ -20,17 +20,19 @@
     <link rel="stylesheet" href="/chatbox/css/custom.css" id="style">
     <!-- Theme light dark version CSS -->
     <link rel="stylesheet" href="/chatbox/css/style.css">
-    <link rel="stylesheet" href="/chatbox/css/style-light.css" id="maintheme">
+
+    <!-- <link rel="stylesheet" type="text/css" href="/chatbox/css/style-light.css" id="maintheme">
+    <link rel="stylesheet" type="text/css" href="/chatbox/css/style-dark.css" id="maintheme"> -->
     <!-- color CSS you can use different color css from css/colors folder -->
     <!-- We have chosen the skin-blue (blue.css) for this starter
                 page. However, you can choose any other skin from folder css / colors .
     -->
-    <!-- <link href="/chatbox/css/colors/green.css" id="theme" rel="stylesheet"> -->
-    <link rel="stylesheet" href="./chatbox/css/colors/purple.css" id="theme">
-    <!-- <link href="/chatbox/css/colors/megna.css" id="theme" rel="stylesheet"> -->
-    <!-- <link href="/chatbox/css/colors/gray.css" id="theme" rel="stylesheet"> -->
-    <!-- <link href="/chatbox/css/colors/blue.css" id="theme" rel="stylesheet">
-    <link href="/chatbox/css/colors/default.css" id="theme" rel="stylesheet"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="/chatbox/css/colors/green.css" id="theme">
+    <link rel="stylesheet" type="text/css" href="./chatbox/css/colors/purple.css" id="theme">
+    <link rel="stylesheet" type="text/css" href="/chatbox/css/colors/megna.css" id="theme">
+    <link rel="stylesheet" type="text/css" href="/chatbox/css/colors/gray.css" id="theme">
+    <link rel="stylesheet" type="text/css" href="/chatbox/css/colors/blue.css" id="theme">
+    <link rel="stylesheet" type="text/css" href="/chatbox/css/colors/default.css" id="theme"> -->
     <!-- Emoji One JS -->
     <link rel="stylesheet" href="/chatbox/smiley/assets/sprites/emojione.sprites.css" />
     <script src="/chatbox/smiley/js/emojione.min.js"></script>
@@ -118,8 +120,8 @@
                                         <div class="avatar icon-user-default" style="height: 40px; width: 40px;">
                                             <div class="avatar-body userimage">
                                                 <a href="/editprofile">
-                                                    <img src="<%= session.profile_pic%>" alt="Img"
-                                                        class="avatar-image is-loaded bg-theme" width="100%">
+                                                    <img src="<%= (session.profile_pic) ? session.profile_pic : '/images/defaultUser.png' %>"
+                                                        alt="Img" class="avatar-image is-loaded bg-theme" width="100%">
                                                 </a>
                                             </div>
                                         </div>
@@ -342,25 +344,17 @@
                     </ul>
                     <ul id="mainthemecolors" class="m-t-20">
                         <li><b>Theme (Light/Dark)</b></li>
-                        <li><a href="#" onclick="mainthemehref('/chatbox/css/style-light.css', 'maintheme')"
-                                maintheme="style-light" class="light-theme working">1</a></li>
-                        <li><a href="#" onclick="mainthemehref('/chatbox/css/style-dark.css', 'maintheme')"
-                                maintheme="style-dark" class="dark-theme">2</a></li>
+                        <li><a href="#" maintheme="style-light" class="light-theme working">1</a></li>
+                        <li><a href="#" maintheme="style-dark" class="dark-theme">2</a></li>
                     </ul>
                     <ul id="themecolors" class="m-t-20">
                         <li><b>With Color Effect</b></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/default.css', 'theme')" theme="default"
-                                class="default-theme">1</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/green.css', 'theme')" theme="green"
-                                class="green-theme">2</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/gray.css', 'theme')" theme="gray"
-                                class="yellow-theme">3</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/blue.css', 'theme')" theme="blue"
-                                class="blue-theme">4</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/purple.css', 'theme')" theme="purple"
-                                class="purple-theme working">5</a></li>
-                        <li><a href="#" onclick="themeHRF('/chatbox/css/colors/megna.css', 'theme')" theme="megna"
-                                class="megna-theme">6</a></li>
+                        <li><a href="#" theme="default" class="default-theme">1</a></li>
+                        <li><a href="#" theme="green" class="green-theme">2</a></li>
+                        <li><a href="#" theme="gray" class="yellow-theme">3</a></li>
+                        <li><a href="#" theme="blue" class="blue-theme">4</a></li>
+                        <li><a href="#" theme="purple" class="purple-theme working">5</a></li>
+                        <li><a href="#" theme="megna" class="megna-theme">6</a></li>
                     </ul>
 
                 </div>
@@ -383,37 +377,6 @@
 
     </div>
 </body>
-<script>
-    function themeHRF(newHRFLink, oldLinkID) {
-        // alert(newHRFLink);
-        var oldlink = document.getElementById(oldLinkID);
-        oldlink.href = newHRFLink;
-        // var newlink = document.createElement("link");
-        // newlink.setAttribute("rel", "stylesheet");
-        // newlink.setAttribute("id", oldLinkID);
-        // newlink.setAttribute("type", "text/css");
-        // newlink.setAttribute("href", newHRFLink);
-
-        // document.getElementsByTagName("head").item(oldLinkID).replaceChild(newlink, oldlink);
-        // let a = document.getElementById('maintheme');
-        // a.href = hrefLink;
-    }
-    function mainthemehref(newHRFLink, oldLinkID) {
-        // alert(newHRFLink);
-        var oldlink = document.getElementById(oldLinkID);
-        var newlink = document.createElement("link");
-        newlink.setAttribute("rel", "stylesheet");
-        newlink.setAttribute("id", oldLinkID);
-        newlink.setAttribute("type", "text/css");
-        newlink.setAttribute("href", newHRFLink);
-
-        document.getElementsByTagName("head").item(oldLinkID).replaceChild(newlink, oldlink);
-        // let a = document.getElementById('maintheme');
-        // a.href = hrefLink;
-    }
-
-
-</script>
 <script src="/assets/jquery/jquery-1.11.1.min.js"></script>
 <script src="/assets/jquery/jquery-3.5.1.min.js"></script>
 <!--- Popper.js -->
@@ -457,9 +420,15 @@
                 "onclick=\"javascript:chatWith1('" + result[i].name + "','" + result[i]._id + "','" + result[i].profile_pic + "')\">" +
 
                 "<a href='javascript:void(0)'>" +
-                "<span class='userimage profile-picture min-profile-picture'><img " +
-                "src='" + result[i].profile_pic + "' alt='Img'" +
-                "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
+                "<span class='userimage profile-picture min-profile-picture'>";
+            if (result[i].profile_pic == null) {
+                list += "<img src='/images/defaultUser.png' alt='Img' class='avatar-image is-loaded bg-theme' width='100%'>";
+            }
+            else {
+                list += "<img src='" + result[i].profile_pic + "' alt='Img' class='avatar-image is-loaded bg-theme' width='100%'>";
+            }
+
+            list += "</span>" +
                 "<span>" +
                 "<span class='bname personName'>" + result[i].name + "</span>" +
                 "<br>" +
@@ -485,7 +454,11 @@
     }
     // after clicking on user it creates the chat room of the user 
     function chatWith1(name_user2, id_user2, img_user2, email, status) {
-        chatWith(name_user2, id_user2, img_user2);
+        if (img_user2 == null)
+            img = '/images/defaultUser.png';
+        else
+            img = img_user2
+        chatWith(name_user2, id_user2, img);
         messageLoad(id_user2);
     }
     // it loads the chats of the user
@@ -578,7 +551,6 @@
 
 
         var dateDiff = parseInt(currentdate) - parseInt(date);
-
         if (currentYear == year) {
             if ((currentMonth == month) && (dateDiff < 7)) {
                 switch (dateDiff) {
@@ -868,15 +840,21 @@
     function makeSidebarUser(res) {
         let result = res.result;
         $("#display").find('p').remove();
-        let list = '<li class=\'person chatboxhead active\' data-statusbar="' + result.statusbar + '"' +
+        let list = '';
+        list += '<li class=\'person chatboxhead active\' data-statusbar="' + result.statusbar + '"' +
             "data-email='" + result.email + "' data-value='" + result._id + "' id='" + result._id + "'" +
             "href='javascript:void(0)'" +
             "onclick=\"javascript:chatWith2('" + result.name + "','" + result._id + "','" + result.profile_pic + "')\">" +
             "<a href='javascript:void(0)'>" +
-            "<span class='userimage profile-picture min-profile-picture'><img " +
-            "src='" + result.profile_pic + "' alt='Img'" +
-            "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
-            "<span>" +
+            "<span class='userimage profile-picture min-profile-picture'>";
+        if (result.profile_pic == null) {
+            list += "<img src='/images/defaultUser.png' alt='Img' class='avatar-image is-loaded bg-theme' width='100%'>";
+        }
+        else {
+            list += "<img src='" + result.profile_pic + "' alt='Img' class='avatar-image is-loaded bg-theme' width='100%'>";
+        }
+
+        list += "</span><span>" +
             "<span class='bname personName'>" + result.name + "</span>" +
             "<span class='personStatus" + result._id + "'><span class='time Online'>" +
             "<i class='fa fa-circle aria-hidden='true'></i></span></span> " +
@@ -1128,9 +1106,15 @@
                 "onclick=\"javascript:chatWith2('" + result[i].name + "','" + result[i]._id + "','" + result[i].profile_pic + "')\">" +
 
                 "<a href='javascript:void(0)'>" +
-                "<span class='userimage profile-picture min-profile-picture'><img " +
-                "src='" + result[i].profile_pic + "' alt='Img'" +
-                "class='avatar-image is-loaded bg-theme' width='100%'></span>" +
+                "<span class='userimage profile-picture min-profile-picture'>";
+            if (result[i].profile_pic == null) {
+                list += "<img src='/images/defaultUser.png' alt='Img' class='avatar-image is-loaded bg-theme' width='100%'>";
+            }
+            else {
+                list += "<img src='" + result[i].profile_pic + "' alt='Img' class='avatar-image is-loaded bg-theme' width='100%'>";
+            }
+
+            list += "</span>" +
                 "<span>" +
                 "<span class='bname personName'>" + result[i].name + "</span>" +
                 "<span class='personStatus" + result[i]._id + "'></span> " +
