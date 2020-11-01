@@ -17,10 +17,8 @@ const cookieParser = require("cookie-parser"); // Module for cookie in Session
 const session = require("express-session");
 const config = require('./config'); //it includes configuration file.
 
-// app.use(express.static(__dirname + "/public")); // all statics files in /public
-app.use(express.static('./public'));
-// app.set("views", path.join(__dirname, "views"));
-app.set('views', './src/views');
+app.use(express.static(__dirname + "/public")); // all statics files in /public
+app.set('views', __dirname + '/src/views');
 app.set("view engine", "ejs");
 
 // app.use(logger("dev"));
