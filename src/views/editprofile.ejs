@@ -79,7 +79,6 @@
                     </label>
                     <input type="file" class="mt-5 mb-5 btn btn-primary profile-button" name="upload_image"
                         id="upload_image" accept="image/*" style="display: none" />
-                    <br />
                 </div>
             </div>
             <div class="col-md-5 border-right">
@@ -98,7 +97,7 @@
                         <div class="col-md-12">
                             <label class="labels">Mobile Number</label>
                             <input type="text" name="mobile" id="mobile" class="form-control"
-                                placeholder="Mobile number" value="123467891" disabled>
+                                placeholder="Mobile number" value="" disabled>
                         </div>
 
                         <div class="col-md-12">
@@ -143,7 +142,7 @@
     $(document).ready(function () {
         // it checks if user don't have a profile pic then set default logo profile
         if ($('#profile_pic').attr('src') == '') {
-            $('#profile_pic').attr('src', '/images/people.png');
+            $('#profile_pic').attr('src', '/images/defaultUser.png');
         }
         // it cropes the image
         $image_crop = $('#image_demo').croppie({
