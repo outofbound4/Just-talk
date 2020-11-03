@@ -235,7 +235,7 @@ ul#themecolors li:first-child {
 }
 .chat-list .chat-image {
     display: inline-block;
-    float: left;
+    /* float: left; */
     text-align: center;
     width: 50px;
 }
@@ -270,8 +270,8 @@ ul#themecolors li:first-child {
 }
 .chat-list .chat-body {
     display: inline-block;
-    float: left;
-    font-size: 12px;
+    /* float: left; */
+    font-size: 16px;
     margin-left: 12px;
     width: 65%;
 }
@@ -1703,19 +1703,20 @@ ol, ul {
     transform: rotate(180deg);
 }
 .chat-head h3 {
-    float: left;
+    /* float: left; */
     margin-left: 12px;
     display: inline-block;
 }
 .chat-head .personStatus {
-    float: left; margin-left: 10px;display: inline-block;line-height: 50px;
+    /* float: left;  */
+    margin-left: 10px;display: inline-block;line-height: 50px;
 }
 
 .write-link {
     display: none;
     cursor: pointer;
     display: inline-block;
-    float: left;
+    /* float: left; */
     width: 50px;
     height: 50px;
     content: '';
