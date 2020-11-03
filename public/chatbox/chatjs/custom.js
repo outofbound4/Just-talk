@@ -197,6 +197,7 @@ $(window).bind("load", function () {
     $('.chatboxtextarea').on('focus', function (e) {
         $(".target-emoji").css({ 'display': 'none' });
         $('.wchat-filler').css({ 'height': 0 + 'px' });
+        // $('.btn-emoji').removeClass('ti-arrow-circle-down').addClass('ti-face-smile');
     });
 });
 
