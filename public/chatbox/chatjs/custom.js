@@ -2,13 +2,17 @@ $(document).ready(function () {
 
     $(".e1").click(function (event) {
         var client = $('.chat.active-chat').attr('client');
-
         var prevMsg = $('#chatFrom .chatboxtextarea').val();
         var shortname = $(this).data('shortname');
+        // alert("in custom.js, shortname : " + shortname)
+        var unicodeEmoji = emojione.shortnameToUnicode(shortname);
+        // alert("in custom.js, shortnameToUnicode : " + unicodeEmoji)
+        
+        $('#chatFrom .chatboxtextarea').val(prevMsg + ' ' + unicodeEmoji + ' ');
 
-        $('#chatFrom .chatboxtextarea').val(prevMsg + ' ' + shortname + ' ');
         //$('#chatFrom .chatboxtextarea').focus();
     });
+
     $(".chat-head .personName").click(function () {
         var personName = $(this).text();
     });
@@ -105,8 +109,8 @@ $(document).ready(function () {
 
 
 function chatemoji() {
-    $(".target-emoji").slideToggle('fast', function () {
 
+    $(".target-emoji").slideToggle('fast', function () {
         if ($(".target-emoji").css('display') == 'block') {
             //alert($(window).height());
             //$('.chat-list').css({'height':(($(window).height())-279)+'px'});
@@ -119,6 +123,7 @@ function chatemoji() {
         }
     });
     var heit = $('#resultchat').css('max-height');
+
 }
 
 function typePlace() {
