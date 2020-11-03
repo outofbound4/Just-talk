@@ -20,13 +20,9 @@
     margin-top: 30px;
 }
 .thumb-lg {
-    height: auto;
-    width: auto;
-}
-/* .thumb-lg {
     height: 88px;
     width: 88px;
-} */
+}
 .text-white {
     color: #ffffff;
 }
@@ -486,7 +482,6 @@ ul#themecolors li:first-child {
     background-color: #fff;
 }
 /*******************light-dark  COLOR CSS*************/
-
 #wchat {
     font-family: 'Roboto', sans-serif !important;
     text-rendering: optimizeLegibility;
@@ -504,11 +499,9 @@ ul#themecolors li:first-child {
     padding: 0;
     margin: 0;
 }
-
 #wchat {
-	position: absolute;top: 10;left: 0;
+	position: absolute;top: 0;left: 0;
 }
-
 .wchat {
 	position: relative;overflow: hidden;-webkit-transform-origin: center;transform-origin: center;-webkit-animation: app-enter .3s cubic-bezier(.1, .82, .25, 1);animation: app-enter .3s cubic-bezier(.1, .82, .25, 1);background-position: top left;background-repeat: repeat-x;display: -webkit-box;display: -ms-flexbox;display: flex;
 }
@@ -1664,15 +1657,6 @@ ol, ul {
 .chatonline li a span.Offline { color: #aaaaaa; !important;}
 
 .chat-head .Online { color: #00c292; !important;}
-
-.cut-text { 
-    text-overflow: ellipsis;
-    overflow: hidden; 
-    width: 160px; 
-    height: 1.2em; 
-    white-space: nowrap;
-}
-
 .chat-head .Offline { color: #aaaaaa; !important;}
 .chat-head{
     cursor: pointer;
