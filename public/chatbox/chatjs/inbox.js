@@ -1,6 +1,6 @@
-// var username = "Bylancer";
-var audioogg = new Audio('audio/chat.ogg');
-var audiomp3 = new Audio('audio/chat.mp3');
+// var username = "GAURAV";
+// var audioogg = new Audio('audio/chat.ogg');
+// var audiomp3 = new Audio('audio/chat.mp3');
 
 function scrollDown() {
     var wtf = $('.wchat-chat-body');
@@ -59,6 +59,7 @@ function createChatBox(id_user2, minimizeChatBox) {
         $("#chatFrom").html(chatFormTpl);
     }
     $(".chatboxtextarea").focus();
+    
 }
 
 function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
@@ -89,8 +90,7 @@ function checkChatBoxInputKey(event, chatboxtextarea, id_user2, send) {
                 }
             }
             message = $words.join(' ');
-            message = emojione.shortnameToImage(message); // Set imotions
-            // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
+            // message = emojione.shortnameToImage(message); // Set imotions
             let previousMessageDate = $(".messageDate").last().text();
             // this method ids defined in chatbox.ejs and formate date and time
             let currentMessageDate = dateConvert2(new Date());
@@ -175,9 +175,8 @@ function clickTosendMessage(id_user2) {
             }
         }
         message = $words.join(' ');
-        message = emojione.shortnameToImage(message);  // Set imotions
+        // message = emojione.shortnameToImage(message);  // Set imotions
 
-        // $("#chatbox_" + id_user2).append('<div class="col-xs-12 p-b-10 odd">' +
         let previousMessageDate = $(".messageDate").last().text();
         // this method ids defined in chatbox.ejs and formate date and time
         let currentMessageDate = dateConvert2(new Date());
@@ -216,14 +215,6 @@ function clickTosendMessage(id_user2) {
             listItem.remove();
             clonedLI.clone().prependTo("#display");
         }
-
-        // // it is for getting sidebar data when user search and text to another user
-        // let SearchBoxVal = document.getElementById('searchbox').value;
-        // if (SearchBoxVal != '') {
-        //     sidebarRecentUser();
-        //     document.getElementById('searchbox').value = '';
-        // }
-        // $('#rm' + id_user2).text(message);
     }
 
 
