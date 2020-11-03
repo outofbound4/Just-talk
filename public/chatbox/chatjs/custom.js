@@ -2,15 +2,20 @@ $(document).ready(function () {
 
     $(".e1").click(function (event) {
         var client = $('.chat.active-chat').attr('client');
+
+        // will give the current postion of the cursor
+        var curPos = document.getElementById("chatboxtextarea").selectionStart;
+
         var prevMsg = $('#chatFrom .chatboxtextarea').val();
         var shortname = $(this).data('shortname');
         // alert("in custom.js, shortname : " + shortname)
         var unicodeEmoji = emojione.shortnameToUnicode(shortname);
-        // alert("in custom.js, shortnameToUnicode : " + unicodeEmoji)
-        
-        $('#chatFrom .chatboxtextarea').val(prevMsg + ' ' + unicodeEmoji + ' ');
-
-        //$('#chatFrom .chatboxtextarea').focus();
+        // setting the updated value in the text area
+        let x = prevMsg.slice(0, curPos) + unicodeEmoji;
+        $('#chatFrom .chatboxtextarea').val(prevMsg.slice(0, curPos) + unicodeEmoji + prevMsg.slice(curPos));
+        // here setting the cursor position 
+        setCaretPosition('chatboxtextarea', x.length);
+        // $('#chatFrom .chatboxtextarea').focus();
     });
 
     $(".chat-head .personName").click(function () {
@@ -107,6 +112,19 @@ $(document).ready(function () {
     });*/
 });
 
+// it is for setting cuesor postion of textfield
+function setCaretPosition(elemId, caretPos) {
+    var elem = document.getElementById(elemId);
+    elem.focus();
+    elem.setSelectionRange(caretPos, caretPos);
+
+    // if (elem.createTextRange) {
+    //         var range = elem.createTextRange();
+    //         range.move('character', caretPos);
+    //         range.select();
+    // }
+
+}
 
 function chatemoji() {
 
