@@ -1,9 +1,24 @@
+
 .p-b-10 {  padding-bottom: 10px !important;  }
+.cut-text { 
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 160px; 
+    height: 1.2em; 
+    white-space: nowrap;
+}
 .user-bg {
     margin: -25px;
     height: 230px;
     overflow: hidden;
     position: relative;
+}
+.cut-text { 
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 160px; 
+    height: 1.2em; 
+    white-space: nowrap;
 }
 .user-bg .overlay-box {
     background: #9675ce;
@@ -284,8 +299,18 @@ ul#themecolors li:first-child {
     text-align: right;
     color: #ffffff;
 }
+.chat-list .even .chat-body {
+    float: left !important;
+    margin-right: 5px;
+    text-align: left;
+    color: #ffffff;
+}
 .chat-list .odd .chat-text {
-    background: #ff6849;
+    background: #063f04;
+}
+
+.chat-list .even .chat-text {
+    background: #426806;
 }
 .chat-list .odd .chat-text h4 {
     color: #ffffff;
