@@ -20,13 +20,13 @@
     <!-- Theme light dark version CSS -->
     <link rel="stylesheet" href="/chatbox/css/style.css">
 
-    <link rel="stylesheet" href="/chatbox/css/style-light.css" integrity="" crossorigin="anonymous" />
+    <!-- <link rel="stylesheet" href="/chatbox/css/style-light.css" integrity="" crossorigin="anonymous" /> -->
 
     <!-- color CSS you can use different color css from css/colors folder -->
     <!-- We have chosen the skin-blue (blue.css) for this starter
                 page. However, you can choose any other skin from folder css / colors .
     -->
-    <link rel="stylesheet" href="/chatbox/css/green.css" integrity="" crossorigin="anonymous" />
+    <!-- <link rel="stylesheet" href="/chatbox/css/green.css" integrity="" crossorigin="anonymous" /> -->
     <!-- media="all" /> -->
     <!-- Emoji One JS -->
     <!-- basic rules for styling the emoji images -->
@@ -6268,7 +6268,7 @@
 
             if (res.result[i].id_user1 == id_user2) {
                 message_content +=
-                    '<div class="col-xs-12 p-b-10">' +
+                    '<div class="col-xs-12 p-b-10 even">' +
                     '<div class="chat-body">' +
                     '<div class="chat-text">' +
                     '<input type="hidden" name="message_object_id" id=' + res.result[i]._id + ' value=\'' + res.result[i]._id + '\'>' +
@@ -6497,7 +6497,7 @@
             sidebarRecentUser();
             document.getElementById('searchbox').value = '';
         }
-        $('#rm' + id_user2).text(message);
+        $('#rm' + result.id_user2).text(message);
     }
 
     // it will update the read, delivery status of message in database
@@ -6529,7 +6529,7 @@
         }
 
         message_content +=
-            '<div class="col-xs-12 p-b-10">' +
+            '<div class="col-xs-12 p-b-10 even">' +
             '<div class="chat-body">' +
             '<div class="chat-text">' +
             '<input type="hidden" name="message_object_id" id=\'' + data._id + '\' value=\'' + data._id + '\'>' +
