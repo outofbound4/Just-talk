@@ -130,7 +130,7 @@ class UserAuthController {
                 // if everything ok
                 let CurrentTime = new Date();
                 let timeDifference = CurrentTime - result.emailVerificationExpiryTime;
-                if ((result.emailVerifiactionToken.toString() == emailVerifiactionToken) && (result.email_verified_at == null) && (timeDifference < 0)) {
+                if ((result.emailVerifiactionToken == emailVerifiactionToken) && (result.email_verified_at == null) && (timeDifference < 0)) {
 
                     result.email_verified_at = CurrentTime;
                     result.save().then(function(result) {
@@ -145,5 +145,62 @@ class UserAuthController {
             });
         }
     }
+
+    // it changes the password
+    saveChangedPassword(req, res) {
+        let errors = this.validationResult(req);
+        /* If some error occurs, then this 
+         *  block of code will run 
+         */
+        if (!errors.isEmpty()) {
+            //sending errors to client page
+            return res.json({
+                status: 400,
+                message: 'Required Param Empty',
+                errors: errors,
+            });
+        }
+        /* If no error occurs, then this 
+         * block of code will run 
+         */
+        else {
+            let _id = req.body._id;
+            let token = req.body.token;
+            let password = req.body.password;
+            //finding the user credentials
+            User.findOne({ '_id': _id }, "passwordResetToken PasswordResetExpiryTime PasswordResetStatus", function(errors, result) {
+                if (errors) {
+                    //sending errors to client page
+                    return res.json({
+                        status: 500,
+                        message: 'data fetching error occurs',
+                        errors: errors,
+                    });
+                }
+                // if everything ok
+                let CurrentTime = new Date();
+                let timeDifference = CurrentTime - result.PasswordResetExpiryTime;
+                if ((result.passwordResetToken == token) && (result.PasswordResetStatus == false) && (timeDifference < 0)) {
+
+                    result.PasswordResetStatus = true;
+                    result.save().then(function(result) {
+                        // if every things ok
+                        // console.log(result);
+                        // sends json data to client
+                        return res.json({
+                            status: 'changed',
+                            message: 'Password changed successfully. Thanks!!',
+                        });
+                    });
+                } else {
+                    return res.json({
+                        status: 'expired',
+                        message: 'Link expired. Thanks!!',
+                    });
+                }
+            });
+        }
+    }
+
 }
 module.exports = UserAuthController;
