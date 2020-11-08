@@ -186,7 +186,7 @@ class NodeMailer {
         else {
             let email = req.body.email;
             // finding the user credentials
-            User.find({ email: email }, function(errors, result) {
+            User.find({ email: email }, "_id", function(errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
@@ -199,7 +199,7 @@ class NodeMailer {
                 // if everything ok
                 //checking if result exists
                 if (Object.keys(result).length !== 0) {
-                    // if every things ok
+                    let _id = result[0]._id;
                     // generating email authentication tocken
                     let passwordResetToken = randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
                     // adding 30 minutes to current time
@@ -209,13 +209,14 @@ class NodeMailer {
 
                     result[0].passwordResetToken = passwordResetToken;
                     result[0].PasswordResetExpiryTime = PasswordResetExpiryTime;
+                    result[0].PasswordResetStatus = false;
                     result[0].save().then(function(result) {
                         // if every things ok
                         console.log("in nodemaillercontroller , forgetPassword fn, : " + JSON.stringify(result))
                         let from = config.EMAIL.ADMIN_EMAIL;
                         let to = email;
                         let subject = "Just-Talk Password Reset";
-                        let text = "http://localhost:3000/changePassword?_id=&token=";
+                        let text = "http://localhost:3000/changePassword?_id=" + _id + "&token=" + passwordResetToken;
                         // here we are calling sendMailToUser function
                         sendMailToUser(from, to, subject, text, res);
                     });
