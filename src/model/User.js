@@ -39,6 +39,10 @@ var schema = new Schema({
     PasswordResetExpiryTime: {
         type: Date,
     },
+    PasswordResetStatus: {
+        type: Boolean,
+        default: false,
+    },
     mobile_verified_at: {
         type: Date,
     },
