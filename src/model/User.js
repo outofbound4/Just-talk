@@ -33,6 +33,12 @@ var schema = new Schema({
     email_verified_at: {
         type: Date,
     },
+    passwordResetToken: {
+        type: String,
+    },
+    PasswordResetExpiryTime: {
+        type: Date,
+    },
     mobile_verified_at: {
         type: Date,
     },
@@ -40,7 +46,6 @@ var schema = new Schema({
         type: String,
         required: true,
     },
-
     recent_user: [{
         userid: Schema.Types.ObjectId,
         message: String,
