@@ -6,7 +6,7 @@ class ChatboxControlle {
      * Liste of Articles
      * @param {*} req
      * @param {*} res
-    */
+     */
     constructor(validationResult) {
         this.validationResult = validationResult;
     }
@@ -25,7 +25,7 @@ class ChatboxControlle {
         // isNaN(searchkey) returns true if string is not number
         // we are here searching by name
         if (isNaN(searchkey)) {
-            User.find({ name: { $regex: searchkey, $options: "i" } }, '_id name profile_pic statusbar email', function (errors, result) {
+            User.find({ name: { $regex: searchkey, $options: "i" } }, '_id name profile_pic statusbar email', function(errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
@@ -43,9 +43,9 @@ class ChatboxControlle {
                 });
             });
         }
-        // we are here searching by number
+        // we are here searching by email
         else {
-            User.find({ mobile: { $regex: searchkey } }, '_id name profile_pic statusbar email', function (errors, result) {
+            User.find({ email: { $regex: searchkey } }, '_id name profile_pic statusbar email', function(errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
