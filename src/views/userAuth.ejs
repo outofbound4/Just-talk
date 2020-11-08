@@ -9,7 +9,6 @@
 <link href="/css/pageLoading.css" rel="stylesheet">
 <style>
     @import url('https://fonts.googleapis.com/css?family=Mukta');
-
     body {
         font-family: 'Mukta', sans-serif;
         height: 100px;
@@ -21,12 +20,12 @@
         position: relative;
         overflow-y: hidden;
     }
-
+    
     a {
         text-decoration: none;
         color: #444444;
     }
-
+    
     .login-reg-panel {
         position: relative;
         top: 50%;
@@ -39,7 +38,7 @@
         height: 400px;
         background-color: rgba(236, 48, 20, 0.9);
     }
-
+    
     .white-panel {
         background-color: rgba(255, 255, 255, 1);
         height: 500px;
@@ -51,16 +50,16 @@
         z-index: 0;
         box-shadow: 0 0 15px 9px #00000096;
     }
-
+    
     .login-reg-panel input[type="radio"] {
         position: relative;
         display: none;
     }
-
+    
     .login-reg-panel {
         color: #B8B8B8;
     }
-
+    
     .login-reg-panel #label-login,
     .login-reg-panel #label-register {
         border: 1px solid #9E9E9E;
@@ -73,7 +72,7 @@
         font-weight: 600;
         font-size: 18px;
     }
-
+    
     .login-info-box {
         width: 30%;
         padding: 0 50px;
@@ -82,7 +81,7 @@
         position: absolute;
         text-align: left;
     }
-
+    
     .register-info-box {
         width: 30%;
         padding: 0 50px;
@@ -90,13 +89,12 @@
         right: 0;
         position: absolute;
         text-align: left;
-
     }
-
+    
     .right-log {
         right: 50px !important;
     }
-
+    
     .login-show,
     .register-show {
         z-index: 1;
@@ -107,12 +105,12 @@
         text-align: left;
         padding: 50px;
     }
-
+    
     .show-log-panel {
         display: block;
         opacity: 0.9;
     }
-
+    
     .login-show input[type="text"],
     .login-show input[type="password"] {
         width: 100%;
@@ -122,7 +120,7 @@
         border: 1px solid #b5b5b5;
         outline: none;
     }
-
+    
     .login-show input[type="button"] {
         max-width: 150px;
         width: 100%;
@@ -135,12 +133,12 @@
         float: right;
         cursor: pointer;
     }
-
+    
     .login-show a {
         display: inline-block;
         padding: 10px 0;
     }
-
+    
     .register-show input[type="text"],
     .register-show input[type="password"] {
         width: 100%;
@@ -150,7 +148,7 @@
         border: 1px solid #b5b5b5;
         outline: none;
     }
-
+    
     .register-show input[type="button"] {
         max-width: 150px;
         width: 100%;
@@ -163,7 +161,7 @@
         float: right;
         cursor: pointer;
     }
-
+    
     .credit {
         position: absolute;
         bottom: 10px;
@@ -178,7 +176,7 @@
         letter-spacing: 1px;
         z-index: 99;
     }
-
+    
     a {
         text-decoration: none;
         color: #2c7715;
@@ -235,8 +233,8 @@
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="/ajax/ajax.js"></script>
 <script>
-
-    $('#btnLogin').on('click', function () {
+    $('#btnLogin').on('click', function() {
+        $("#LoginResponse").text("");
         $('#btnLogin').hide();
         $('#loginLoader').show();
         let email = $("#emailLogin").val();
@@ -245,35 +243,37 @@
             var urlData = ajax.create_url_data("login");
             // it sends request to UserAuthController
             ajax.processPOST("/login", urlData, postFunctionLogin);
-        }
-        else {
+        } else {
             $("#validEmailLogin").text("Please Enter valid email.");
         }
     });
 
     function postFunctionLogin(res) {
-        $('#btnLogin').show();
-        $('#loginLoader').hide();
-        
+
         if (res.status === 400) {
+            $('#loginLoader').hide();
+            $('#btnLogin').show();
             $("#LoginResponse").text("All fields are mendatory.");
-        }
-        else if (res.status === 200) {
+        } else if (res.status === 200) {
             window.open("/chatbox", "_self");
-        }
-        else if (res.status === 422) {
+        } else if (res.status === 422) {
+            $('#loginLoader').hide();
+            $('#btnLogin').show();
             $("#LoginResponse").text("Unauthorised user, password incorrect.");
-        }
-        else if (res.status === 421) {
+        } else if (res.status === 421) {
+            $('#loginLoader').hide();
+            $('#btnLogin').show();
             $("#LoginResponse").text("Email not registered.");
-        }
-        else {
+        } else {
+            $('#loginLoader').hide();
+            $('#btnLogin').show();
             $("#LoginResponse").text("Something went wrong.");
 
         }
     }
 
-    $('#btnRegister').on('click', function () {
+    $('#btnRegister').on('click', function() {
+        $("#RegisterResponse").text("");
         $('#btnRegister').hide();
         $('#registerLoading').show();
         let email = $("#emailRegister").val();
@@ -289,21 +289,16 @@
     function postFunctionRegister(res) {
         $('#registerLoading').hide();
         $('#btnRegister').show();
-        
+
         if (res.status === 400) {
             $("#RegisterResponse").text("All fields are mendatory.");
-        }
-        else if (res.status === true) {
+        } else if (res.status === true) {
             $("#RegisterResponse").text("Verification link has been sent to your email. Thanks!!");
-        }
-        else if (res.status === false) {
+        } else if (res.status === false) {
             $("#RegisterResponse").text("Please Check your internet connectivity. Thanks!!");
-        }
-        else if (res.status === 'userExist') {
+        } else if (res.status === 'userExist') {
             $("#RegisterResponse").text("Email id already registered.");
-        }
-        
-        else {
+        } else {
             $("#RegisterResponse").text("Something went wrong.");
         }
     }
@@ -315,11 +310,11 @@
     }
 </script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('.login-info-box').fadeOut();
         $('.login-show').addClass('show-log-panel');
     });
-    $('.login-reg-panel input[type="radio"]').on('change', function () {
+    $('.login-reg-panel input[type="radio"]').on('change', function() {
         if ($('#log-login-show').is(':checked')) {
             $('.register-info-box').fadeOut();
             $('.login-info-box').fadeIn();
