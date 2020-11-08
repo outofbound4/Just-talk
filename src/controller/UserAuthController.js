@@ -1,5 +1,5 @@
 //init
-var validator = require("email-validator");
+const bcrypt = require('bcryptjs'); // for password encryption
 var User = require('../model/User');
 
 class UserAuthController {
@@ -7,7 +7,7 @@ class UserAuthController {
      * Liste of Articles
      * @param {*} req
      * @param {*} res
-    */
+     */
     constructor(validationResult) {
         this.validationResult = validationResult;
     }
@@ -27,11 +27,13 @@ class UserAuthController {
             });
         }
         /* If no error occurs, then this 
-        * block of code will run 
-        */
+         * block of code will run 
+         */
         else {
+            let email = req.body.email;
+            let password = req.body.password;
             //finding the user credentials
-            User.find({ 'email': req.body.email }, function (errors, result) {
+            User.find({ 'email': email }, "_id mobile name email password statusbar profile_pic", function(errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
@@ -40,34 +42,42 @@ class UserAuthController {
                         errors: errors,
                     });
                 }
-
                 // if everything ok
-                // checking password for authenticity
-                if (Object.keys(result).length !== 0) { //checking if mobile number is registered
-                    if (result[0].password === req.body.password) {
-                        //setting session
-                        req.session.mobile = result[0].mobile;
-                        req.session.name = result[0].name;
-                        req.session.profile_pic = result[0].profile_pic;
-                        req.session.email = result[0].email;
-                        req.session.statusbar = result[0].statusbar;
-                        req.session._id = result[0]._id;
-                        //  returning data to user
-                        return res.json({
-                            status: 200,
-                            message: 'Authorised user',
-                            result: result,
-                        });
-                    }
-                    else {
-                        //  returning data to user
-                        return res.json({
-                            status: 422,
-                            message: 'Unauthorised user, password incorrect',
-                        });
-                    }
-                }
-                else {
+                // checking if user exist with this email or not
+                if (Object.keys(result).length !== 0) {
+                    let _id = result[0]._id;
+                    let mobile = result[0].mobile;
+                    let name = result[0].name;
+                    let email = result[0].email;
+                    let statusbar = result[0].statusbar;
+                    let hash = result[0].password;
+                    let profile_pic = result[0].profile_pic;
+                    // Load hash from your password DB.
+                    bcrypt.compare(password, hash, function(err, Authorised) {
+                        // console.log(result)
+                        if (Authorised === true) {
+                            //setting session
+                            req.session.mobile = mobile;
+                            req.session.name = name;
+                            req.session.profile_pic = profile_pic;
+                            req.session.email = email;
+                            req.session.statusbar = statusbar;
+                            req.session._id = _id;
+                            //  returning data to user
+                            return res.json({
+                                status: 200,
+                                message: 'Authorised user',
+                                // result: result,
+                            });
+                        } else {
+                            //  returning data to user
+                            return res.json({
+                                status: 422,
+                                message: 'Unauthorised user, password incorrect',
+                            });
+                        }
+                    });
+                } else {
                     return res.json({
                         status: 421,
                         message: 'email not registered',
@@ -102,13 +112,13 @@ class UserAuthController {
             });
         }
         /* If no error occurs, then this 
-        * block of code will run 
-        */
+         * block of code will run 
+         */
         else {
             let _id = req.query._id;
             let emailVerifiactionToken = req.query.token;
             //finding the user credentials
-            User.findOne({ '_id': _id }, "emailVerifiactionToken emailVerificationExpiryTime email_verified_at", function (errors, result) {
+            User.findOne({ '_id': _id }, "emailVerifiactionToken emailVerificationExpiryTime email_verified_at", function(errors, result) {
                 if (errors) {
                     //sending errors to client page
                     return res.json({
@@ -118,28 +128,18 @@ class UserAuthController {
                     });
                 }
                 // if everything ok
-                //  && (result.email_verified_at == 'undefined')
                 let CurrentTime = new Date();
                 let timeDifference = CurrentTime - result.emailVerificationExpiryTime;
                 if ((result.emailVerifiactionToken.toString() == emailVerifiactionToken) && (result.email_verified_at == null) && (timeDifference < 0)) {
-                    User.updateOne({ '_id': _id },
-                        {
-                            '$set': {
-                                'email_verified_at': CurrentTime,
-                            }
-                        }, function (err, result) {
-                            console.log(err);
-                            console.log(result);
-                            // sends json data to client
-                            return res.send("<div class='text-center'><h2 style='color:green;'>Email verification done. Thanks!!</h2></div>");
-                        });
-                }
-                else {
-                    console.log("emailVerifiactionToken : " + emailVerifiactionToken);
-                    console.log("result.emailVerifiactionToken : " + result.emailVerifiactionToken);
-                    console.log("result.email_verified_at : " + result.email_verified_at);
-                    console.log("timeDifference : " + timeDifference);
 
+                    result.email_verified_at = CurrentTime;
+                    result.save().then(function(result) {
+                        // if every things ok
+                        // console.log(result);
+                        // sends json data to client
+                        return res.send("<div class='text-center'><h2 style='color:green;'>Email verification done. Thanks!!</h2></div>");
+                    });
+                } else {
                     return res.send("<div style='text-center'><h2 style='color:red;'>Link expired. Thanks!!</h2></div>");
                 }
             });
