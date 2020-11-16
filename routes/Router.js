@@ -16,7 +16,6 @@ const ChatboxControlle_obj = new ChatboxControlle(validationResult);
 
 
 // View controller router
-router.get("/home", (req, res) => Viewcontroller_obj.home(req, res));
 router.get("/chatbox", (req, res) => Viewcontroller_obj.chatbox(req, res));
 router.get("/forgetPassword", (req, res) => Viewcontroller_obj.forgetPassword(req, res));
 router.get("/changePassword", (req, res) => Viewcontroller_obj.changePassword(req, res));
