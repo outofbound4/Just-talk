@@ -7,12 +7,11 @@ class ViewController {
      * @param {*} req
      * @param {*} res
      */
-    home(req, res) {
-        return res.render("home");
-    }
+    
     userAuth(req, res) {
         return res.render("userAuth");
     }
+    
     chatbox(req, res) {
         // checking if session is set
         // console.log(req.session);
