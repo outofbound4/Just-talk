@@ -196,7 +196,10 @@
                     <div class="wchat-chat-controls">
                         <div class="menu menu-horizontal">
                             <div class="menu-item active pull-right">
-                                <i class="fa fa-phone font-24" aria-hidden="true"></i>
+                                <a href="javascript:audeoCall()">
+                                    <i class="fa fa-phone font-24" aria-hidden="true"></i>
+
+                                </a>
                             </div>
                             <div class="menu-item active pull-right">
                                 <a href="javascript:videoCall()"><i class="fa fa-video-camera font-24"
@@ -3464,18 +3467,23 @@
     }
 
     var socket = io.connect('http://localhost:3000');
+
+    function audeoCall() {
+        alert("This is under maintanance. soon, you will use this feature. Thanks!!");
+    }
     // it will redirect to video call page
     function videoCall() {
-        var id_user1 = $("#id_user1").val();
-        var id_user2 = $("#id_user2").val();
-        // it opens videochat window
-        let url = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&page=0";
-        window.open("/inVideoCall?" + url);
-        // send request to user through socket to join video call
-        socket.emit('video call user1 initiate', {
-            id_user1: id_user1,
-            id_user2: id_user2,
-        });
+        alert("This is under maintanance. soon, you will use this feature. Thanks!!");
+        // var id_user1 = $("#id_user1").val();
+        // var id_user2 = $("#id_user2").val();
+        // // it opens videochat window
+        // let url = "id_user1=" + id_user1 + "&id_user2=" + id_user2 + "&page=0";
+        // window.open("/inVideoCall?" + url);
+        // // send request to user through socket to join video call
+        // socket.emit('video call user1 initiate', {
+        //     id_user1: id_user1,
+        //     id_user2: id_user2,
+        // });
     }
     // opens video chat window for incomming video chat
     socket.on("open video call window user2", function(data) {
