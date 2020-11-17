@@ -203,9 +203,9 @@
             <div class="login-show">
                 <h2>LOGIN</h2>
                 <form action="" id="login">
-                    <input type="text" name="email" id="emailLogin" placeholder="Email" required>
+                    <input type="text" onclick="removeLoginResponse()" name="email" id="emailLogin" placeholder="Email" required>
                     <p id='validEmailLogin' style="color: coral;"></p>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" onclick="removeLoginResponse()" name="password" placeholder="Password" required>
                     <p id='LoginResponse' style="color: red;"></p>
                     <div class="loader" id="loginLoader" style="float: right; display: none;"></div>
                     <input type="button" id="btnLogin" value="Login">
@@ -215,11 +215,11 @@
             <div class="register-show">
                 <h2>REGISTER</h2>
                 <form id="register" action="">
-                    <input type="text" name="name" placeholder="Name" required>
-                    <input type="text" id="emailRegister" name="email" placeholder="Email" required>
+                    <input type="text" onclick="removeRegisterResponse()" name="name" placeholder="Name" required>
+                    <input type="text" onclick="removeEmailResponse()" id="emailRegister" name="email" placeholder="Email" required>
                     <p id='validEmailRegister' style="color: coral;"></p>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <input type="password" placeholder="Confirm Password" required>
+                    <input type="password" id="password" onclick="removeRegisterResponse()" name="password" placeholder="Password" required>
+                    <input type="password" id="confirm" onclick="removeRegisterResponse()" placeholder="Confirm Password" required>
                     <p id='RegisterResponse' style="color: red;"></p>
                     <div class="loader" id="registerLoading" style="float: right; display: none;"></div>
                     <input type="button" id="btnRegister" value="Register">
@@ -235,10 +235,10 @@
 <script>
     $('#btnLogin').on('click', function() {
         $("#LoginResponse").text("");
-        $('#btnLogin').hide();
-        $('#loginLoader').show();
         let email = $("#emailLogin").val();
         if (isEmail(email) == true) {
+            $('#btnLogin').hide();
+            $('#loginLoader').show();
             var ajax = new Ajax();
             var urlData = ajax.create_url_data("login");
             // it sends request to UserAuthController
@@ -274,13 +274,23 @@
 
     $('#btnRegister').on('click', function() {
         $("#RegisterResponse").text("");
-        $('#btnRegister').hide();
-        $('#registerLoading').show();
         let email = $("#emailRegister").val();
+        let password = $("#password").val();
+        let confirm_pass = $("#confirm").val();
         if (isEmail(email) == true) {
-            var ajax = new Ajax();
-            var urlData = ajax.create_url_data("register");
-            ajax.processPOST("/register", urlData, postFunctionRegister);
+            if (confirmPassword(password, confirm_pass) == true) {
+                if (passwordCriteria(password) == true) {
+                    $('#btnRegister').hide();
+                    $('#registerLoading').show();
+                    var ajax = new Ajax();
+                    var urlData = ajax.create_url_data("register");
+                    ajax.processPOST("/register", urlData, postFunctionRegister);
+                } else {
+                    $("#RegisterResponse").text("Password must be atleast 6 digits and less than 50 digits.");
+                }
+            } else {
+                $("#RegisterResponse").text("Confirm password Wrong.");
+            }
         } else {
             $("#validEmailRegister").text("Please Enter valid email.");
         }
@@ -307,6 +317,34 @@
     function isEmail(email) {
         var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         return regex.test(email);
+    }
+
+    // it checks if password match or not
+    function confirmPassword(pass, confirm) {
+        if (pass == confirm)
+            return true;
+        else
+            return false;
+    }
+    // it check user fullfill the password criteria
+    function passwordCriteria(password) {
+        let len = password.length;
+        if (len >= 6 && len < 50)
+            return true;
+        else
+            return false;
+    }
+    // it removes Response Error text message
+    function removeRegisterResponse() {
+        $("#RegisterResponse").text("");
+    }
+    // it removes Response Error text message
+    function removeEmailResponse() {
+        $("#validEmailRegister").text("");
+    }
+    // it removes Response error text message
+    function removeLoginResponse() {
+        $("#LoginResponse").text("");
     }
 </script>
 <script>
