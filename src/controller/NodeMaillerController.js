@@ -86,33 +86,41 @@ class NodeMailer {
                         errors: errors,
                     });
                 }
-
                 // if everything ok
                 //checking if result exists
                 if (Object.keys(result).length !== 0) {
-                    if (result[0].email_verified_at == null) {
+                    // if (result[0].email_verified_at == null) {
+                    if (result[0].email_verified_at == undefined) {
                         // generating email authentication tocken
                         let verificationToken = randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
                         // adding 30 minutes to current time
                         var now = new Date();
                         now.setMinutes(now.getMinutes() + 30); // timestamp
                         let emailVerificationExpiryTime = new Date(now); // Date object
-                        bcrypt.hash(password, result[0].password, function(err, hash) {
-                            // updating the document that is not verified
-                            result[0].name = name;
-                            result[0].email = email;
-                            result[0].password = hash;
-                            result[0].emailVerifiactionToken = verificationToken;
-                            result[0].emailVerificationExpiryTime = emailVerificationExpiryTime;
-                            result[0].save().then(function(result) {
-                                // if every things ok
-                                let _id = result._id;
-                                let from = config.EMAIL.ADMIN_EMAIL;
-                                let to = email;
-                                let subject = "Just-Talk Email verification";
-                                let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
-                                // here we are calling sendMailToUser function
-                                sendMailToUser(from, to, subject, text, res);
+                        bcrypt.genSalt(10, function(err, salt) {
+                            bcrypt.hash(password, salt, function(err, hash) {
+                                // updating the document that is not verified
+                                result[0].name = name;
+                                result[0].email = email;
+                                result[0].password = hash;
+                                result[0].emailVerifiactionToken = verificationToken;
+                                result[0].emailVerificationExpiryTime = emailVerificationExpiryTime;
+
+                                result[0].save().then(function(result) {
+                                    // if every things ok
+                                    let _id = result._id;
+                                    let from = config.EMAIL.ADMIN_EMAIL;
+                                    let to = email;
+                                    let subject = "Just-Talk Email verification";
+                                    let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
+                                    // here we are calling sendMailToUser function
+                                    sendMailToUser(from, to, subject, text, res);
+                                }).catch(function(err) {
+                                    return res.json({
+                                        status: 'error',
+                                        error: err,
+                                    });
+                                });
                             });
                         });
                     } else {
@@ -212,7 +220,6 @@ class NodeMailer {
                     result[0].PasswordResetStatus = false;
                     result[0].save().then(function(result) {
                         // if every things ok
-                        console.log("in nodemaillercontroller , forgetPassword fn, : " + JSON.stringify(result))
                         let from = config.EMAIL.ADMIN_EMAIL;
                         let to = email;
                         let subject = "Just-Talk Password Reset";
