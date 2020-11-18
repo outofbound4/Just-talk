@@ -89,8 +89,8 @@ class NodeMailer {
                 // if everything ok
                 //checking if result exists
                 if (Object.keys(result).length !== 0) {
-                    // if (result[0].email_verified_at == null) {
-                    if (result[0].email_verified_at == undefined) {
+                    if (result[0].email_verified_at == null) {
+                    // if (result[0].email_verified_at == undefined) {
                         // generating email authentication tocken
                         let verificationToken = randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
                         // adding 30 minutes to current time
