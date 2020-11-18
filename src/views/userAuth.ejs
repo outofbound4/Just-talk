@@ -264,6 +264,10 @@
             $('#loginLoader').hide();
             $('#btnLogin').show();
             $("#LoginResponse").text("Email not registered.");
+        } else if (res.status === 423) {
+            $('#loginLoader').hide();
+            $('#btnLogin').show();
+            $("#LoginResponse").text("Verify email or Register again.");
         } else {
             $('#loginLoader').hide();
             $('#btnLogin').show();
