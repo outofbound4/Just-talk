@@ -3874,8 +3874,7 @@
         let result = res.result;
         let ids = res.ids;
         let messages = res.messages;
-
-        for (let i = 0; i < ids.length; i++) {
+        for (let i = 0; i < result.length; i++) {
             list += '<li class=\'person chatboxhead active\' data-statusbar="' + result[i].statusbar + '"' +
                 "data-email='" + result[i].email + "' data-value='" + result[i]._id + "' id='" + result[i]._id + "'" +
                 "href='javascript:void(0)'" +
@@ -3900,7 +3899,7 @@
                 "</li >";
         }
         if (list == "") {
-            $("#display").html("<p>plz. search user and start conversation.</p>").css("color", "red");;
+            $("#display").html("<p>plz. search user and start conversation.</p>").css("color", "red");
         } else {
             $("#display").html(list);
             // it will show the green circle as online status to sidebar
