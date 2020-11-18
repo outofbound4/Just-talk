@@ -14,7 +14,6 @@ class ViewController {
     
     chatbox(req, res) {
         // checking if session is set
-        // console.log(req.session);
         if (req.session._id) {
             // if session is set then go to next page
             return res.render("chatbox", { session: req.session });
@@ -30,11 +29,26 @@ class ViewController {
         return res.render("changePassword", { data: req.query });
     }
     editprofile(req, res) {
-        return res.render("editprofile");
+        // checking if session is set
+        if (req.session._id) {
+            // if session is set then go to next page
+            return res.render("editprofile");
+        } else {
+            // if session not set the goto to login and register page
+            return res.render("userAuth");
+        }
     }
 
     inVideoCall(req, res) {
-        return res.render("inVideoCall", { data: req.query });
+        // checking if session is set
+        if (req.session._id) {
+            // if session is set then go to next page
+            return res.render("inVideoCall", { data: req.query });
+        } else {
+            // if session not set the goto to login and register page
+            return res.render("userAuth");
+        }
+        
     }
 }
 
