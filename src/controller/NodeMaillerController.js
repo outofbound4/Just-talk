@@ -113,7 +113,7 @@ class NodeMailer {
                                     let from = process.env.ADMIN_EMAIL;
                                     let to = email;
                                     let subject = "Just-Talk Email verification Link";
-                                    let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
+                                    let text = process.env.BASE_URL + "verifyEmail?_id=" + _id + "&token=" + verificationToken;
                                     // here we are calling sendMailToUser function
                                     sendMailToUser(from, to, subject, text, res);
                                 }).catch(function(err) {
@@ -165,7 +165,7 @@ class NodeMailer {
                                     let from = process.env.ADMIN_EMAIL;
                                     let to = email;
                                     let subject = "Just-Talk Email verification";
-                                    let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
+                                    let text = process.env.BASE_URL + "verifyEmail?_id=" + _id + "&token=" + verificationToken;
                                     sendMailToUser(from, to, subject, text, res);
                                 });
                         });
@@ -224,7 +224,7 @@ class NodeMailer {
                         let from = process.env.ADMIN_EMAIL;
                         let to = email;
                         let subject = "Just-Talk Password Reset";
-                        let text = "http://localhost:3000/changePassword?_id=" + _id + "&token=" + passwordResetToken;
+                        let text = process.env.BASE_URL + "changePassword?_id=" + _id + "&token=" + passwordResetToken;
                         // here we are calling sendMailToUser function
                         sendMailToUser(from, to, subject, text, res);
                     });
