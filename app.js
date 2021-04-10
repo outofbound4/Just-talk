@@ -1,10 +1,3 @@
-/*********************************************************************************************************************************************
- * *************************************************************************
- * *************************************************************************
- *  Configuration of Frameworks
- * *************************************************************************
- * *************************************************************************
- ******************************************************************************************************************************************/
 
 const express = require("express");
 // const Debug = require("debug");
@@ -15,7 +8,7 @@ const app = express();
 const bodyParser = require("body-parser"); // Module for POST/GET datas
 // const cookieParser = require("cookie-parser"); // Module for cookie in Session
 const session = require("express-session");
-const config = require('./config'); //it includes configuration file.
+require('dotenv').config();
 
 app.use(express.static(__dirname + "/public")); // all statics files in /public
 app.set('views', __dirname + '/src/views');
@@ -32,14 +25,12 @@ app.use(
   })
 );
 
-/**
- * Configuration of Session
- */
+// Configuration of Session
 app.set("trust proxy", 1); // trust first proxy
 app.use(
   session({
-    name: config.SESSION_NAME,
-    secret: config.SESSION_SECRET,
+    name: process.env.SESSION_NAME,
+    secret: process.env.SESSION_SECRET,
     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request.
     // cookie: {
     //   maxAge: config.SESSION_LIFETIME,
@@ -48,9 +39,8 @@ app.use(
     saveUninitialized: false // Forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
   })
 );
-/**
- * Store in local session all
- */
+
+// Store in local session all
 app.use((req, res, next) => {
   res.locals.session = req.session;
   next();
@@ -66,25 +56,18 @@ app.use((req, res, next) => {
 
 const database = require('./src/DBConn/database');
 
-/**
- * Routing
- */
 //on root url home page calling
 app.get("/", (req, res) => res.render("userAuth"));
 
 const Router = require("./routes/Router");
 app.use("/", Router);
 
-var server;
-if (!module.parent) {
-  server = app.listen(config.PORT, function () {
-    console.log(`app is listening at http://localhost:${config.PORT}`);
-  });
-}
+const PORT = process.env.PORT;
+let server = app.listen(process.env.PORT, function () {
+  console.log(`app is listening at http://localhost:${PORT}`);
+});
 
-/**
- * here establishing socket.io connection
- */
+// here establishing socket.io connection
 const SocketConnection = require("./socket/socket");
 var SocketConnection_obj = new SocketConnection(server);
 SocketConnection_obj.listenConnection();
