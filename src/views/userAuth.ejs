@@ -309,7 +309,7 @@
         } else if (res.status === true) {
             $("#RegisterResponse").text("Verification link has been sent to your email. Thanks!!");
         } else if (res.status === false) {
-            $("#RegisterResponse").text("Please Check your internet connectivity. Thanks!!");
+            $("#RegisterResponse").text(res.message + "Or Please Check your internet connectivity. Thanks!!");
         } else if (res.status === 'userExist') {
             $("#RegisterResponse").text("Email id already registered.");
         } else {
