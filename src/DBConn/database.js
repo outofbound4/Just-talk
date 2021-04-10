@@ -1,9 +1,9 @@
 //code init
 const mongoose = require('mongoose');
-const config = require('./../../config');
+require('dotenv').config();
 
-// mongoDB_URL = 'mongodb://127.0.0.1:27017/chatapp', 'chatapp' is database name
-var mongoDB_URL = config.MongoDB.MongoDB_URL + config.MongoDB.DATABASE_NAME;
+// mongoDB_URL = 'mongodb://127.0.0.1:27017/chatapp', 'JustTalk' is database name
+var mongoDB_URL = process.env.MongoDB_URL + process.env.DATABASE_NAME;
 
 //  Connecting to the database
 const connect = async function () {
