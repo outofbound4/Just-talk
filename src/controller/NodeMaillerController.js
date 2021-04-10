@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer'); // for sending mail to user
 const bcrypt = require('bcryptjs'); // for password encryption
 var User = require('../model/User');
-const config = require('./../../config'); //it includes configuration file.
+require('dotenv').config();
 
 /**
  * initializing nodemailer for sending mail
@@ -10,8 +10,8 @@ const config = require('./../../config'); //it includes configuration file.
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: config.EMAIL.ADMIN_EMAIL,
-        pass: config.EMAIL.EMAIL_PASSWORD,
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
     }
 });
 // this function will generate randome alfa numeric string
@@ -31,9 +31,10 @@ function sendMailToUser(from, to, subject, text, res) {
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
             //sending errors to client page
+            console.log(JSON.stringify(error));
             return res.json({
                 'status': false,
-                'message': "error in sending message"
+                'message': "535-5.7.8 Username and Password not accepted."
             });
 
         } else {
@@ -109,9 +110,9 @@ class NodeMailer {
                                 result[0].save().then(function(result) {
                                     // if every things ok
                                     let _id = result._id;
-                                    let from = config.EMAIL.ADMIN_EMAIL;
+                                    let from = process.env.ADMIN_EMAIL;
                                     let to = email;
-                                    let subject = "Just-Talk Email verification";
+                                    let subject = "Just-Talk Email verification Link";
                                     let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
                                     // here we are calling sendMailToUser function
                                     sendMailToUser(from, to, subject, text, res);
@@ -161,7 +162,7 @@ class NodeMailer {
                                     // if every things ok
                                     // console.log(result);
                                     // if every things ok
-                                    let from = config.EMAIL.ADMIN_EMAIL;
+                                    let from = process.env.ADMIN_EMAIL;
                                     let to = email;
                                     let subject = "Just-Talk Email verification";
                                     let text = "http://localhost:3000/verifyEmail?_id=" + _id + "&token=" + verificationToken;
@@ -220,7 +221,7 @@ class NodeMailer {
                     result[0].PasswordResetStatus = false;
                     result[0].save().then(function(result) {
                         // if every things ok
-                        let from = config.EMAIL.ADMIN_EMAIL;
+                        let from = process.env.ADMIN_EMAIL;
                         let to = email;
                         let subject = "Just-Talk Password Reset";
                         let text = "http://localhost:3000/changePassword?_id=" + _id + "&token=" + passwordResetToken;
