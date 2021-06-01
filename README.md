@@ -29,4 +29,4 @@ npm start
 ```
 ### Some screnshots after successful setup.
 * Login and Register
-![Alt text](./public/images/screenshots/Register.jpg?raw=true "Register")
+![Alt text](/public/images/screenshots/Register.png?raw=true "Register")
