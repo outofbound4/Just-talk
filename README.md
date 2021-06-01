@@ -30,3 +30,12 @@ npm start
 ### Some screnshots after successful setup.
 * Login and Register
 ![Alt text](/public/images/screenshots/Register.png?raw=true "Register")
+
+* Home page
+![Alt text](/public/images/screenshots/Home.png?raw=true "Home")
+
+* Chat page
+![Alt text](/public/images/screenshots/Chat.png?raw=true "Chat")
+
+* Page settings page
+![Alt text](/public/images/screenshots/PageSettings.png?raw=true "PageSettings")
