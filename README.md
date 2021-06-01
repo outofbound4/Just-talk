@@ -11,7 +11,7 @@ Just-Talk is web chat app where we can text, voice and video chat. In this proje
 https://github.com/outofbound4/Just-talk.git
 ```
 
-### Steps to setup the backend.
+### Steps to setup the project.
 
 * Install the dependencies
 ```
